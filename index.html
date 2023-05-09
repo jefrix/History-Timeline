@@ -44,7 +44,14 @@
     ul.menu li a:hover {
       background-color: #483D8B;
     }
-      .scrollable-container {
+    .center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Adjusts the height of the parent container to occupy the full viewport height */
+}  
+    
+    .scrollable-container {
   width: 800px;
   height: 300px;
   overflow-y: scroll;
@@ -210,7 +217,8 @@
 
   <h2>Timeline of Ancient Human Cultural Change</h2>
   <caption><b><center>(Mediteranean & Levantine Focus)</center></b></caption>
-  <div class="scrollable-container">
+  <div class="center-container">
+    <div class="scrollable-container">
   <table>
     <thead>
       <tr>
@@ -483,8 +491,8 @@
 
     </tbody>
   </table>
+  </div>   
 </div>   
-  
 <h2 id="technology" style="text-align: center;">Bronze Age and Iron Age Technology Timeline</h2>
 <p>The Bronze Age and Iron Age were significant periods in human history that saw the development of metalworking, which led to advancements in tools, weapons, and other technologies. This timeline highlights some of the key innovations and inventions during these periods, as well as their respective civilizations and impacts on society.</p>
 
@@ -3876,8 +3884,8 @@ By the end of the 10th century, Orthodox Christianity had become a vital religio
   <td>Greek</td>
 </tr>
    <tr>
-    <td>c. 100 BCE - 100 CE &#128220;</td>
-    <td>Dead Sea Scrolls</td>
+    <td>c. 100 BCE - 100 CE</td>
+    <td>Dead Sea Scrolls &#128220;</td>
     <td>Judaic Essene sect</td>
     <td>Hebrew, Aramaic, and Greek Scribes</td>
     <td>Messianic Judaism / Proto-Christianity</td>
