@@ -10,124 +10,66 @@
 
   <title>Jeff's Condensed Timeline of Human Cultural Change (Levantine Focus)</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <style>
+    <style>
     body {
-      background-image: url("https://github.com/jefrix/History-Timeline/raw/main/blue.jpeg");
-      background-repeat: repeat;
-      background-size: 95%;
-      background-position: left center;
       font-family: Arial, sans-serif;
-      background-color: #3333CC;
-      color: #71FFD9;
-    }
-
-    ul.menu {
-      list-style-type: none;
       margin: 0;
       padding: 0;
-      overflow: hidden;
-      background-color: #00008B;
-      position: -webkit-sticky; /* For Safari */
-      position: sticky;
+    }
+
+    /* Side Menu Styling */
+    .side-menu {
+      height: 100%; /* Full height */
+      width: 200px; /* Width of the menu */
+      position: fixed; /* Fixed Sidebar (stay in place on scroll) */
       top: 0;
-      z-index: 1000;
+      left: 0;
+      background-color: #00008B; /* Dark blue background */
+      padding-top: 20px;
+      z-index: 1000; /* Stay on top */
     }
 
-    ul.menu li {
-      float: left;
-    }
-
-    ul.menu li a {
-      display: block;
-      color: #FFCC00;
-      text-align: center;
-      padding: 12px 16px;
-      text-decoration: none;
-      font-size: 14px;
-    }
-
-    ul.menu li a:hover {
-      background-color: #483D8B;
-    }
-
-    .center-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }  
-    
-    .scrollable-container {
-      width: 80%;
-      height: 600px;
-      overflow-y: auto;
-      background-color: black;
-      padding: 15px;
-      border: 1px solid #ccc;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-    }
-    th, td {
+    .side-menu a {
+      padding: 10px 15px;
       text-align: left;
-      padding: 8px;
-      border: 1px solid #ccc;
-    }
-    th {
-      background-color: #404060;
-      color: #FFCC00;
-    }
-    tr:nth-child(even) {
-      color: #FF7F50;
+      display: block;
+      color: #FFCC00; /* Yellow text */
+      text-decoration: none;
+      font-size: 14px; /* Smaller font size */
     }
 
-    h1, h2, h4 {
-      color: Gold;
-      text-align: center;
-      font-family: 'Papyrus', 'Times New Roman', serif;
+    .side-menu a:hover {
+      background-color: #483D8B; /* Darker blue on hover */
+      color: white;
     }
 
-    h1 {
-      margin-top: 20px;
+    /* Main content */
+    .main-content {
+      margin-left: 220px; /* Same width as the sidebar */
+      padding: 15px;
     }
 
-    h4 {
-      color: #FFD971;
+    /* For small screens, the side menu should be a horizontal top menu */
+    @media screen and (max-width: 768px) {
+      .side-menu {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      .side-menu a {
+        float: left;
+        padding: 12px;
+      }
+      .main-content {
+        margin-left: 0;
+      }
     }
 
-    .caption {
-      font-weight: bold;
-      text-align: center;
-      color: #FF7197;
-    }
-
-    ul {
-      padding-left: 20px;
-    }
-
-    ul li {
-      margin-bottom: 5px;
-      color: #D971FF;
-    }
-
-    .highlight {
-      color: #FFD971;
-      text-align: center;
-    }
-
-    p {
-      text-align: justify;
-    }
-
-    a {
-      color: #FFCC00;
-      text-decoration: underline;
-    }
-
-    a:hover {
-      color: #FFD700;
+    /* Clear floats after the columns */
+    .side-menu::after {
+      content: "";
+      display: table;
+      clear: both;
     }
   </style>
 </head>
