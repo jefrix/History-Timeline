@@ -129,7 +129,61 @@
     a:hover {
       color: #FFD700;
     }
-  </style>
+  /* Side Menu Styling */
+    .side-menu {
+      height: 100%; /* Full height */
+      width: 200px; /* Width of the menu */
+      position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+      top: 0;
+      left: 0;
+      background-color: #00008B; /* Dark blue background */
+      padding-top: 20px;
+      z-index: 1000; /* Stay on top */
+    }
+
+    .side-menu a {
+      padding: 10px 15px;
+      text-align: left;
+      display: block;
+      color: #FFCC00; /* Yellow text */
+      text-decoration: none;
+      font-size: 14px; /* Smaller font size */
+    }
+
+    .side-menu a:hover {
+      background-color: #483D8B; /* Darker blue on hover */
+      color: white;
+    }
+
+    /* Main content */
+    .main-content {
+      margin-left: 220px; /* Same width as the sidebar */
+      padding: 15px;
+    }
+
+    /* For small screens, the side menu should be a horizontal top menu */
+    @media screen and (max-width: 768px) {
+      .side-menu {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      .side-menu a {
+        float: left;
+        padding: 12px;
+      }
+      .main-content {
+        margin-left: 0;
+      }
+    }
+
+    /* Clear floats after the columns */
+    .side-menu::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+    </style>
 </head>
 <body>
 
