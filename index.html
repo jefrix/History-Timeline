@@ -5021,33 +5021,7 @@ By the end of the 10th century, Orthodox Christianity had become a vital religio
 <p style="color: coral; text-align: center;">I hope these timelines help your history studies!</p>
 <p></p>
   
-<div id="visitorCounter"></div>
-    <script src="counter.js"></script>
-  // This script will fetch the count from the server and display it
-function updateCounter() {
-    fetch('counter.php')
-    .then(response => response.text())
-    .then(count => {
-        document.getElementById('visitorCounter').innerText = `Visitors: ${count}`;
-    })
-    .catch(error => console.error('Error fetching visitor count:', error));
-}
 
-// Update the counter when the page loads and every 5 minutes
-window.onload = updateCounter;
-setInterval(updateCounter, 300000); // 5 minutes in milliseconds
-  <?php
-// This script will increment the counter and return the new value
-$file = 'visitor_count.txt';
-$count = (file_exists($file)) ? (int)file_get_contents($file) : 0;
-
-// Increment the counter
-$count++;
-file_put_contents($file, $count);
-
-// Return the count to the JavaScript
-echo $count;
-?>
  
 </body>
 </html>
