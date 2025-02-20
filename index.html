@@ -21,7 +21,220 @@
   <meta name="twitter:image" content="https://jefrix.github.io/History-Timeline/path-to-your-image.jpg">
   <meta name="twitter:site" content="@JeffRicksDude">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <!-- Your existing styles remain here -->
+     <style>
+    body {
+      background-image: url("https://github.com/jefrix/History-Timeline/raw/main/blue.jpeg");
+      background-repeat: repeat;
+      background-size: 95%;
+      background-position: left center;
+      font-family: Arial, sans-serif;
+      background-color: #3333CC;
+      color: #71FFD9;
+    }
+
+      ul.menu {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: rgba(0, 0, 139, 0.3); /* Dark blue with 50% transparency */
+      position: -webkit-sticky; /* For Safari */
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    ul.menu li {
+      float: left;
+    }
+
+    ul.menu li a {
+      display: block;
+      color: #FFCC00;
+      text-align: center;
+      padding: 10px 14px;
+      text-decoration: none;
+      font-size: 11px;
+      background-color: rgba(0, 0, 139, 0.5); /* Matching the menu background with 50% transparency */
+    }
+
+    ul.menu li a:hover {
+      background-color: #483D8B;
+    }
+
+    .center-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }  
+    
+    .scrollable-container {
+      width: 80%;
+      height: 600px;
+      overflow-y: auto;
+      background-color: black;
+      padding: 15px;
+      border: 1px solid #000;
+    }
+
+    table {
+      border: 1px solid navy;
+      border-collapse: collapse;
+      width: 100%;
+      
+    }
+
+    th, td {
+      text-align: left;
+      padding: 8px;
+      border: 1px solid navy;
+    }
+
+    th {
+      background-color: #404060;
+      color: #FFCC00;
+    }
+
+    tr:nth-child(even) {
+      background-color: #091a2b; /* Darker brown background color for even rows */
+    }
+
+    tr:nth-child(odd) {
+      background-color: #2B2B4F; /* Slightly darker blue background color for odd rows */
+    }
+  
+    h1, h2, h4 {
+      color: Gold;
+      text-align: center;
+      font-family: 'Papyrus', 'Times New Roman', serif;
+    }
+
+    h1 {
+      margin-top: 20px;
+    }
+
+    h4 {
+      color: #FFD971;
+    }
+
+    .caption {
+      font-weight: bold;
+      text-align: center;
+      color: #FF7197;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    ul li {
+      margin-bottom: 5px;
+      color: #D971FF;
+    }
+
+    .highlight {
+      color: #FFD971;
+      text-align: center;
+    }
+
+    p {
+      text-align: justify;
+    }
+
+    a {
+      color: #FFCC00;
+      text-decoration: underline;
+    }
+
+    a:hover {
+      color: #FFD700;
+    }
+
+  /* Side Menu Styling */
+    .side-menu {
+      height: 100%; /* Full height */
+      width: 200px; /* Width of the menu */
+      position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+      top: 0;
+      left: 0;
+      background-color: #00008B; /* Dark blue background */
+      padding-top: 20px;
+      z-index: 1000; /* Stay on top */
+    }
+
+    .side-menu a {
+      padding: 10px 15px;
+      text-align: left;
+      display: block;
+      color: #FFCC00; /* Yellow text */
+      text-decoration: none;
+      font-size: 14px; /* Smaller font size */
+    }
+
+    .side-menu a:hover {
+      background-color: #483D8B; /* Darker blue on hover */
+      color: white;
+    }
+
+    /* Main content */
+    .main-content {
+      margin-left: 220px; /* Same width as the sidebar */
+      padding: 15px;
+    }
+
+    /* For small screens, the side menu should be a horizontal top menu */
+    @media screen and (max-width: 768px) {
+      .side-menu {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      .side-menu a {
+        float: left;
+        padding: 12px;
+      }
+      .main-content {
+        margin-left: 0;
+      }
+    }
+
+    /* Clear floats after the columns */
+    .side-menu::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+     .philosophy-table {
+  width: 100%;
+  border: 1px solid navy;     
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+}
+
+.philosophy-table th, .philosophy-table td {
+  padding: 11px;
+  border-bottom: 1px solid navy;
+  text-align: left;
+}
+
+.philosophy-table thead {
+  background-color: #222;
+  color: #FFD971;
+}
+
+.philosophy-table tbody tr:nth-child(odd) {
+  background-color: #000000;
+}
+
+.philosophy-table tbody tr:nth-child(even) {
+  background-color: #333366; /* Adjust as needed */
+  color: Thistle; /* Ensure the text is readable on darker backgrounds */
+}
+
+</style>
+
+
 </head>
 
 <body>
@@ -154,17 +367,13 @@
   
   </center>
 
-  <h2>Timeline of Ancient Human Cultural Change</h2>
-  <caption><b><center>(Mediterranean & Levantine Focus)</center></b></caption>
-   <div class="center-container">
-    
-  <table>
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Event</th>
-      </tr>
-    </thead>
+<section id="AncientCulturalChange" role="region" aria-labelledby="AncientCulturalChange">
+      <h2 id="AncientCulturalChange" class="collapsible">Timeline of Ancient Human Cultural Change</h2>
+      <div class="content">
+        <caption><b><center>(Mediterranean & Levantine Focus)</center></b></caption>
+        <div class="center-container">
+          <table>
+            <thead><tr><th>Date</th><th>Event</th></tr></thead>
 
     <tbody>
       <tr>
@@ -477,12 +686,15 @@
   <td>Birth of Jesus of Nazareth (traditional date)</td>
 </tr>
  
-    </tbody>
-  </table>
-      
-</div> 
+   </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
+<section id="technology" role="region" aria-labelledby="technology">  
 <h2 id="technology" style="text-align: center;">Bronze Age and Iron Age Technology Timeline</h2>
+<div class="content">
 <p>The Bronze Age and Iron Age represent pivotal epochs in human civilization, marked by significant technological leaps in metalworking, which catalyzed advancements in various sectors of life including agriculture, warfare, trade, and communication. Below is a detailed timeline capturing the essence of these innovations, their originators, and the profound impacts they had on society:</p>
 
 <table style="width:100%; border-collapse: collapse;">
@@ -579,7 +791,10 @@
       </ul>
     </td>
   </tr>
-</table>    
+       </table>
+      </div>
+    </section>
+  
  <h2 id="AncientWonders" style="text-align: center; margin-top: 40px; color: #FFD700;">Seven Wonders of the Ancient World</h2>
 <p style="text-align: justify; color: #E3F6F5;">
     The Seven Wonders of the Ancient World were remarkable constructions known for their grandeur and artistic achievement. These wonders were celebrated by various ancient authors and have become a symbol of human ingenuity and the ambition to create lasting monuments. Below is a table listing these wonders, including their locations, estimated dates of construction, and a brief description.
