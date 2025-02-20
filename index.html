@@ -21,219 +21,207 @@
   <meta name="twitter:image" content="https://jefrix.github.io/History-Timeline/path-to-your-image.jpg">
   <meta name="twitter:site" content="@JeffRicksDude">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
-     <style>
-    body {
-      background-image: url("https://github.com/jefrix/History-Timeline/raw/main/blue.jpeg");
-      background-repeat: repeat;
-      background-size: 95%;
-      background-position: left center;
-      font-family: Arial, sans-serif;
-      background-color: #3333CC;
-      color: #71FFD9;
-    }
+ <style>
+  body {
+    background-image: url("https://github.com/jefrix/History-Timeline/raw/main/blue.jpeg");
+    background-repeat: repeat;
+    background-size: 95%;
+    background-position: left center;
+    font-family: Arial, sans-serif;
+    background-color: #3333CC;
+    color: #71FFD9;
+    margin: 0; /* Remove default margin for full-width */
+  }
+  ul.menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgba(0, 0, 139, 0.3);
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  ul.menu li { float: left; }
+  ul.menu li a {
+    display: block;
+    color: #FFCC00;
+    text-align: center;
+    padding: 10px 14px;
+    text-decoration: none;
+    font-size: 11px;
+    background-color: rgba(0, 0, 139, 0.5);
+  }
+  ul.menu li a:hover { background-color: #483D8B; }
+  .center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%; /* Ensure full width */
+  }
+  .scrollable-container {
+    width: 80%;
+    max-width: 100%; /* Prevent overflow on small screens */
+    height: 600px;
+    overflow-y: auto;
+    background-color: black;
+    padding: 15px;
+    border: 1px solid #000;
+  }
+  table {
+    border: 1px solid navy;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%; /* Ensure tables fit screen */
+  }
+  th, td {
+    text-align: left;
+    padding: 8px;
+    border: 1px solid navy;
+    font-size: 14px; /* Base font size */
+  }
+  th {
+    background-color: #404060;
+    color: #FFCC00;
+  }
+  tr:nth-child(even) { background-color: #091a2b; }
+  tr:nth-child(odd) { background-color: #2B2B4F; }
+  h1, h2, h3, h4 {
+    color: Gold;
+    text-align: center;
+    font-family: 'Papyrus', 'Times New Roman', serif;
+  }
+  h1 { margin-top: 20px; font-size: 24px; }
+  h2 { font-size: 20px; }
+  h3 { font-size: 18px; }
+  h4 { color: #FFD971; font-size: 16px; }
+  .caption {
+    font-weight: bold;
+    text-align: center;
+    color: #FF7197;
+  }
+  ul { padding-left: 20px; }
+  ul li { margin-bottom: 5px; color: #D971FF; }
+  .highlight { color: #FFD971; text-align: center; }
+  p { text-align: justify; font-size: 14px; }
+  a { color: #FFCC00; text-decoration: underline; }
+  a:hover { color: #FFD700; }
+  .side-menu {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #00008B;
+    padding-top: 20px;
+    z-index: 1000;
+  }
+  .side-menu a {
+    padding: 10px 15px;
+    text-align: left;
+    display: block;
+    color: #FFCC00;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  .side-menu a:hover { background-color: #483D8B; color: white; }
+  .main-content { margin-left: 220px; padding: 15px; }
+  .philosophy-table {
+    width: 100%;
+    border: 1px solid navy;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+  }
+  .philosophy-table th, .philosophy-table td {
+    padding: 11px;
+    border-bottom: 1px solid navy;
+    text-align: left;
+  }
+  .philosophy-table thead { background-color: #222; color: #FFD971; }
+  .philosophy-table tbody tr:nth-child(odd) { background-color: #000000; }
+  .philosophy-table tbody tr:nth-child(even) { background-color: #333366; color: Thistle; }
+  .collapsible {
+    cursor: pointer;
+    padding: 10px;
+    background-color: #404060;
+    color: #FFCC00;
+    border: 1px solid navy;
+    text-align: center;
+    font-family: 'Papyrus', 'Times New Roman', serif;
+    font-size: 18px;
+  }
+  .content { display: none; padding: 15px; background-color: black; border: 1px solid navy; }
+  .content.show { display: block; }
+  .tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted #FFCC00;
+  }
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #483D8B;
+    color: #FFD971;
+    text-align: center;
+    padding: 5px;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+  }
+  .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
 
-      ul.menu {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background-color: rgba(0, 0, 139, 0.3); /* Dark blue with 50% transparency */
-      position: -webkit-sticky; /* For Safari */
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-
-    ul.menu li {
-      float: left;
-    }
-
-    ul.menu li a {
-      display: block;
-      color: #FFCC00;
-      text-align: center;
-      padding: 10px 14px;
-      text-decoration: none;
-      font-size: 11px;
-      background-color: rgba(0, 0, 139, 0.5); /* Matching the menu background with 50% transparency */
-    }
-
-    ul.menu li a:hover {
-      background-color: #483D8B;
-    }
-
-    .center-container {
+  /* Mobile-Specific Styles */
+  @media screen and (max-width: 768px) {
+    body { font-size: 16px; } /* Base font increase for readability */
+    ul.menu {
+      position: relative; /* Remove sticky for mobile */
       display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }  
-    
-    .scrollable-container {
-      width: 80%;
-      height: 600px;
-      overflow-y: auto;
-      background-color: black;
-      padding: 15px;
-      border: 1px solid #000;
+      flex-direction: column;
+      background-color: rgba(0, 0, 139, 0.5);
     }
-
+    ul.menu li { float: none; width: 100%; }
+    ul.menu li a { font-size: 14px; padding: 12px; }
+    .center-container { min-height: auto; padding: 10px; }
+    .scrollable-container { width: 100%; height: auto; overflow-x: auto; }
     table {
-      border: 1px solid navy;
-      border-collapse: collapse;
-      width: 100%;
-      
-    }
-
-    th, td {
-      text-align: left;
-      padding: 8px;
-      border: 1px solid navy;
-    }
-
-    th {
-      background-color: #404060;
-      color: #FFCC00;
-    }
-
-    tr:nth-child(even) {
-      background-color: #091a2b; /* Darker brown background color for even rows */
-    }
-
-    tr:nth-child(odd) {
-      background-color: #2B2B4F; /* Slightly darker blue background color for odd rows */
-    }
-  
-    h1, h2, h4 {
-      color: Gold;
-      text-align: center;
-      font-family: 'Papyrus', 'Times New Roman', serif;
-    }
-
-    h1 {
-      margin-top: 20px;
-    }
-
-    h4 {
-      color: #FFD971;
-    }
-
-    .caption {
-      font-weight: bold;
-      text-align: center;
-      color: #FF7197;
-    }
-
-    ul {
-      padding-left: 20px;
-    }
-
-    ul li {
-      margin-bottom: 5px;
-      color: #D971FF;
-    }
-
-    .highlight {
-      color: #FFD971;
-      text-align: center;
-    }
-
-    p {
-      text-align: justify;
-    }
-
-    a {
-      color: #FFCC00;
-      text-decoration: underline;
-    }
-
-    a:hover {
-      color: #FFD700;
-    }
-
-  /* Side Menu Styling */
-    .side-menu {
-      height: 100%; /* Full height */
-      width: 200px; /* Width of the menu */
-      position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-      top: 0;
-      left: 0;
-      background-color: #00008B; /* Dark blue background */
-      padding-top: 20px;
-      z-index: 1000; /* Stay on top */
-    }
-
-    .side-menu a {
-      padding: 10px 15px;
-      text-align: left;
       display: block;
-      color: #FFCC00; /* Yellow text */
-      text-decoration: none;
-      font-size: 14px; /* Smaller font size */
+      overflow-x: auto; /* Horizontal scroll for tables */
+      white-space: nowrap; /* Prevent wrapping */
+      font-size: 12px;
     }
+    th, td { padding: 6px; font-size: 12px; }
+    h1 { font-size: 20px; }
+    h2 { font-size: 18px; }
+    h3 { font-size: 16px; }
+    h4 { font-size: 14px; }
+    .main-content { margin-left: 0; padding: 10px; }
+    .side-menu { width: 100%; height: auto; position: relative; }
+    .side-menu a { float: left; padding: 12px; font-size: 12px; }
+    .collapsible { font-size: 16px; padding: 8px; }
+    .content { padding: 10px; }
+    .tooltip .tooltiptext { width: 150px; margin-left: -75px; font-size: 10px; }
+  }
 
-    .side-menu a:hover {
-      background-color: #483D8B; /* Darker blue on hover */
-      color: white;
-    }
-
-    /* Main content */
-    .main-content {
-      margin-left: 220px; /* Same width as the sidebar */
-      padding: 15px;
-    }
-
-    /* For small screens, the side menu should be a horizontal top menu */
-    @media screen and (max-width: 768px) {
-      .side-menu {
-        width: 100%;
-        height: auto;
-        position: relative;
-      }
-      .side-menu a {
-        float: left;
-        padding: 12px;
-      }
-      .main-content {
-        margin-left: 0;
-      }
-    }
-
-    /* Clear floats after the columns */
-    .side-menu::after {
-      content: "";
-      display: table;
-      clear: both;
-    }
-     .philosophy-table {
-  width: 100%;
-  border: 1px solid navy;     
-  border-collapse: collapse;
-  font-family: Arial, sans-serif;
-}
-
-.philosophy-table th, .philosophy-table td {
-  padding: 11px;
-  border-bottom: 1px solid navy;
-  text-align: left;
-}
-
-.philosophy-table thead {
-  background-color: #222;
-  color: #FFD971;
-}
-
-.philosophy-table tbody tr:nth-child(odd) {
-  background-color: #000000;
-}
-
-.philosophy-table tbody tr:nth-child(even) {
-  background-color: #333366; /* Adjust as needed */
-  color: Thistle; /* Ensure the text is readable on darker backgrounds */
-}
-
-</style>
-
+  /* Extra Small Screens (e.g., phones < 480px) */
+  @media screen and (max-width: 480px) {
+    body { font-size: 14px; }
+    ul.menu li a { font-size: 12px; padding: 10px; }
+    table { font-size: 10px; }
+    th, td { padding: 4px; }
+    h1 { font-size: 18px; }
+    h2 { font-size: 16px; }
+    h3 { font-size: 14px; }
+    h4 { font-size: 12px; }
+  }
+</style>   
 
 </head>
 
