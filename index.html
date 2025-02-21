@@ -150,7 +150,109 @@
     a:hover {
       color: #FFD700;
     }
+.main-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 139, 0.3);
+}
 
+.menu-toggle {
+  display: none; /* Hidden by default on larger screens */
+  background: none;
+  border: none;
+  color: #FFCC00;
+  font-size: 18px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.menu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.menu li {
+  float: left;
+  position: relative;
+}
+
+.menu li a {
+  display: block;
+  color: #FFCC00;
+  text-align: center;
+  padding: 10px 14px;
+  text-decoration: none;
+  font-size: 11px;
+  background-color: rgba(0, 0, 139, 0.5);
+}
+
+.menu li a:hover {
+  background-color: #483D8B;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: rgba(0, 0, 139, 0.7);
+  min-width: 160px;
+  z-index: 1001;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu li {
+  float: none;
+}
+
+.dropdown-menu li a {
+  padding: 10px;
+  text-align: left;
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 139, 0.5);
+  }
+
+  .menu.active {
+    display: flex;
+  }
+
+  .menu li {
+    float: none;
+    width: 100%;
+  }
+
+  .dropdown-menu {
+    position: static;
+    display: none;
+    background-color: rgba(0, 0, 139, 0.7);
+  }
+
+  .dropdown:hover .dropdown-menu { 
+    display: none; /* Prevent hover on mobile */
+  }
+
+  .dropdown.active .dropdown-menu {
+    display: block; /* Show when toggled */
+  }
+}
   /* Side Menu Styling */
     .side-menu {
       height: 100%; /* Full height */
@@ -316,73 +418,96 @@
 
 <body>
 <img src="https://counter.dev/track?page=https%3A%2F%2Fjefrix.github.io%2FHistory-Timeline%2F&user=jefrix&repo=counter-data" alt="Visitor Counter" style="display: none;">
-<ul class="menu">
-  <!-- Texts -->
-  <li><a href="#Texts">Historic Texts</a></li>
-  <li><a href="#Bibles">Bibles</a></li>
-  
-  <!-- Ancient Civilizations (Mesopotamia and Near East) -->
-  <li><a href="#Sumerians">Sumerians</a></li>
-  <li><a href="#Akkadians">Akkadians</a></li>
-  <li><a href="#Elamites">Elamites</a></li>
-  <li><a href="#Babylonians">Babylonians</a></li>
-  <li><a href="#Assyrians">Assyrians</a></li>
-  <li><a href="#Hittites">Hittites</a></li>
-  <li><a href="#Canaanites">Canaanites</a></li>
-  <li><a href="#Phoenicians">Phoenicians</a></li>
-  <li><a href="#Israel">Israel</a></li>
-  <li><a href="#Judah">Judah</a></li>
-  <li><a href="#Moabites">Moabites</a></li>
-  <li><a href="#Edomites">Edomites</a></li>
-  <li><a href="#Ammonites">Ammonites</a></li>
-  <li><a href="#Persians">Persians</a></li>
-  <li><a href="#SeaPeoples">Sea Peoples</a></li>
-  
-  <!-- Ancient Civilizations (Africa) -->
-  <li><a href="#Egyptians">Egyptians</a></li>
-  <li><a href="#Nubian_Kingdoms">Nubians</a></li>
-  
-  <!-- Ancient Civilizations (Europe and Mediterranean) -->
-  <li><a href="#Minoans">Minoans</a></li>
-  <li><a href="#Mycenaeans">Mycenaeans</a></li>
-  <li><a href="#Greeks">Ancient Greece</a></li>
-  <li><a href="#Carthaginians">Carthaginians</a></li>
-  <li><a href="#Romans">Romans</a></li>
-  
-  <!-- Ancient Civilizations (Asia) -->
-  <li><a href="#indus_valley">Indus Valley</a></li>
-  <li><a href="#shang_zhou">Shang & Zhou</a></li>
-  
-  <!-- Wars -->
-  <li><a href="#Wars">Bronze Age Wars</a></li>
-  <li><a href="#IronAgeWars">Iron Age Wars</a></li>
-  
-  <!-- Rulers -->
-  <li><a href="#Rulers">Levantine Rulers</a></li>
-  
-  <!-- Religions and Philosophies -->
-  <li><a href="#Judaism">Judaism</a></li>
-  <li><a href="#JewishApocrypha">Apocrypha</a></li>
-  <li><a href="#Mithraism">Mithraism</a></li>
-  <li><a href="#Gnosticism">Gnosticism</a></li>
-  <li><a href="#Christianity">Christianity</a></li>
-  <li><a href="#Orthodoxy">Orthodoxy</a></li>
-  <li><a href="#Catholics">Catholics</a></li>
-  <li><a href="#Protestants">Protestants</a></li>
-  <li><a href="#Islam">Islam</a></li>
-  <li><a href="#Bahai">Bahai</a></li>
-  <li><a href="#Esoteric">Esoterica</a></li>
-  <li><a href="#Philosophy">Philosophies</a></li>
-  
-  <!-- Technology and Science -->
-  <li><a href="#technology">Technology</a></li>
-  <li><a href="#Science">Science</a></li>
-  <li><a href="#AncientWonders">Ancient Wonders</a></li>
-  <li><a href="#HeroicLegendsComparison">Heroes</a></li>
-  
-  <!-- Linguistics -->
-  <li><a href="#Linguistics">Linguistics</a></li>
-</ul>
+<!-- Replace the existing <ul class="menu"> section with this -->
+<nav class="main-nav" role="navigation" aria-label="Main Navigation">
+  <button class="menu-toggle" aria-expanded="false" aria-controls="menu">☰ Menu</button>
+  <ul class="menu" id="menu">
+    <!-- Category: Texts -->
+    <li class="dropdown">
+      <a href="#" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Texts</a>
+      <ul class="dropdown-menu">
+        <li><a href="#Texts">Historic Texts</a></li>
+        <li><a href="#Bibles">Bibles</a></li>
+      </ul>
+    </li>
+
+    <!-- Category: Ancient Civilizations -->
+    <li class="dropdown">
+      <a href="#" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Civilizations</a>
+      <ul class="dropdown-menu">
+        <li><a href="#Sumerians">Sumerians</a></li>
+        <li><a href="#Akkadians">Akkadians</a></li>
+        <li><a href="#Elamites">Elamites</a></li>
+        <li><a href="#Babylonians">Babylonians</a></li>
+        <li><a href="#Assyrians">Assyrians</a></li>
+        <li><a href="#Hittites">Hittites</a></li>
+        <li><a href="#Canaanites">Canaanites</a></li>
+        <li><a href="#Phoenicians">Phoenicians</a></li>
+        <li><a href="#Israel">Israel</a></li>
+        <li><a href="#Judah">Judah</a></li>
+        <li><a href="#Moabites">Moabites</a></li>
+        <li><a href="#Edomites">Edomites</a></li>
+        <li><a href="#Ammonites">Ammonites</a></li>
+        <li><a href="#Persians">Persians</a></li>
+        <li><a href="#SeaPeoples">Sea Peoples</a></li>
+        <li><a href="#Egyptians">Egyptians</a></li>
+        <li><a href="#Nubian_Kingdoms">Nubians</a></li>
+        <li><a href="#Minoans">Minoans</a></li>
+        <li><a href="#Mycenaeans">Mycenaeans</a></li>
+        <li><a href="#Greeks">Ancient Greece</a></li>
+        <li><a href="#Carthaginians">Carthaginians</a></li>
+        <li><a href="#Romans">Romans</a></li>
+        <li><a href="#indus_valley">Indus Valley</a></li>
+        <li><a href="#shang_zhou">Shang & Zhou</a></li>
+      </ul>
+    </li>
+
+    <!-- Category: Wars -->
+    <li class="dropdown">
+      <a href="#" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Wars</a>
+      <ul class="dropdown-menu">
+        <li><a href="#Wars">Bronze Age Wars</a></li>
+        <li><a href="#IronAgeWars">Iron Age Wars</a></li>
+      </ul>
+    </li>
+
+    <!-- Category: Rulers -->
+    <li><a href="#Rulers">Levantine Rulers</a></li>
+
+    <!-- Category: Religions and Philosophies -->
+    <li class="dropdown">
+      <a href="#" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Religions &amp; Philosophies</a>
+      <ul class="dropdown-menu">
+        <li><a href="#Judaism">Judaism</a></li>
+        <li><a href="#JewishApocrypha">Apocrypha</a></li>
+        <li><a href="#Mithraism">Mithraism</a></li>
+        <li><a href="#Gnosticism">Gnosticism</a></li>
+        <li><a href="#Christianity">Christianity</a></li>
+        <li><a href="#Orthodoxy">Orthodoxy</a></li>
+        <li><a href="#Catholics">Catholics</a></li>
+        <li><a href="#Protestants">Protestants</a></li>
+        <li><a href="#Islam">Islam</a></li>
+        <li><a href="#Bahai">Bahai</a></li>
+        <li><a href="#Esoteric">Esoterica</a></li>
+        <li><a href="#Philosophy">Philosophies</a></li>
+      </ul>
+    </li>
+
+    <!-- Category: Technology and Science -->
+    <li class="dropdown">
+      <a href="#" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Science &amp; Technology</a>
+      <ul class="dropdown-menu">
+        <li><a href="#technology">Technology</a></li>
+        <li><a href="#Science">Science</a></li>
+        <li><a href="#AncientWonders">Ancient Wonders</a></li>
+        <li><a href="#HeroicLegendsComparison">Heroes</a></li>
+      </ul>
+    </li>
+
+    <!-- Category: Linguistics -->
+    <li><a href="#Linguistics">Linguistics</a></li>
+  </ul>
+</nav>
 
 
    <p></p>
@@ -3358,7 +3483,25 @@ Overall, Phoenicia was a highly advanced civilization that made significant cont
         <td>Focus on rigorous Torah study, often in major yeshivas.</td>
     </tr>
 </table>
+<script>
+  document.querySelector('.menu-toggle').addEventListener('click', function() {
+    const menu = document.getElementById('menu');
+    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+    this.setAttribute('aria-expanded', !isExpanded);
+    menu.classList.toggle('active');
+  });
 
+  document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+    toggle.addEventListener('click', function(e) {
+      if (window.innerWidth <= 768) {
+        e.preventDefault();
+        const parent = this.parentElement;
+        const isActive = parent.classList.contains('active');
+        parent.classList.toggle('active', !isActive);
+      }
+    });
+  });
+</script>
 </body>
 </html>
   <section id="JewishApocrypha" role="region" aria-labelledby="Jewish Apocrypha">    
