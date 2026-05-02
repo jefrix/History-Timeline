@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Layered Human History Timeline</title>
+  <style>
+    :root {
+      --bg: #07090f;
+      --panel: rgba(14, 18, 30, 0.86);
+      --panel-soft: rgba(20, 26, 42, 0.72);
+      --line: rgba(255, 255, 255, 0.14);
+      --text: #f5f1e8;
+      --muted: #a8adba;
+      --gold: #f7c948;
+      --biology: #58e08f;
+      --climate: #54b8ff;
+      --tech: #ffb347;
+      --civilization: #d7a55f;
+      --information: #b78cff;
+      --shock: #ff4d5d;
+      --warm: #ff8a4c;
+      --cold: #3977ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(247, 201, 72, 0.11), transparent 28%),
+        radial-gradient(circle at 80% 25%, rgba(183, 140, 255, 0.10), transparent 28%),
+        linear-gradient(180deg, #05060a 0%, #090d16 45%, #05060a 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .timeline-page {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      padding: 48px 18px 72px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: clamp(28px, 5vw, 64px);
+      background:
+        linear-gradient(135deg, rgba(247, 201, 72, 0.12), transparent 35%),
+        linear-gradient(90deg, rgba(15, 19, 33, 0.92), rgba(8, 11, 20, 0.92));
+      box-shadow: 0 26px 80px rgba(0, 0, 0, 0.42);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: linear-gradient(90deg, black, transparent 82%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      position: relative;
+      z-index: 1;
+      margin: 0 0 14px;
+      color: var(--gold);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+
+    h1 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      max-width: 900px;
+      font-size: clamp(2.2rem, 6vw, 5.2rem);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+    }
+
+    .hero p {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.28rem);
+      line-height: 1.65;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin: 26px 0 18px;
+    }
+
+    .filter-button {
+      appearance: none;
+      border: 1px solid var(--line);
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.055);
+      border-radius: 999px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 750;
+      transition: 160ms ease;
+    }
+
+    .filter-button:hover,
+    .filter-button.active {
+      transform: translateY(-1px);
+      border-color: rgba(247, 201, 72, 0.62);
+      background: rgba(247, 201, 72, 0.14);
+    }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+      margin: 18px 0 18px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 10px 12px;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      box-shadow: 0 0 18px currentColor;
+    }
+
+    .timeline-shell {
+      position: relative;
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.035), transparent),
+        rgba(6, 9, 17, 0.9);
+      box-shadow: 0 26px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    .timeline {
+      position: relative;
+      min-width: 1280px;
+      padding: 34px 28px 46px 210px;
+    }
+
+    .time-axis {
+      position: relative;
+      height: 72px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 18px;
+    }
+
+    .tick {
+      position: absolute;
+      bottom: 0;
+      width: 1px;
+      height: 20px;
+      background: rgba(255,255,255,0.18);
+    }
+
+    .tick span {
+      position: absolute;
+      bottom: 26px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--muted);
+      font-size: 0.72rem;
+      white-space: nowrap;
+    }
+
+    .layer {
+      position: relative;
+      height: 106px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.075);
+    }
+
+    .layer:last-child {
+      border-bottom: 0;
+    }
+
+    .layer-label {
+      position: absolute;
+      left: -190px;
+      top: 24px;
+      width: 168px;
+      padding: 12px 12px;
+      border-radius: 18px;
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      font-weight: 900;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .layer-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 52px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
+    }
+
+    .event-node {
+      --node-color: var(--gold);
+      position: absolute;
+      top: 52px;
+      transform: translate(-50%, -50%);
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--node-color);
+      box-shadow: 0 0 0 5px rgba(255,255,255,0.06), 0 0 22px var(--node-color);
+      cursor: pointer;
+      transition: transform 160ms ease, opacity 160ms ease;
+      z-index: 6;
+    }
+
+    .event-node:hover,
+    .event-node.selected {
+      transform: translate(-50%, -50%) scale(1.45);
+      z-index: 20;
+    }
+
+    .event-node.dimmed {
+      opacity: 0.18;
+    }
+
+    .event-node::after {
+      content: attr(data-short);
+      position: absolute;
+      left: 50%;
+      top: 22px;
+      transform: translateX(-50%);
+      width: max-content;
+      max-width: 150px;
+      color: var(--muted);
+      font-size: 0.68rem;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .climate-band {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 12px;
+      height: 80px;
+      border-radius: 18px;
+      opacity: 0.48;
+      background: linear-gradient(90deg,
+        var(--cold) 0%,
+        #3168d9 18%,
+        #4d9aff 34%,
+        #ffc45a 55%,
+        var(--warm) 72%,
+        #d24b39 100%);
+      filter: blur(0.2px);
+    }
+
+    .shock-line {
+      position: absolute;
+      top: 106px;
+      bottom: 34px;
+      width: 2px;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, transparent, rgba(255, 77, 93, 0.86), transparent);
+      box-shadow: 0 0 24px rgba(255, 77, 93, 0.84);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .shock-line::before {
+      content: attr(data-label);
+      position: absolute;
+      top: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ffd3d8;
+      background: rgba(255, 77, 93, 0.12);
+      border: 1px solid rgba(255, 77, 93, 0.36);
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 0.68rem;
+      white-space: nowrap;
+    }
+
+    .detail-panel {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px;
+      background: var(--panel);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+    }
+
+    .card h2,
+    .card h3 {
+      margin: 0 0 10px;
+    }
+
+    .event-date {
+      color: var(--gold);
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.82rem;
+    }
+
+    .event-title {
+      margin: 8px 0 10px;
+      font-size: clamp(1.45rem, 3vw, 2.3rem);
+      letter-spacing: -0.04em;
+    }
+
+    .event-description {
+      color: var(--muted);
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    .system-list {
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .system-list li {
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.045);
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .system-list strong {
+      color: var(--text);
+    }
+
+    .note {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    @media (max-width: 860px) {
+      .timeline-page {
+        padding-top: 24px;
+      }
+
+      .detail-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline {
+        min-width: 1100px;
+        padding-left: 172px;
+      }
+
+      .layer-label {
+        left: -154px;
+        width: 136px;
+        font-size: 0.68rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="timeline-page">
+    <section class="hero">
+      <p class="eyebrow">Layered History System</p>
+      <h1>The Evolution of Reality</h1>
+      <p>
+        A synchronized timeline of biology, climate, technology, civilization, and information systems — showing how human history unfolds through layered pressures, breakthroughs, collapses, and reorganizations.
+      </p>
+    </section>
+
+    <section class="controls" aria-label="Timeline filters">
+      <button class="filter-button active" data-filter="all">All Layers</button>
+      <button class="filter-button" data-filter="biology">Biology</button>
+      <button class="filter-button" data-filter="climate">Climate</button>
+      <button class="filter-button" data-filter="technology">Technology</button>
+      <button class="filter-button" data-filter="civilization">Civilization</button>
+      <button class="filter-button" data-filter="information">Information</button>
+      <button class="filter-button" data-filter="shock">System Shocks</button>
+    </section>
+
+    <section class="legend" aria-label="Legend">
+      <div class="legend-item"><span class="legend-dot" style="color: var(--biology); background: var(--biology);"></span>Biology / Evolution</div>
+      <div class="legend-item"><span class="legend-dot" style="color: var(--climate); background: var(--climate);"></span>Climate / Earth System</div>
+      <div class="legend-item"><span class="legend-dot" style="color: var(--tech); background: var(--tech);"></span>Technology / Energy</div>
+      <div class="legend-item"><span class="legend-dot" style="color: var(--civilization); background: var(--civilization);"></span>Civilization / Power</div>
+      <div class="legend-item"><span class="legend-dot" style="color: var(--information); background: var(--information);"></span>Information / Belief</div>
+      <div class="legend-item"><span class="legend-dot" style="color: var(--shock); background: var(--shock);"></span>System Shock</div>
+    </section>
+
+    <section class="timeline-shell" aria-label="Layered timeline visualization">
+      <div class="timeline" id="timeline">
+        <div class="time-axis" id="timeAxis"></div>
+      </div>
+    </section>
+
+    <section class="detail-panel">
+      <article class="card" id="detailCard">
+        <div class="event-date">Select an event</div>
+        <h2 class="event-title">Layered Timeline</h2>
+        <p class="event-description">
+          Click any node to reveal how that event fits into the larger system of human history.
+        </p>
+      </article>
+
+      <aside class="card">
+        <h3>Civilization as a System</h3>
+        <p class="note">
+          Human history is not just a sequence of dates. It is a feedback loop between biology, climate, energy, power, and information. When those layers reinforce each other, civilizations rise. When they fall out of alignment, collapse follows.
+        </p>
+        <ul class="system-list">
+          <li><strong>Integration:</strong> trade, language, agriculture, and law bind groups together.</li>
+          <li><strong>Complexity:</strong> cities, empires, priesthoods, armies, and supply chains emerge.</li>
+          <li><strong>Fragility:</strong> drought, war, migration, disease, or resource stress can cascade.</li>
+          <li><strong>Reorganization:</strong> collapse rarely ends history — it rearranges it.</li>
+        </ul>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const timelineStart = -200000;
+    const timelineEnd = -4;
+
+    const layers = [
+      { id: 'biology', label: 'Biology / Evolution', color: 'var(--biology)' },
+      { id: 'climate', label: 'Climate / Earth System', color: 'var(--climate)' },
+      { id: 'technology', label: 'Technology / Energy', color: 'var(--tech)' },
+      { id: 'civilization', label: 'Civilization / Power', color: 'var(--civilization)' },
+      { id: 'information', label: 'Information / Belief', color: 'var(--information)' }
+    ];
+
+    const events = [
+      {
+        year: -200000,
+        layer: 'biology',
+        title: 'Emergence of Homo sapiens',
+        short: 'Homo sapiens',
+        date: 'c. 200,000 BCE',
+        description: 'Anatomically modern humans emerge in Africa, eventually becoming the only surviving branch of the human family tree.'
+      },
+      {
+        year: -115000,
+        layer: 'climate',
+        title: 'Last Glacial Period',
+        short: 'Ice Age',
+        date: 'c. 115,000–11,700 BCE',
+        description: 'Global cooling expands ice sheets, lowers sea levels, and reshapes migration routes, coastlines, and ecological pressure.'
+      },
+      {
+        year: -90000,
+        layer: 'technology',
+        title: 'Specialized Fishing Tools',
+        short: 'Fishing tools',
+        date: 'c. 90,000 BCE',
+        description: 'Modern humans develop specialized tools for fishing, expanding diet, mobility, and coastal survival strategies.'
+      },
+      {
+        year: -77000,
+        layer: 'information',
+        title: 'Recorded Information on Objects',
+        short: 'Symbols',
+        date: 'c. 77,000 BCE',
+        description: 'Early symbolic marking suggests that humans were storing meaning outside the body — a foundation for later writing, memory systems, and culture.'
+      },
+      {
+        year: -74000,
+        layer: 'shock',
+        title: 'Toba Supereruption / Population Bottleneck',
+        short: 'Toba shock',
+        date: 'c. 74,000 BCE',
+        description: 'A possible near-extinction bottleneck linked to the Toba supereruption. The severity of this bottleneck remains debated, but it is a powerful system-shock marker.'
+      },
+      {
+        year: -70000,
+        layer: 'biology',
+        title: 'Cognitive and Cultural Acceleration',
+        short: 'Cognition',
+        date: 'c. 70,000 BCE',
+        description: 'Symbolic thought, long-range planning, language complexity, and mythic imagination expand the human capacity for cooperation.'
+      },
+      {
+        year: -65000,
+        layer: 'civilization',
+        title: 'Aboriginal Australian Culture Begins',
+        short: 'Australia',
+        date: 'c. 65,000–50,000 BCE',
+        description: 'Humans reach Australia and establish one of the deepest continuous cultural traditions on Earth.'
+      },
+      {
+        year: -40000,
+        layer: 'biology',
+        title: 'Modern Humans Reach Europe',
+        short: 'Europe',
+        date: 'c. 40,000 BCE',
+        description: 'Homo sapiens expand into Europe and encounter remaining Neanderthal populations.'
+      },
+      {
+        year: -28000,
+        layer: 'biology',
+        title: 'Neanderthals Disappear',
+        short: 'Neanderthals',
+        date: 'c. 28,000 BCE',
+        description: 'Neanderthals vanish as a distinct population, though genetic traces survive in many modern humans.'
+      },
+      {
+        year: -24000,
+        layer: 'climate',
+        title: 'Last Glacial Maximum',
+        short: 'LGM',
+        date: 'c. 24,000–17,000 BCE',
+        description: 'Ice sheets reach their greatest extent, locking up water, lowering sea levels, and altering human migration corridors.'
+      },
+      {
+        year: -15000,
+        layer: 'biology',
+        title: 'Humans Reach the Americas',
+        short: 'Americas',
+        date: 'c. 15,000 BCE',
+        description: 'Modern humans spread into the Americas, adapting rapidly to new ecosystems and megafauna-rich landscapes.'
+      },
+      {
+        year: -12900,
+        layer: 'climate',
+        title: 'Younger Dryas',
+        short: 'Younger Dryas',
+        date: 'c. 12,900–11,700 BCE',
+        description: 'A sudden return to colder conditions interrupts post-glacial warming just before the Holocene.'
+      },
+      {
+        year: -11700,
+        layer: 'climate',
+        title: 'Beginning of the Holocene',
+        short: 'Holocene',
+        date: 'c. 11,700 BCE',
+        description: 'The current interglacial period begins, bringing warmer temperatures, retreating ice sheets, rising seas, and new ecological opportunities.'
+      },
+      {
+        year: -10000,
+        layer: 'technology',
+        title: 'Neolithic Revolution',
+        short: 'Agriculture',
+        date: 'c. 10,000 BCE',
+        description: 'Agriculture begins transforming small nomadic bands into larger settlements, food surpluses, population growth, and social hierarchy.'
+      },
+      {
+        year: -9600,
+        layer: 'civilization',
+        title: 'Göbekli Tepe',
+        short: 'Göbekli Tepe',
+        date: 'c. 9600 BCE',
+        description: 'Monumental ritual architecture appears before full agricultural urban civilization, suggesting belief and social organization helped drive settlement.'
+      },
+      {
+        year: -8200,
+        layer: 'shock',
+        title: '8.2 Kiloyear Climate Event',
+        short: '8.2k event',
+        date: 'c. 8200 BCE',
+        description: 'A sudden cooling and drying event disrupts early Holocene communities and tests the resilience of emerging farming systems.'
+      },
+      {
+        year: -8000,
+        layer: 'civilization',
+        title: 'Çatalhöyük',
+        short: 'Çatalhöyük',
+        date: 'c. 8000 BCE',
+        description: 'One of the world’s earliest known dense urban settlements appears in Anatolia.'
+      },
+      {
+        year: -6200,
+        layer: 'information',
+        title: 'Proto-Writing Misdated Marker',
+        short: 'Proto-writing',
+        date: 'c. 6200 BCE',
+        description: 'Use this as a placeholder for symbolic accounting systems, but true proto-cuneiform belongs much later, around the late 4th millennium BCE.'
+      },
+      {
+        year: -5200,
+        layer: 'shock',
+        title: '5.2 Kiloyear Event',
+        short: '5.2k event',
+        date: 'c. 5200 BCE',
+        description: 'A widespread cold and arid event contributes to cultural shifts and migration.'
+      },
+      {
+        year: -5000,
+        layer: 'civilization',
+        title: 'Stonehenge Construction Begins',
+        short: 'Stonehenge',
+        date: 'c. 5000 BCE',
+        description: 'A long-lived monumental landscape begins developing in Britain, later becoming one of the most iconic ritual sites in Europe.'
+      },
+      {
+        year: -3500,
+        layer: 'civilization',
+        title: 'Uruk and Sumerian City-States',
+        short: 'Uruk',
+        date: 'c. 3500 BCE',
+        description: 'Urbanism, temple economies, bureaucracy, and city-state power emerge in southern Mesopotamia.'
+      },
+      {
+        year: -3500,
+        layer: 'technology',
+        title: 'Wheel Invented',
+        short: 'Wheel',
+        date: 'c. 3500–3000 BCE',
+        description: 'The wheel transforms transport, craft production, trade, warfare, and mechanical thinking.'
+      },
+      {
+        year: -3200,
+        layer: 'information',
+        title: 'Hieroglyphic and Early Writing Systems',
+        short: 'Writing',
+        date: 'c. 3200 BCE',
+        description: 'Writing systems emerge in Egypt and Mesopotamia, allowing states to store memory, taxes, law, myth, and power across generations.'
+      },
+      {
+        year: -3000,
+        layer: 'civilization',
+        title: 'Minoan Civilization',
+        short: 'Minoans',
+        date: 'c. 3000–1450 BCE',
+        description: 'Palatial civilization develops on Crete, becoming a maritime, artistic, and administrative power of the Aegean Bronze Age.'
+      },
+      {
+        year: -2600,
+        layer: 'civilization',
+        title: 'Indus Valley Civilization',
+        short: 'Indus',
+        date: 'c. 2600 BCE',
+        description: 'Urban civilization emerges in present-day Pakistan and India, with planned cities, trade, craft specialization, and undeciphered script.'
+      },
+      {
+        year: -2300,
+        layer: 'civilization',
+        title: 'Akkadian Empire',
+        short: 'Akkad',
+        date: 'c. 2300 BCE',
+        description: 'Akkad becomes one of the earliest known empires, consolidating power across Mesopotamia.'
+      },
+      {
+        year: -2200,
+        layer: 'shock',
+        title: '4.2 Kiloyear Event',
+        short: '4.2k event',
+        date: 'c. 2200 BCE',
+        description: 'A severe aridification event stresses Egypt, Mesopotamia, the Indus region, and surrounding systems, contributing to political disruption.'
+      },
+      {
+        year: -1600,
+        layer: 'shock',
+        title: 'Santorini / Thera Eruption',
+        short: 'Thera',
+        date: 'c. 1600 BCE',
+        description: 'A major Aegean eruption disrupts the eastern Mediterranean world and is often connected to later memories of catastrophe.'
+      },
+      {
+        year: -1500,
+        layer: 'civilization',
+        title: 'Phoenician Maritime Civilization',
+        short: 'Phoenicians',
+        date: 'c. 1500–300 BCE',
+        description: 'Levantine maritime traders build networks across the Mediterranean and help spread alphabetic writing.'
+      },
+      {
+        year: -1400,
+        layer: 'technology',
+        title: 'Early Iron Tools and Weapons',
+        short: 'Iron',
+        date: 'c. 1400 BCE',
+        description: 'Iron technology begins to develop in the Near East before later becoming widespread after the Bronze Age collapse.'
+      },
+      {
+        year: -1250,
+        layer: 'civilization',
+        title: 'Traditional Start of the Trojan War',
+        short: 'Trojan War',
+        date: 'c. 1250 BCE',
+        description: 'Traditional dating places the Trojan War in the Late Bronze Age, near the period of broader eastern Mediterranean instability.'
+      },
+      {
+        year: -1200,
+        layer: 'shock',
+        title: 'Bronze Age Collapse / Sea Peoples',
+        short: 'Collapse',
+        date: 'c. 1208–1176 BCE',
+        description: 'A regional systems collapse disrupts Mycenaean Greece, Anatolia, the Levant, and Egypt through war, migration, trade disruption, drought, and political fragmentation.'
+      },
+      {
+        year: -1000,
+        layer: 'information',
+        title: 'Phoenician Alphabet Spreads',
+        short: 'Alphabet',
+        date: 'c. 1000 BCE',
+        description: 'Alphabetic writing helps simplify literacy and influence Greek, Latin, Hebrew, Aramaic, and later writing traditions.'
+      },
+      {
+        year: -800,
+        layer: 'information',
+        title: 'Axial Age Begins',
+        short: 'Axial Age',
+        date: 'c. 800–200 BCE',
+        description: 'Greek philosophy, Hebrew prophecy, Buddhism, Jainism, Confucianism, and Daoism reshape ethics, metaphysics, law, and human identity.'
+      },
+      {
+        year: -509,
+        layer: 'civilization',
+        title: 'Roman Republic Established',
+        short: 'Rome',
+        date: '509 BCE',
+        description: 'Rome establishes a republican system that later becomes the foundation for one of history’s most influential empires.'
+      },
+      {
+        year: -322,
+        layer: 'civilization',
+        title: 'Maurya Empire',
+        short: 'Maurya',
+        date: '322–185 BCE',
+        description: 'The Maurya Empire unifies much of India and spreads Buddhism under Ashoka.'
+      },
+      {
+        year: -45,
+        layer: 'information',
+        title: 'Julian Calendar',
+        short: 'Calendar',
+        date: '45 BCE',
+        description: 'Julius Caesar introduces the Julian calendar, standardizing Roman timekeeping and influencing later Western calendars.'
+      },
+      {
+        year: -4,
+        layer: 'information',
+        title: 'Birth of Jesus of Nazareth',
+        short: 'Jesus',
+        date: 'c. 4 BCE',
+        description: 'The traditional historical dating of Jesus’s birth becomes a central anchor for later Christian civilization and Western chronology.'
+      }
+    ];
+
+    const shocks = events.filter(event => event.layer === 'shock');
+
+    function yearToPercent(year) {
+      const compressedStart = -200000;
+      const compressedBreak = -20000;
+      const compressedEnd = -4;
+
+      if (year <= compressedBreak) {
+        const earlySpan = compressedBreak - compressedStart;
+        return ((year - compressedStart) / earlySpan) * 44;
+      }
+
+      const lateSpan = compressedEnd - compressedBreak;
+      return 44 + ((year - compressedBreak) / lateSpan) * 56;
+    }
+
+    function buildTimeline() {
+      const timeline = document.getElementById('timeline');
+      const timeAxis = document.getElementById('timeAxis');
+
+      const ticks = [
+        { year: -200000, label: '200k BCE' },
+        { year: -100000, label: '100k BCE' },
+        { year: -50000, label: '50k BCE' },
+        { year: -20000, label: '20k BCE' },
+        { year: -10000, label: '10k BCE' },
+        { year: -5000, label: '5000 BCE' },
+        { year: -3000, label: '3000 BCE' },
+        { year: -2000, label: '2000 BCE' },
+        { year: -1200, label: '1200 BCE' },
+        { year: -800, label: '800 BCE' },
+        { year: -500, label: '500 BCE' },
+        { year: -4, label: '0' }
+      ];
+
+      ticks.forEach(tick => {
+        const tickEl = document.createElement('div');
+        tickEl.className = 'tick';
+        tickEl.style.left = `${yearToPercent(tick.year)}%`;
+        tickEl.innerHTML = `<span>${tick.label}</span>`;
+        timeAxis.appendChild(tickEl);
+      });
+
+      shocks.forEach(shock => {
+        const shockEl = document.createElement('div');
+        shockEl.className = 'shock-line';
+        shockEl.dataset.label = shock.short;
+        shockEl.style.left = `${yearToPercent(shock.year)}%`;
+        timeline.appendChild(shockEl);
+      });
+
+      layers.forEach(layer => {
+        const layerEl = document.createElement('div');
+        layerEl.className = 'layer';
+        layerEl.dataset.layer = layer.id;
+
+        const label = document.createElement('div');
+        label.className = 'layer-label';
+        label.style.color = layer.color;
+        label.textContent = layer.label;
+
+        const line = document.createElement('div');
+        line.className = 'layer-line';
+
+        layerEl.appendChild(label);
+        layerEl.appendChild(line);
+
+        if (layer.id === 'climate') {
+          const band = document.createElement('div');
+          band.className = 'climate-band';
+          layerEl.appendChild(band);
+        }
+
+        events
+          .filter(event => event.layer === layer.id)
+          .forEach(event => layerEl.appendChild(createNode(event, layer.color)));
+
+        timeline.appendChild(layerEl);
+      });
+
+      const shockLayer = document.createElement('div');
+      shockLayer.className = 'layer';
+      shockLayer.dataset.layer = 'shock';
+
+      const label = document.createElement('div');
+      label.className = 'layer-label';
+      label.style.color = 'var(--shock)';
+      label.textContent = 'System Shocks';
+
+      const line = document.createElement('div');
+      line.className = 'layer-line';
+
+      shockLayer.appendChild(label);
+      shockLayer.appendChild(line);
+
+      shocks.forEach(event => shockLayer.appendChild(createNode(event, 'var(--shock)')));
+      timeline.appendChild(shockLayer);
+    }
+
+    function createNode(event, color) {
+      const node = document.createElement('button');
+      node.className = 'event-node';
+      node.style.setProperty('--node-color', color);
+      node.style.left = `${yearToPercent(event.year)}%`;
+      node.dataset.layer = event.layer;
+      node.dataset.short = event.short;
+      node.setAttribute('aria-label', `${event.date}: ${event.title}`);
+      node.addEventListener('click', () => selectEvent(event, node));
+      return node;
+    }
+
+    function selectEvent(event, node) {
+      document.querySelectorAll('.event-node').forEach(el => el.classList.remove('selected'));
+      node.classList.add('selected');
+
+      const card = document.getElementById('detailCard');
+      card.innerHTML = `
+        <div class="event-date">${event.date}</div>
+        <h2 class="event-title">${event.title}</h2>
+        <p class="event-description">${event.description}</p>
+      `;
+    }
+
+    function setupFilters() {
+      document.querySelectorAll('.filter-button').forEach(button => {
+        button.addEventListener('click', () => {
+          const filter = button.dataset.filter;
+          document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          applyFilter(filter);
+        });
+      });
+    }
+
+    function applyFilter(filter) {
+      const nodes = document.querySelectorAll('.event-node');
+      const layersEls = document.querySelectorAll('.layer');
+      const shockLines = document.querySelectorAll('.shock-line');
+
+      nodes.forEach(node => {
+        const visible = filter === 'all' || node.dataset.layer === filter;
+        node.classList.toggle('dimmed', !visible);
+      });
+
+      layersEls.forEach(layer => {
+        const visible = filter === 'all' || layer.dataset.layer === filter || filter === 'shock';
+        layer.style.opacity = visible ? '1' : '0.28';
+      });
+
+      shockLines.forEach(line => {
+        line.style.opacity = filter === 'all' || filter === 'shock' ? '1' : '0.18';
+      });
+    }
+
+    buildTimeline();
+    setupFilters();
+  </script>
+</body>
+</html>
