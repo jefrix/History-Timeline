@@ -303,7 +303,7 @@
     panel.innerHTML = `
       <div class="tu-explorer-header">
         <h2 style="cursor:default;border:none;padding:0;margin:0;">Time Explorer</h2>
-        <p class="tu-explorer-help">Drag the slider to a year. Every dated event on the page that overlaps that moment will be highlighted; everything else dims. The scale is logarithmic — recent millennia get more room than the deep past.</p>
+        <p class="tu-explorer-help">Drag the slider to a year. The matching event from the master timeline will appear below. The scale gives more room to recent millennia than to the deep past.</p>
       </div>
       <div class="tu-explorer-readout">
         <button class="tu-explorer-step" data-dir="-1" aria-label="Earlier">‹</button>
@@ -329,6 +329,7 @@
       <div class="tu-explorer-stats" id="tuExplorerStats">
         Loading dated events…
       </div>
+      <div class="tu-matches" id="tuMatches"></div>
     `;
 
     // Insert after the very first <h1>/<h2>/<h4> intro headings,
@@ -342,62 +343,121 @@
   }
 
   // -----------------------------------------------------------
-  // INDEX every dated row on the page
-  // For each <tr>, take the first <td> as the date column,
-  // parse it, and remember the {start, end} range alongside the row.
+  // INDEX dated rows from the MAIN cultural-change table only.
+  // The per-civilization tables are too detailed to be useful
+  // here — the user wants a curated "what was happening then"
+  // view, which is exactly what the first table already provides.
+  //
+  // Strategy: find the first <table> in the document that has at
+  // least 5 rows whose first cell parses as a date. That's almost
+  // certainly the main "Timeline of Ancient Human Cultural Change"
+  // table regardless of where it appears or what id its section has.
   // -----------------------------------------------------------
   function indexDatedRows() {
     datedRows = [];
-    document.querySelectorAll('section table tbody tr, section table tr').forEach(tr => {
-      // Skip header rows
+    const tables = document.querySelectorAll('section table');
+    let mainTable = null;
+    for (const t of tables) {
+      let dateCount = 0;
+      t.querySelectorAll('tr').forEach(tr => {
+        if (tr.querySelector('th')) return;
+        const td = tr.querySelector('td');
+        if (td && parseHistoricalDate(td.textContent)) dateCount++;
+      });
+      if (dateCount >= 5) { mainTable = t; break; }
+    }
+    if (!mainTable) return;
+
+    mainTable.querySelectorAll('tr').forEach(tr => {
       if (tr.querySelector('th')) return;
       const firstCell = tr.querySelector('td');
       if (!firstCell) return;
       const range = parseHistoricalDate(firstCell.textContent);
-      if (range) datedRows.push({ tr, range });
+      if (range) {
+        datedRows.push({
+          tr,
+          range,
+          dateText: firstCell.textContent.trim(),
+          // Snapshot the event cell once so we can re-display it
+          // without disturbing the original row (no <mark> tags etc.)
+          eventHTML: tr.querySelectorAll('td')[1]?.innerHTML || ''
+        });
+      }
     });
   }
 
   // -----------------------------------------------------------
-  // APPLY the slider: dim rows whose date range doesn't include
-  // the current year, highlight those that do.
-  // null currentYear = slider inactive, show everything.
+  // APPLY the slider: instead of dimming/highlighting rows in
+  // the table (which forced the user to scroll to find matches),
+  // we render the matching rows in a card directly under the slider.
+  // The original table rows stay visible and unchanged.
+  // null currentYear = slider inactive, hide the matches card.
   // -----------------------------------------------------------
   function applyTimeFilter() {
     const total = datedRows.length;
+    const matchesBox = document.getElementById('tuMatches');
+    const statsEl = document.getElementById('tuExplorerStats');
 
     if (currentYear === null) {
-      datedRows.forEach(({ tr }) => {
-        tr.classList.remove('tu-time-dim', 'tu-time-hit');
-      });
+      matchesBox.innerHTML = '';
+      matchesBox.classList.remove('has-matches');
       document.getElementById('tuTimeCount').textContent = '';
-      document.getElementById('tuExplorerStats').innerHTML =
-        `Showing all <strong>${total}</strong> dated events.`;
+      statsEl.innerHTML =
+        `Drag the slider to surface events from the master timeline (${total} dated entries).`;
       return;
     }
 
-    let hits = 0;
-    datedRows.forEach(({ tr, range }) => {
-      const inRange = currentYear >= range.start && currentYear <= range.end;
-      if (inRange) {
-        tr.classList.add('tu-time-hit');
-        tr.classList.remove('tu-time-dim');
-        hits++;
-      } else {
-        tr.classList.add('tu-time-dim');
-        tr.classList.remove('tu-time-hit');
-      }
-    });
+    // Find every dated row whose range includes currentYear
+    const hits = datedRows.filter(({ range }) =>
+      currentYear >= range.start && currentYear <= range.end
+    );
 
     document.getElementById('tuTimeCount').textContent =
-      hits + ' / ' + total;
-    document.getElementById('tuExplorerStats').innerHTML =
-      `<strong>${hits}</strong> of ${total} events overlap ${formatYear(currentYear)}.`;
+      hits.length + ' / ' + total;
 
-    // Auto-expand sections that have a hit so the user sees their result
-    document.querySelectorAll('section.tu-section.collapsed').forEach(sec => {
-      if (sec.querySelector('.tu-time-hit')) sec.classList.remove('collapsed');
-    });
+    if (hits.length === 0) {
+      // Find the nearest row(s) before and after, so the user gets
+      // helpful context instead of "nothing happened"
+      let nearestBefore = null, nearestAfter = null;
+      datedRows.forEach(r => {
+        if (r.range.end < currentYear) {
+          if (!nearestBefore || r.range.end > nearestBefore.range.end) nearestBefore = r;
+        } else if (r.range.start > currentYear) {
+          if (!nearestAfter || r.range.start < nearestAfter.range.start) nearestAfter = r;
+        }
+      });
+      statsEl.innerHTML =
+        `<strong>0</strong> events recorded at exactly ${formatYear(currentYear)}.`;
+      let html = '<div class="tu-matches-empty">Nothing in the master timeline overlaps this exact year.</div>';
+      if (nearestBefore || nearestAfter) {
+        html += '<div class="tu-matches-context">Nearest entries:</div>';
+        html += '<div class="tu-matches-list">';
+        if (nearestBefore) html += renderMatchCard(nearestBefore, 'before');
+        if (nearestAfter)  html += renderMatchCard(nearestAfter, 'after');
+        html += '</div>';
+      }
+      matchesBox.innerHTML = html;
+      matchesBox.classList.add('has-matches');
+      return;
+    }
+
+    statsEl.innerHTML =
+      `<strong>${hits.length}</strong> ` +
+      (hits.length === 1 ? 'event overlaps' : 'events overlap') +
+      ` ${formatYear(currentYear)}.`;
+    matchesBox.innerHTML =
+      '<div class="tu-matches-list">' +
+      hits.map(h => renderMatchCard(h, 'hit')).join('') +
+      '</div>';
+    matchesBox.classList.add('has-matches');
+  }
+
+  function renderMatchCard(item, kind) {
+    return `
+      <div class="tu-match tu-match-${kind}">
+        <div class="tu-match-date">${escapeHTML(item.dateText)}</div>
+        <div class="tu-match-event">${item.eventHTML}</div>
+      </div>`;
   }
 
   // -----------------------------------------------------------

@@ -432,16 +432,85 @@ img[alt="Visitor Counter"] { display: none !important; }
 .tu-explorer-stats strong { color: var(--accent); }
 
 /* ============================================================
-   ROW STATES under the time slider
+   MATCHES CARD — shows events that overlap the slider's year
+   right under the explorer, so the user doesn't have to scroll.
    ============================================================ */
-.tu-time-dim {
-  opacity: 0.18;
-  transition: opacity 0.2s;
+.tu-matches {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  display: none;
 }
-.tu-time-hit {
-  background: var(--accent-soft) !important;
-  box-shadow: inset 3px 0 0 var(--accent);
-  transition: background 0.15s;
+.tu-matches.has-matches { display: block; }
+
+.tu-matches-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.tu-match {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 1.25rem;
+  padding: 0.85rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  align-items: start;
+  animation: tu-match-in 0.18s ease;
+}
+@keyframes tu-match-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.tu-match-date {
+  font-family: var(--mono);
+  color: var(--accent);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  padding-top: 0.1rem;
+}
+.tu-match-event {
+  color: var(--text);
+  line-height: 1.55;
+  font-size: 0.95rem;
+}
+/* Inline-styled spans inside the event (Last Glacial Period etc.)
+   were already converted to chips by the main CSS — they render
+   correctly inside the match card too. */
+
+/* "Nearest entries" cards when the slider hits an empty year */
+.tu-match-before, .tu-match-after {
+  border-left-color: var(--text-muted);
+  opacity: 0.85;
+}
+.tu-match-before .tu-match-date::before { content: "↑ "; opacity: 0.6; }
+.tu-match-after  .tu-match-date::before { content: "↓ "; opacity: 0.6; }
+
+.tu-matches-empty {
+  padding: 0.85rem 1rem;
+  background: var(--bg);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+}
+.tu-matches-context {
+  margin-top: 0.85rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+  .tu-match { grid-template-columns: 1fr; gap: 0.3rem; }
 }
 
 /* ============================================================

@@ -5,7 +5,7 @@ Three files that bolt onto your existing `index.html` and add:
 - A sticky topbar with **live search** across every event (Cmd/Ctrl-K to focus, Esc to clear)
 - A **side-drawer navigation** rebuilt automatically from your existing `<nav class="main-nav">` menu
 - A **filter chip bar** that lets readers show only Civilizations, Religions, Wars, Texts, etc.
-- A **Time Explorer slider** — drag a handle along a timeline from 200,000 BCE to 2025 CE, and every dated row on the page that includes that moment lights up; everything else dims
+- A **Time Explorer slider** — drag a handle along a timeline from 200,000 BCE to 2025 CE, and the matching event(s) from the master timeline appear in a card directly below the slider
 - **Collapsible sections** — click any section heading to expand/collapse
 - A **back-to-top** button
 - The new dark-ink + parchment + gold aesthetic, applied automatically to every existing `<table>` and `<section>`
@@ -48,14 +48,22 @@ These aren't required, but will improve the result:
 
 ## How the Time Explorer works
 
-The slider parses the date in the **first cell** of every table row across the page, using a parser that handles every format I observed in your file:
+The slider draws its results from a single source table — the **first table in the document with at least 5 dated rows**, which on your site is "Timeline of Ancient Human Cultural Change". Every other table on the page is left alone (no dimming, no filtering — just the unchanged content).
+
+When you drag the slider:
+
+- The matching row(s) for the current year appear as a card directly below the slider, with the date in mono-gold and the event text preserved exactly as written (chips, bold, links, everything).
+- If a year falls between recorded events, the panel shows the nearest entry before and the nearest entry after, so the reader gets context instead of a blank screen.
+- Reset (or the ✕ in the topbar) clears the card and returns the panel to its idle state.
+
+The parser handles every date format I observed in your file:
 
 - `200,000 BCE`, `c. 164,000 BCE`, `~1600 BCE`, `1184 BCE (approx.)`
 - Ranges: `1208-1176 BCE`, `c. 115,000-11,700 BCE`, `c. 2000 BCE-1540 CE`
 - Centuries: `10th-8th centuries BCE`
 - Both eras: `4 BCE`, `45 BCE`, `100 CE`, `c. 1070 BCE – 350 CE`
 
-A row is shown as a **hit** (gold left-border, gold tint background) if the slider's current year falls within its date range. Otherwise it's **dimmed** (~18% opacity). Rows with unparseable date columns are left untouched.
+A row matches the current year if that year falls within its date range (so a row dated `c. 115,000-11,700 BCE` matches any slider position from 115,000 BCE to 11,700 BCE).
 
 The slider uses a **piecewise scale** that gives each major era roughly proportional space:
 - 0–25% covers 200,000 BCE to 10,000 BCE (deep prehistory, log-warped)
@@ -68,6 +76,8 @@ Two ways to use it:
 - **Compact slider** in the topbar — click "⏱ Time" to open it and drag without scrolling back to the top
 
 Both stay in sync. Press the **Reset** button (or the ✕ in the topbar) to clear the slider and show everything again.
+
+To use a different source table, change the selector logic in `indexDatedRows()` near line 350 of `timeline-upgrade.js` — it currently picks the first table with 5+ parseable date rows.
 
 ---
 
@@ -143,5 +153,5 @@ If you want to use the heading font that ships with Cormorant Garamond (instead 
 
 The most likely cause is an inline `style="..."` attribute on an element that the override didn't anticipate. The CSS uses `!important` aggressively for table cells and headings precisely because the original file has many inline styles, but a few unusual ones might slip through. If you spot one, paste me the markup and I'll add a targeted override.
 
-For the time slider specifically: if a row that should match the current year isn't lighting up, check that its first `<td>` cell contains a date in one of the recognized formats listed above. Notes, footnotes, or rows with non-date first columns will be ignored by the slider (which is the correct behavior — they're left visible regardless of date).
+For the time slider specifically: if a row that should match the current year isn't appearing in the matches card, check that its first `<td>` cell contains a date in one of the recognized formats listed above. Rows with non-date first columns are skipped (which is correct — they're never shown as matches).
 
