@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Evolution of Reality — Cinematic Scroll Timeline</title>
+  <style>
+    :root {
+      --bg: #03050a;
+      --text: #f7f0df;
+      --muted: #a9afbd;
+      --gold: #f7c948;
+      --biology: #58e08f;
+      --climate: #54b8ff;
+      --tech: #ffb347;
+      --civilization: #d7a55f;
+      --information: #b78cff;
+      --shock: #ff4d5d;
+      --panel: rgba(9, 13, 24, 0.72);
+      --panel-solid: rgba(9, 13, 24, 0.92);
+      --line: rgba(255, 255, 255, 0.14);
+      --shadow: rgba(0, 0, 0, 0.55);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -4;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(247, 201, 72, 0.12), transparent 26%),
+        radial-gradient(circle at 78% 12%, rgba(183, 140, 255, 0.12), transparent 24%),
+        radial-gradient(circle at 50% 84%, rgba(84, 184, 255, 0.10), transparent 30%),
+        linear-gradient(180deg, #020309 0%, #07101b 45%, #03050a 100%);
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      opacity: 0.34;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(circle at center, black, transparent 78%);
+      pointer-events: none;
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--gold), var(--shock), var(--information));
+      z-index: 100;
+      box-shadow: 0 0 22px rgba(247, 201, 72, 0.75);
+    }
+
+    .starfield,
+    .dust,
+    .aurora {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .starfield { z-index: -2; opacity: 0.45; }
+    .dust { z-index: -1; opacity: 0.25; }
+    .aurora { z-index: -1; opacity: 0.55; filter: blur(50px); }
+
+    .aurora::before,
+    .aurora::after {
+      content: "";
+      position: absolute;
+      width: 54vw;
+      height: 54vw;
+      border-radius: 50%;
+      background: rgba(247, 201, 72, 0.16);
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+
+    .aurora::before { left: -18vw; top: 18vh; }
+    .aurora::after { right: -18vw; top: 42vh; background: rgba(183, 140, 255, 0.16); animation-duration: 24s; }
+
+    @keyframes drift {
+      from { transform: translate3d(0, 0, 0) scale(1); }
+      to { transform: translate3d(10vw, -8vh, 0) scale(1.2); }
+    }
+
+    .site-nav {
+      position: fixed;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 30;
+      display: grid;
+      gap: 10px;
+    }
+
+    .site-nav a {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.34);
+      background: rgba(255,255,255,0.08);
+      box-shadow: 0 0 14px rgba(255,255,255,0.12);
+      transition: 180ms ease;
+    }
+
+    .site-nav a.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      transform: scale(1.35);
+      box-shadow: 0 0 18px rgba(247,201,72,0.82);
+    }
+
+    .chapter {
+      min-height: 100vh;
+      position: relative;
+      display: grid;
+      place-items: center;
+      padding: 8vh 22px;
+    }
+
+    .chapter-inner {
+      width: min(1180px, 100%);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(28px, 5vw, 78px);
+      align-items: center;
+    }
+
+    .chapter.full .chapter-inner {
+      grid-template-columns: 1fr;
+      text-align: center;
+      max-width: 1040px;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: var(--gold);
+      font-weight: 900;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.24em;
+    }
+
+    h1,
+    h2 {
+      margin: 0;
+      letter-spacing: -0.065em;
+      line-height: 0.95;
+    }
+
+    h1 { font-size: clamp(3.2rem, 9vw, 8.7rem); }
+    h2 { font-size: clamp(2.4rem, 7vw, 6.5rem); }
+
+    .lead {
+      max-width: 780px;
+      margin: 24px auto 0;
+      color: var(--muted);
+      font-size: clamp(1.08rem, 2vw, 1.45rem);
+      line-height: 1.72;
+    }
+
+    .copy p {
+      color: var(--muted);
+      font-size: clamp(1.02rem, 1.8vw, 1.28rem);
+      line-height: 1.72;
+      margin: 22px 0 0;
+    }
+
+    .visual-card {
+      position: relative;
+      min-height: 480px;
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.08), transparent),
+        rgba(255,255,255,0.035);
+      box-shadow: 0 36px 90px var(--shadow);
+      transform: translateY(24px);
+      opacity: 0;
+      transition: 900ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    .copy {
+      transform: translateY(24px);
+      opacity: 0;
+      transition: 900ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    .chapter.in-view .visual-card,
+    .chapter.in-view .copy {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .scene-title {
+      position: absolute;
+      left: 26px;
+      top: 24px;
+      z-index: 4;
+      margin: 0;
+      color: rgba(255,255,255,0.86);
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(0.2px);
+    }
+
+    .orb.one {
+      width: 220px;
+      height: 220px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(88,224,143,0.88), rgba(88,224,143,0.08) 62%, transparent 70%);
+      box-shadow: 0 0 80px rgba(88,224,143,0.45);
+    }
+
+    .orb.two {
+      width: 360px;
+      height: 360px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(88,224,143,0.24);
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.38; }
+      50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.72; }
+    }
+
+    .cold-warm {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(57,119,255,0.68), rgba(84,184,255,0.44), rgba(255,138,76,0.45)),
+        radial-gradient(circle at 40% 50%, rgba(255,255,255,0.2), transparent 18%);
+    }
+
+    .climate-spike {
+      position: absolute;
+      bottom: 0;
+      width: 2px;
+      height: 100%;
+      background: rgba(255,77,93,0.72);
+      box-shadow: 0 0 30px rgba(255,77,93,0.8);
+      animation: flicker 2.2s ease-in-out infinite;
+    }
+
+    .climate-spike:nth-child(2) { left: 24%; animation-delay: .2s; }
+    .climate-spike:nth-child(3) { left: 52%; animation-delay: .8s; }
+    .climate-spike:nth-child(4) { left: 74%; animation-delay: 1.3s; }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 0.35; }
+      50% { opacity: 1; }
+    }
+
+    .city-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(247,201,72,0.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(247,201,72,0.22) 1px, transparent 1px);
+      background-size: 42px 42px;
+      transform: perspective(700px) rotateX(62deg) translateY(80px);
+      transform-origin: bottom;
+      mask-image: linear-gradient(transparent, black 30%, transparent 92%);
+    }
+
+    .monument {
+      position: absolute;
+      bottom: 75px;
+      width: 62px;
+      height: 150px;
+      background: linear-gradient(180deg, rgba(247,201,72,0.72), rgba(215,165,95,0.18));
+      border: 1px solid rgba(247,201,72,0.4);
+      box-shadow: 0 0 40px rgba(247,201,72,0.18);
+    }
+
+    .monument:nth-child(2) { left: 24%; height: 110px; }
+    .monument:nth-child(3) { left: 43%; height: 190px; }
+    .monument:nth-child(4) { left: 62%; height: 136px; }
+    .monument:nth-child(5) { left: 78%; height: 86px; }
+
+    .info-rings {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .ring {
+      position: absolute;
+      border: 1px solid rgba(183,140,255,0.46);
+      border-radius: 50%;
+      animation: expand 5s ease-in-out infinite;
+    }
+
+    .ring:nth-child(1) { width: 140px; height: 140px; }
+    .ring:nth-child(2) { width: 260px; height: 260px; animation-delay: .8s; }
+    .ring:nth-child(3) { width: 390px; height: 390px; animation-delay: 1.6s; }
+
+    @keyframes expand {
+      0%, 100% { opacity: .2; transform: scale(.92); }
+      50% { opacity: .92; transform: scale(1.04); }
+    }
+
+    .glyph-stream {
+      position: absolute;
+      inset: auto 24px 24px 24px;
+      color: rgba(255,255,255,0.72);
+      font-size: clamp(1.4rem, 4vw, 3.6rem);
+      letter-spacing: 0.2em;
+      text-align: center;
+      text-shadow: 0 0 22px rgba(183,140,255,0.72);
+    }
+
+    .collapse-card {
+      background:
+        linear-gradient(135deg, rgba(255,77,93,0.14), transparent 42%),
+        rgba(255,255,255,0.035);
+    }
+
+    .fracture {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(104deg, transparent 0 47%, rgba(255,77,93,0.72) 47.4% 47.8%, transparent 48.2%),
+        linear-gradient(73deg, transparent 0 53%, rgba(255,77,93,0.46) 53.4% 53.8%, transparent 54.2%),
+        radial-gradient(circle at 50% 50%, rgba(255,77,93,0.26), transparent 44%);
+      animation: fractureFlash 3s ease-in-out infinite;
+    }
+
+    @keyframes fractureFlash {
+      0%, 100% { opacity: .34; }
+      50% { opacity: .95; }
+    }
+
+    .floating-events {
+      position: absolute;
+      inset: 0;
+    }
+
+    .floating-events span {
+      position: absolute;
+      padding: 9px 12px;
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 999px;
+      background: rgba(0,0,0,0.34);
+      color: rgba(255,255,255,0.82);
+      font-size: 0.78rem;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+    }
+
+    .floating-events span:nth-child(1) { left: 10%; top: 24%; }
+    .floating-events span:nth-child(2) { right: 14%; top: 28%; }
+    .floating-events span:nth-child(3) { left: 18%; bottom: 20%; }
+    .floating-events span:nth-child(4) { right: 18%; bottom: 18%; }
+    .floating-events span:nth-child(5) { left: 44%; top: 52%; }
+
+    .sticky-timeline-wrap {
+      min-height: 320vh;
+      position: relative;
+      padding: 0 18px;
+    }
+
+    .sticky-timeline {
+      position: sticky;
+      top: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .timeline-stage {
+      width: min(1320px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      background: rgba(5, 8, 16, 0.82);
+      box-shadow: 0 36px 100px rgba(0,0,0,0.46);
+      padding: clamp(22px, 4vw, 44px);
+    }
+
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 24px;
+    }
+
+    .timeline-header h2 {
+      font-size: clamp(2rem, 5vw, 4.5rem);
+    }
+
+    .timeline-header p {
+      max-width: 420px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .timeline-grid {
+      position: relative;
+      min-height: 560px;
+      overflow: hidden;
+      border-radius: 24px;
+      background:
+        linear-gradient(90deg, rgba(84,184,255,0.06), rgba(247,201,72,0.06)),
+        rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .era-window {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 28%;
+      border-left: 2px solid rgba(247,201,72,0.9);
+      border-right: 2px solid rgba(247,201,72,0.9);
+      background: linear-gradient(90deg, transparent, rgba(247,201,72,0.11), transparent);
+      box-shadow: 0 0 42px rgba(247,201,72,0.24);
+      z-index: 4;
+      transform: translateX(0%);
+    }
+
+    .timeline-layer {
+      position: relative;
+      height: 108px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .timeline-layer:last-child { border-bottom: 0; }
+
+    .layer-name {
+      position: absolute;
+      left: 18px;
+      top: 18px;
+      z-index: 5;
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .layer-track {
+      position: absolute;
+      left: 155px;
+      right: 24px;
+      top: 54px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
+    }
+
+    .timeline-node {
+      position: absolute;
+      top: 54px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--node-color);
+      box-shadow: 0 0 20px var(--node-color);
+      opacity: 0.48;
+      transition: 260ms ease;
+    }
+
+    .timeline-node.active {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.45);
+    }
+
+    .timeline-node span {
+      position: absolute;
+      left: 50%;
+      top: 22px;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.72);
+      white-space: nowrap;
+      font-size: 0.66rem;
+    }
+
+    .chapter-card {
+      position: absolute;
+      right: 28px;
+      bottom: 28px;
+      width: min(390px, calc(100% - 56px));
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(14px);
+      z-index: 10;
+    }
+
+    .chapter-card .date {
+      color: var(--gold);
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-size: .74rem;
+    }
+
+    .chapter-card h3 {
+      margin: 8px 0 8px;
+      font-size: 1.55rem;
+      letter-spacing: -0.03em;
+    }
+
+    .chapter-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .final-panel {
+      max-width: 980px;
+      text-align: center;
+      padding: 48px;
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      background: rgba(255,255,255,0.045);
+      box-shadow: 0 36px 100px rgba(0,0,0,0.42);
+    }
+
+    .final-panel h2 { font-size: clamp(2.4rem, 7vw, 6rem); }
+
+    .final-panel p {
+      margin: 26px auto 0;
+      color: var(--muted);
+      max-width: 760px;
+      line-height: 1.8;
+      font-size: clamp(1.04rem, 2vw, 1.32rem);
+    }
+
+    @media (max-width: 880px) {
+      .site-nav { display: none; }
+      .chapter-inner { grid-template-columns: 1fr; }
+      .visual-card { min-height: 360px; }
+      .timeline-header { display: block; }
+      .timeline-header p { margin-top: 12px; }
+      .timeline-grid { overflow-x: auto; }
+      .timeline-layer { min-width: 960px; }
+      .chapter-card { position: relative; right: auto; bottom: auto; margin-top: 18px; width: 100%; }
+      .timeline-stage { overflow: hidden; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" id="progressBar"></div>
+  <canvas class="starfield" id="starfield"></canvas>
+  <canvas class="dust" id="dust"></canvas>
+  <div class="aurora"></div>
+
+  <nav class="site-nav" aria-label="Story navigation">
+    <a href="#opening" class="active" aria-label="Opening"></a>
+    <a href="#biology" aria-label="Biology"></a>
+    <a href="#climate" aria-label="Climate"></a>
+    <a href="#cities" aria-label="Cities"></a>
+    <a href="#information" aria-label="Information"></a>
+    <a href="#collapse" aria-label="Collapse"></a>
+    <a href="#master" aria-label="Master timeline"></a>
+    <a href="#ending" aria-label="Ending"></a>
+  </nav>
+
+  <main>
+    <section class="chapter full" id="opening" data-scene="opening">
+      <div class="chapter-inner">
+        <div class="copy">
+          <p class="eyebrow">A Layered History System</p>
+          <h1>The Evolution of Reality</h1>
+          <p class="lead">
+            Human history is not a straight line. It is a layered machine — biology, climate, technology, power, and information moving together through deep time.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="biology" data-scene="biology">
+      <div class="chapter-inner">
+        <div class="copy">
+          <p class="eyebrow" style="color: var(--biology);">Layer One / Biology</p>
+          <h2>First, the body adapts.</h2>
+          <p>
+            Around 200,000 BCE, anatomically modern humans emerge in Africa. Across thousands of generations, they spread, adapt, interbreed, remember, and survive.
+          </p>
+          <p>
+            The story begins not with cities, kings, or writing — but with bodies learning how to endure the planet.
+          </p>
+        </div>
+        <div class="visual-card">
+          <p class="scene-title">Biological Emergence</p>
+          <div class="orb one"></div>
+          <div class="orb two"></div>
+          <div class="floating-events">
+            <span>Homo sapiens</span>
+            <span>Migration</span>
+            <span>Neanderthals</span>
+            <span>Denisovans</span>
+            <span>Cognition</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="climate" data-scene="climate">
+      <div class="chapter-inner">
+        <div class="visual-card">
+          <p class="scene-title">Earth System Pressure</p>
+          <div class="cold-warm"></div>
+          <div class="climate-spike"></div>
+          <div class="climate-spike"></div>
+          <div class="climate-spike"></div>
+        </div>
+        <div class="copy">
+          <p class="eyebrow" style="color: var(--climate);">Layer Two / Climate</p>
+          <h2>Then, the planet shifts.</h2>
+          <p>
+            Ice sheets expand. Seas fall. Corridors open. Corridors close. The Younger Dryas interrupts warming. The Holocene begins. Floods, droughts, and warming reshape every human possibility.
+          </p>
+          <p>
+            Climate is not background. Climate is one of history’s engines.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="cities" data-scene="cities">
+      <div class="chapter-inner">
+        <div class="copy">
+          <p class="eyebrow" style="color: var(--civilization);">Layer Three / Civilization</p>
+          <h2>Settlement becomes power.</h2>
+          <p>
+            Agriculture turns survival into surplus. Surplus becomes storage. Storage becomes hierarchy. Settlements become cities. Cities become states. States become empires.
+          </p>
+          <p>
+            From Göbekli Tepe and Çatalhöyük to Uruk, Egypt, the Indus Valley, and Akkad, civilization emerges as a new operating system for humanity.
+          </p>
+        </div>
+        <div class="visual-card">
+          <p class="scene-title">Urban Complexity</p>
+          <div class="city-grid"></div>
+          <div class="monument"></div>
+          <div class="monument"></div>
+          <div class="monument"></div>
+          <div class="monument"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="information" data-scene="information">
+      <div class="chapter-inner">
+        <div class="visual-card">
+          <p class="scene-title">Externalized Memory</p>
+          <div class="info-rings">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+          </div>
+          <div class="glyph-stream">𓂀 𒀭 Α Ω א</div>
+        </div>
+        <div class="copy">
+          <p class="eyebrow" style="color: var(--information);">Layer Four / Information</p>
+          <h2>Memory leaves the mind.</h2>
+          <p>
+            Marks become symbols. Symbols become accounting. Accounting becomes writing. Writing becomes law, scripture, science, empire, and myth.
+          </p>
+          <p>
+            Once information can survive outside the human brain, civilization gains a long memory — and a new kind of power.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="collapse" data-scene="collapse">
+      <div class="chapter-inner">
+        <div class="copy">
+          <p class="eyebrow" style="color: var(--shock);">Layer Five / System Shock</p>
+          <h2>Complexity creates fragility.</h2>
+          <p>
+            Around 1200 BCE, the Bronze Age world fractures. Trade networks fail. Cities burn. Empires weaken. Migrations surge. Climate stress, warfare, rebellion, and supply-chain collapse converge.
+          </p>
+          <p>
+            The Bronze Age Collapse becomes one of history’s great warnings: when many layers fail at once, civilization does not simply decline — it cascades.
+          </p>
+        </div>
+        <div class="visual-card collapse-card">
+          <p class="scene-title">Bronze Age Collapse</p>
+          <div class="fracture"></div>
+          <div class="floating-events">
+            <span>Sea Peoples</span>
+            <span>Hittites Fall</span>
+            <span>Mycenaean Collapse</span>
+            <span>Trade Failure</span>
+            <span>Iron Age</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sticky-timeline-wrap" id="master">
+      <div class="sticky-timeline">
+        <div class="timeline-stage">
+          <div class="timeline-header">
+            <div>
+              <p class="eyebrow">The Master Timeline</p>
+              <h2>Five layers. One system.</h2>
+            </div>
+            <p>
+              As you scroll, the active window moves across deep time, revealing how events cluster into eras of adaptation, acceleration, and collapse.
+            </p>
+          </div>
+          <div class="timeline-grid" id="timelineGrid">
+            <div class="era-window" id="eraWindow"></div>
+            <div class="chapter-card" id="eraCard">
+              <div class="date">c. 200,000 BCE</div>
+              <h3>Human Emergence</h3>
+              <p>Anatomically modern humans appear in Africa. The biological layer begins the long arc toward culture and civilization.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter full" id="ending" data-scene="ending">
+      <div class="chapter-inner">
+        <div class="final-panel copy">
+          <p class="eyebrow">The Pattern Beneath History</p>
+          <h2>Collapse is not the end.</h2>
+          <p>
+            Human history moves through integration, complexity, fragility, collapse, and reorganization. The timeline is not merely a record of what happened. It is a map of how systems evolve.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const scenes = [...document.querySelectorAll('.chapter')];
+    const navDots = [...document.querySelectorAll('.site-nav a')];
+    const progressBar = document.getElementById('progressBar');
+
+    const layers = [
+      { id: 'biology', label: 'Biology / Evolution', color: 'var(--biology)' },
+      { id: 'climate', label: 'Climate / Earth System', color: 'var(--climate)' },
+      { id: 'technology', label: 'Technology / Energy', color: 'var(--tech)' },
+      { id: 'civilization', label: 'Civilization / Power', color: 'var(--civilization)' },
+      { id: 'information', label: 'Information / Belief', color: 'var(--information)' },
+      { id: 'shock', label: 'System Shocks', color: 'var(--shock)' }
+    ];
+
+    const timelineEvents = [
+      { year: -200000, layer: 'biology', short: 'Homo sapiens', title: 'Human Emergence', date: 'c. 200,000 BCE', text: 'Anatomically modern humans appear in Africa. The biological layer begins the long arc toward culture and civilization.' },
+      { year: -115000, layer: 'climate', short: 'Ice Age', title: 'Last Glacial Period', date: 'c. 115,000–11,700 BCE', text: 'Ice sheets expand and sea levels fall, reshaping migration routes and survival pressure.' },
+      { year: -77000, layer: 'information', short: 'Symbols', title: 'Stored Meaning', date: 'c. 77,000 BCE', text: 'Humans begin recording information on objects, externalizing memory and meaning.' },
+      { year: -74000, layer: 'shock', short: 'Toba', title: 'Possible Toba Bottleneck', date: 'c. 74,000 BCE', text: 'A debated but powerful marker for environmental shock and human population stress.' },
+      { year: -70000, layer: 'biology', short: 'Cognition', title: 'Cognitive Acceleration', date: 'c. 70,000 BCE', text: 'Language, symbolic thought, planning, and mythic imagination deepen human cooperation.' },
+      { year: -40000, layer: 'biology', short: 'Europe', title: 'Humans Reach Europe', date: 'c. 40,000 BCE', text: 'Modern humans expand into Europe and encounter remaining Neanderthal populations.' },
+      { year: -24000, layer: 'climate', short: 'LGM', title: 'Last Glacial Maximum', date: 'c. 24,000–17,000 BCE', text: 'Ice reaches maximum extent, creating extreme environmental pressure.' },
+      { year: -12900, layer: 'climate', short: 'YD', title: 'Younger Dryas', date: 'c. 12,900 BCE', text: 'A sudden return to cold conditions interrupts warming before the Holocene.' },
+      { year: -11700, layer: 'climate', short: 'Holocene', title: 'The Holocene Opens', date: 'c. 11,700 BCE', text: 'Warmer conditions create the ecological stage for agriculture and settlement.' },
+      { year: -10000, layer: 'technology', short: 'Farming', title: 'Agriculture Begins', date: 'c. 10,000 BCE', text: 'Food production creates surplus, settlement, population growth, and hierarchy.' },
+      { year: -9600, layer: 'civilization', short: 'Göbekli', title: 'Göbekli Tepe', date: 'c. 9600 BCE', text: 'Monumental ritual architecture suggests belief and social organization helped drive settlement.' },
+      { year: -8200, layer: 'shock', short: '8.2k', title: '8.2 Kiloyear Event', date: 'c. 8200 BCE', text: 'A sudden cooling event tests early Holocene communities.' },
+      { year: -8000, layer: 'civilization', short: 'Çatalhöyük', title: 'Early Urban Density', date: 'c. 8000 BCE', text: 'Dense settlement appears in Anatolia, foreshadowing urban civilization.' },
+      { year: -5200, layer: 'shock', short: '5.2k', title: '5.2 Kiloyear Event', date: 'c. 5200 BCE', text: 'Cold and arid conditions contribute to migration and cultural shifts.' },
+      { year: -3500, layer: 'civilization', short: 'Uruk', title: 'Uruk and Sumer', date: 'c. 3500 BCE', text: 'City-states, temple economies, bureaucracy, and urban power emerge in Mesopotamia.' },
+      { year: -3500, layer: 'technology', short: 'Wheel', title: 'The Wheel', date: 'c. 3500–3000 BCE', text: 'Transport, production, trade, and mechanical thinking are transformed.' },
+      { year: -3200, layer: 'information', short: 'Writing', title: 'Writing Systems', date: 'c. 3200 BCE', text: 'Writing gives civilization a durable memory for tax, law, myth, and administration.' },
+      { year: -2600, layer: 'civilization', short: 'Indus', title: 'Indus Valley Civilization', date: 'c. 2600 BCE', text: 'Planned cities, craft specialization, trade, and script emerge in South Asia.' },
+      { year: -2300, layer: 'civilization', short: 'Akkad', title: 'Akkadian Empire', date: 'c. 2300 BCE', text: 'One of the first empires consolidates power across Mesopotamia.' },
+      { year: -2200, layer: 'shock', short: '4.2k', title: '4.2 Kiloyear Event', date: 'c. 2200 BCE', text: 'A severe aridification event stresses Egypt, Mesopotamia, and the Indus world.' },
+      { year: -1600, layer: 'shock', short: 'Thera', title: 'Thera Eruption', date: 'c. 1600 BCE', text: 'A major Aegean eruption disrupts the eastern Mediterranean system.' },
+      { year: -1500, layer: 'civilization', short: 'Phoenicia', title: 'Phoenician Networks', date: 'c. 1500–300 BCE', text: 'Maritime trade networks spread goods, technologies, and alphabetic writing.' },
+      { year: -1400, layer: 'technology', short: 'Iron', title: 'Early Iron Technology', date: 'c. 1400 BCE', text: 'Iron begins moving from rare material toward system-changing technology.' },
+      { year: -1250, layer: 'civilization', short: 'Troy', title: 'Trojan War Horizon', date: 'c. 1250 BCE', text: 'Traditional Trojan War dating falls near the unstable Late Bronze Age world.' },
+      { year: -1200, layer: 'shock', short: 'Collapse', title: 'Bronze Age Collapse', date: 'c. 1208–1176 BCE', text: 'Drought, migration, war, rebellion, and trade failure cascade across the eastern Mediterranean.' },
+      { year: -1000, layer: 'information', short: 'Alphabet', title: 'Alphabetic Writing Spreads', date: 'c. 1000 BCE', text: 'The Phoenician alphabet helps reshape literacy and communication across the Mediterranean.' },
+      { year: -800, layer: 'information', short: 'Axial Age', title: 'Axial Age', date: 'c. 800–200 BCE', text: 'Philosophy, prophecy, Buddhism, Jainism, Confucianism, and Daoism transform human self-understanding.' },
+      { year: -509, layer: 'civilization', short: 'Rome', title: 'Roman Republic', date: '509 BCE', text: 'Rome establishes a republican political order that later underwrites imperial power.' },
+      { year: -45, layer: 'information', short: 'Calendar', title: 'Julian Calendar', date: '45 BCE', text: 'Standardized timekeeping becomes a tool of empire, administration, and memory.' },
+      { year: -4, layer: 'information', short: 'Jesus', title: 'Birth of Jesus', date: 'c. 4 BCE', text: 'A religious movement begins that will profoundly reshape later world history.' }
+    ];
+
+    function yearToPercent(year) {
+      const start = -200000;
+      const bend = -20000;
+      const end = -4;
+      if (year <= bend) return ((year - start) / (bend - start)) * 42 + 12;
+      return 54 + ((year - bend) / (end - bend)) * 38;
+    }
+
+    function buildTimeline() {
+      const grid = document.getElementById('timelineGrid');
+      layers.forEach(layer => {
+        const row = document.createElement('div');
+        row.className = 'timeline-layer';
+        row.innerHTML = `<div class="layer-name" style="color:${layer.color}">${layer.label}</div><div class="layer-track"></div>`;
+        timelineEvents.filter(e => e.layer === layer.id).forEach(event => {
+          const node = document.createElement('div');
+          node.className = 'timeline-node';
+          node.dataset.year = event.year;
+          node.style.left = `calc(155px + (${yearToPercent(event.year)}% - 155px))`;
+          node.style.setProperty('--node-color', layer.color);
+          node.innerHTML = `<span>${event.short}</span>`;
+          row.appendChild(node);
+        });
+        grid.appendChild(row);
+      });
+    }
+
+    function updateProgress() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const percent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = `${percent}%`;
+    }
+
+    function updateSceneVisibility() {
+      let activeId = 'opening';
+      scenes.forEach(scene => {
+        const rect = scene.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight * 0.64 && rect.bottom > window.innerHeight * 0.36;
+        scene.classList.toggle('in-view', inView);
+        if (inView) activeId = scene.id;
+      });
+      navDots.forEach(dot => dot.classList.toggle('active', dot.getAttribute('href') === `#${activeId}`));
+    }
+
+    function updateStickyTimeline() {
+      const wrap = document.getElementById('master');
+      const rect = wrap.getBoundingClientRect();
+      const total = wrap.offsetHeight - window.innerHeight;
+      const passed = Math.min(Math.max(-rect.top, 0), total);
+      const progress = total > 0 ? passed / total : 0;
+      const windowEl = document.getElementById('eraWindow');
+      const card = document.getElementById('eraCard');
+      const x = progress * 72;
+      windowEl.style.transform = `translateX(${x * 2.55}%)`;
+
+      const targetIndex = Math.min(timelineEvents.length - 1, Math.floor(progress * timelineEvents.length));
+      const activeEvent = timelineEvents[targetIndex];
+
+      document.querySelectorAll('.timeline-node').forEach(node => {
+        const year = Number(node.dataset.year);
+        node.classList.toggle('active', Math.abs(year - activeEvent.year) < 1);
+      });
+
+      card.innerHTML = `
+        <div class="date">${activeEvent.date}</div>
+        <h3>${activeEvent.title}</h3>
+        <p>${activeEvent.text}</p>
+      `;
+    }
+
+    function makeCanvasParticles(canvasId, count, speed, size, opacity) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+
+      function resize() {
+        canvas.width = window.innerWidth * devicePixelRatio;
+        canvas.height = window.innerHeight * devicePixelRatio;
+        canvas.style.width = `${window.innerWidth}px`;
+        canvas.style.height = `${window.innerHeight}px`;
+        particles = Array.from({ length: count }, () => ({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: (Math.random() * size + 0.4) * devicePixelRatio,
+          vx: (Math.random() - 0.5) * speed * devicePixelRatio,
+          vy: (Math.random() - 0.5) * speed * devicePixelRatio,
+          a: Math.random() * opacity + 0.05
+        }));
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0) p.x = canvas.width;
+          if (p.x > canvas.width) p.x = 0;
+          if (p.y < 0) p.y = canvas.height;
+          if (p.y > canvas.height) p.y = 0;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 240, 210, ${p.a})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+
+      resize();
+      draw();
+      window.addEventListener('resize', resize);
+    }
+
+    function onScroll() {
+      updateProgress();
+      updateSceneVisibility();
+      updateStickyTimeline();
+    }
+
+    buildTimeline();
+    makeCanvasParticles('starfield', 180, 0.08, 1.2, 0.6);
+    makeCanvasParticles('dust', 80, 0.22, 2.3, 0.18);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  </script>
+</body>
+</html>
