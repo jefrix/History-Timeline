@@ -340,13 +340,32 @@ img[alt="Visitor Counter"] { display: none !important; }
 /* ============================================================
    SECTIONS — wrap your existing <section id="..."> elements
    Apply to existing markup; the JS adds .tu-section to each.
+
+   IMPORTANT: The original file has many unclosed <section> tags,
+   so sections often nest inside each other. We only apply the
+   container padding/max-width to TOP-LEVEL sections — nested
+   sections inherit the parent's width to avoid the compounding
+   indent that crushed text deep in the page.
    ============================================================ */
 .tu-section {
-  max-width: 1280px;
-  margin: 0 auto 1.5rem;
-  padding: 0 1.5rem;
   position: relative;
   z-index: 2;
+  margin: 0 auto 1.5rem;
+}
+/* Top-level sections (direct children of <body>) get the
+   container width and horizontal padding. */
+body > .tu-section {
+  max-width: 1280px;
+  padding: 0 1.5rem;
+}
+/* Nested sections (inside another section) reset to fill their
+   parent — no extra padding, no max-width clamp. This is what
+   prevents the "narrower and narrower" bug. */
+.tu-section .tu-section {
+  max-width: none !important;
+  padding: 0 !important;
+  margin-left: 0;
+  margin-right: 0;
 }
 /* Hide hash-jump targets that aren't real sections (caption-only h2s) */
 .tu-section > h2[id] {
