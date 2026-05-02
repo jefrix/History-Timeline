@@ -4,14 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Evolution of Reality — Layered History System</title>
-  <meta name="description" content="A layered timeline of biology, climate, technology, civilization, and information — from 200,000 BCE to the present moment." />
+  <meta name="description" content="A layered timeline of biology, climate, technology, civilization, and meaning systems — from 200,000 BCE to the present moment." />
   <style>
     /* ============================================================
        DESIGN TOKENS
        ============================================================ */
     :root {
       --bg: #07090f;
-      --bg-2: #0a0d18;
       --panel: rgba(14, 18, 30, 0.86);
       --panel-soft: rgba(20, 26, 42, 0.72);
       --line: rgba(255, 255, 255, 0.14);
@@ -22,22 +21,26 @@
       --gold: #f7c948;
       --gold-soft: rgba(247, 201, 72, 0.16);
 
-      /* Layer colors — stable across all UI elements */
-      --biology: #58e08f;
-      --climate: #54b8ff;
-      --tech: #ffb347;
+      /* Layer colors */
+      --biology:      #58e08f;
+      --climate:      #54b8ff;
+      --tech:         #ffb347;
       --civilization: #d7a55f;
-      --information: #b78cff;
-      --shock: #ff4d5d;
+      --information:  #b78cff;
+      --shock:        #ff4d5d;
+
+      /* Information subtypes (intentionally distinct from --shock to avoid color collision) */
+      --religion:   #f7c948;
+      --philosophy: #6ee7ff;
+      --ideology:   #e85b7d;   /* shifted from #ff6b6b to differentiate from --shock */
+      --media:      #b78cff;
+      --ai:         #7cffc4;
 
       --warm: #ff8a4c;
       --cold: #3977ff;
     }
-
     * { box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
-
     body {
       margin: 0;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -51,7 +54,7 @@
     }
 
     /* ============================================================
-       SUITE NAV — links to the three sister pages + Fieldnotes
+       SUITE NAV
        ============================================================ */
     .suite-nav {
       position: sticky;
@@ -63,7 +66,7 @@
       border-bottom: 1px solid var(--line);
     }
     .suite-nav-inner {
-      max-width: 1440px;
+      max-width: 1520px;
       margin: 0 auto;
       padding: 12px 24px;
       display: flex;
@@ -97,7 +100,7 @@
     }
 
     .timeline-page {
-      width: min(1440px, 100%);
+      width: min(1520px, 100%);
       margin: 0 auto;
       padding: 32px 18px 72px;
     }
@@ -118,8 +121,7 @@
     }
     .hero::before {
       content: "";
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background-image:
         linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
@@ -128,8 +130,7 @@
       pointer-events: none;
     }
     .eyebrow {
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
       margin: 0 0 14px;
       color: var(--gold);
       letter-spacing: 0.22em;
@@ -138,10 +139,9 @@
       font-weight: 800;
     }
     h1 {
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
       margin: 0;
-      max-width: 900px;
+      max-width: 1000px;
       font-size: clamp(2.2rem, 6vw, 4.8rem);
       line-height: 0.95;
       letter-spacing: -0.05em;
@@ -152,30 +152,27 @@
       font-weight: 400;
     }
     .hero p.intro {
-      position: relative;
-      z-index: 1;
-      max-width: 780px;
+      position: relative; z-index: 1;
+      max-width: 860px;
       margin: 22px 0 0;
       color: var(--muted);
       font-size: clamp(1rem, 1.6vw, 1.18rem);
       line-height: 1.65;
     }
     .hero-thesis {
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
       margin: 28px 0 0;
       padding: 18px 22px;
       border-left: 3px solid var(--gold);
       background: rgba(247, 201, 72, 0.06);
       border-radius: 0 12px 12px 0;
-      color: var(--text);
       font-size: 0.96rem;
       line-height: 1.6;
     }
     .hero-thesis em { color: var(--gold); font-style: normal; font-weight: 600; }
 
     /* ============================================================
-       CONTROLS — filter chips + mode toggles
+       CONTROLS
        ============================================================ */
     .controls {
       display: flex;
@@ -204,7 +201,7 @@
       border-radius: 999px;
       padding: 9px 14px;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.85rem;
       transition: 160ms ease;
       font-family: inherit;
@@ -220,8 +217,7 @@
     }
     .mode-button .mode-dot {
       display: inline-block;
-      width: 8px;
-      height: 8px;
+      width: 8px; height: 8px;
       border-radius: 50%;
       background: var(--muted-2);
       margin-right: 6px;
@@ -229,13 +225,18 @@
     }
     .mode-button.active .mode-dot { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
 
-    /* Layer-specific filter button colors when active */
+    /* Filter button colors when active */
     .filter-button[data-filter="biology"].active     { border-color: var(--biology); background: rgba(88, 224, 143, 0.12); color: var(--biology); }
     .filter-button[data-filter="climate"].active     { border-color: var(--climate); background: rgba(84, 184, 255, 0.12); color: var(--climate); }
     .filter-button[data-filter="technology"].active  { border-color: var(--tech);    background: rgba(255, 179, 71, 0.12); color: var(--tech); }
     .filter-button[data-filter="civilization"].active{ border-color: var(--civilization); background: rgba(215, 165, 95, 0.12); color: var(--civilization); }
     .filter-button[data-filter="information"].active { border-color: var(--information); background: rgba(183, 140, 255, 0.12); color: var(--information); }
     .filter-button[data-filter="shock"].active       { border-color: var(--shock);   background: rgba(255, 77, 93, 0.14);  color: var(--shock); }
+    .filter-button[data-filter="religion"].active    { border-color: var(--religion); background: rgba(247, 201, 72, 0.14); color: var(--religion); }
+    .filter-button[data-filter="philosophy"].active  { border-color: var(--philosophy); background: rgba(110, 231, 255, 0.14); color: var(--philosophy); }
+    .filter-button[data-filter="ideology"].active    { border-color: var(--ideology); background: rgba(232, 91, 125, 0.14); color: var(--ideology); }
+    .filter-button[data-filter="media"].active       { border-color: var(--media); background: rgba(183, 140, 255, 0.14); color: var(--media); }
+    .filter-button[data-filter="ai"].active          { border-color: var(--ai); background: rgba(124, 255, 196, 0.14); color: var(--ai); }
 
     /* ============================================================
        TIMELINE CONTAINER
@@ -254,23 +255,21 @@
     }
     .timeline {
       position: relative;
-      min-width: 1680px;
-      padding: 28px 60px 24px 210px;
+      min-width: 1780px;
+      padding: 28px 60px 24px 230px;
     }
 
-    /* Era band — labelled background regions */
+    /* Era bands */
     .era-band {
       position: absolute;
-      top: 0;
-      bottom: 0;
+      top: 0; bottom: 0;
       pointer-events: none;
       border-left: 1px dashed rgba(255,255,255,0.07);
     }
-    .era-band:last-child { border-right: 1px dashed rgba(255,255,255,0.07); }
+    .era-band:last-of-type { border-right: 1px dashed rgba(255,255,255,0.07); }
     .era-band-label {
       position: absolute;
-      top: 6px;
-      left: 6px;
+      top: 6px; left: 6px;
       color: var(--muted-2);
       font-size: 0.62rem;
       letter-spacing: 0.16em;
@@ -304,11 +303,8 @@
     }
 
     /* ============================================================
-       LAYER ROWS
+       SHOCKS ROW (clickable, at the top under the axis)
        ============================================================ */
-    /* Dedicated thin shocks row — sits at the top, just under the axis.
-       Provides clickable affordance for shock events (whose vertical
-       lines have pointer-events: none for visual reasons). */
     .shocks-row {
       position: relative;
       height: 38px;
@@ -323,9 +319,12 @@
     }
     .shocks-row .event-node { top: 18px; }
 
+    /* ============================================================
+       LAYER ROWS
+       ============================================================ */
     .layer {
       position: relative;
-      height: 88px;
+      height: 96px;
       border-bottom: 1px solid var(--line-soft);
       transition: opacity 0.2s;
     }
@@ -333,34 +332,33 @@
 
     .layer-label {
       position: absolute;
-      left: -190px;
+      left: -210px;
       top: 18px;
-      width: 168px;
+      width: 188px;
       padding: 10px 12px;
       border-radius: 14px;
       background: var(--panel-soft);
       border: 1px solid var(--line);
       font-weight: 800;
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       letter-spacing: 0.06em;
       text-transform: uppercase;
+      line-height: 1.25;
     }
     .layer-line {
       position: absolute;
-      left: 0;
-      right: 0;
-      top: 44px;
+      left: 0; right: 0;
+      top: 48px;
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
     }
 
-    /* Climate gradient band */
+    /* Climate band */
     .climate-band {
       position: absolute;
-      left: 0;
-      right: 0;
+      left: 0; right: 0;
       top: 8px;
-      height: 72px;
+      height: 80px;
       border-radius: 14px;
       opacity: 0.42;
       background: linear-gradient(90deg,
@@ -374,18 +372,16 @@
     .event-node {
       --node-color: var(--gold);
       position: absolute;
-      top: 44px;
+      top: 48px;
       transform: translate(-50%, -50%);
-      width: 16px;
-      height: 16px;
+      width: 16px; height: 16px;
+      border: 0; padding: 0;
       border-radius: 50%;
       background: var(--node-color);
       box-shadow: 0 0 0 4px rgba(255,255,255,0.05), 0 0 18px var(--node-color);
       cursor: pointer;
       transition: transform 160ms ease, opacity 160ms ease;
       z-index: 6;
-      border: none;
-      padding: 0;
     }
     .event-node:hover, .event-node.selected {
       transform: translate(-50%, -50%) scale(1.5);
@@ -394,9 +390,21 @@
     .event-node.selected {
       box-shadow: 0 0 0 6px rgba(247, 201, 72, 0.18), 0 0 24px var(--node-color);
     }
-    .event-node.dimmed { opacity: 0.16; pointer-events: none; }
+    .event-node.dimmed { opacity: 0.14; pointer-events: none; }
 
-    /* Event with a Fieldnotes link gets a small ring */
+    /* Shape variant: meaning-system (diamond) */
+    .meaning-node {
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      border-radius: 0;
+    }
+
+    /* Shape variant: shock (triangle pointing down) — used in shocks row */
+    .shocks-row .event-node {
+      clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
+      border-radius: 0;
+    }
+
+    /* Fieldnotes-linked event ring */
     .event-node.has-link::before {
       content: "";
       position: absolute;
@@ -405,6 +413,9 @@
       border: 1px solid rgba(247, 201, 72, 0.55);
       pointer-events: none;
     }
+    /* For diamond and triangle shapes, the ring still uses a border-radius circle around */
+    .meaning-node.has-link::before { border-radius: 50%; inset: -8px; }
+    .shocks-row .event-node.has-link::before { border-radius: 50%; inset: -7px; }
 
     .event-node::after {
       content: attr(data-short);
@@ -413,7 +424,7 @@
       top: 18px;
       transform: translateX(-50%);
       width: max-content;
-      max-width: 110px;
+      max-width: 120px;
       color: var(--muted);
       font-size: 0.62rem;
       text-align: center;
@@ -421,17 +432,35 @@
       opacity: 0.85;
       line-height: 1.1;
     }
-    /* Alternate label positions vertically to reduce overlap */
-    .event-node[data-stagger="1"]::after { top: 30px; }
-    .event-node[data-stagger="2"]::after { top: 42px; }
+    /* Stagger labels vertically when nodes cluster horizontally */
+    .event-node[data-stagger="1"]::after  { top: 30px; }
+    .event-node[data-stagger="2"]::after  { top: 42px; }
+    .event-node[data-stagger="3"]::after  { top: 54px; }
     .event-node[data-stagger="-1"]::after { top: -16px; }
 
+    /* Collapse score badge — sits below the shock node */
+    .collapse-score {
+      position: absolute;
+      bottom: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ffd3d8;
+      font-size: 0.55rem;
+      font-weight: 800;
+      background: rgba(255,77,93,0.22);
+      border: 1px solid rgba(255,77,93,0.4);
+      border-radius: 999px;
+      padding: 1px 5px;
+      pointer-events: none;
+      letter-spacing: 0.02em;
+    }
+
     /* ============================================================
-       SHOCK LINES — vertical lines that pierce all layers
+       SHOCK VERTICAL LINES — visual indicators piercing all layers
        ============================================================ */
     .shock-line {
       position: absolute;
-      top: 110px;       /* below time axis + shocks row */
+      top: 110px;
       width: 2px;
       transform: translateX(-50%);
       background: linear-gradient(180deg, transparent, rgba(255, 77, 93, 0.55), rgba(255, 77, 93, 0.3));
@@ -439,14 +468,9 @@
       z-index: 3;
       pointer-events: none;
     }
-    .shock-line::before {
-      content: "";
-    }
 
     /* ============================================================
        STRESS INDEX ROW
-       Computed bar chart — the visual proof of coupled failure.
-       Rises wherever multiple layers have simultaneous events.
        ============================================================ */
     .stress-row {
       position: relative;
@@ -457,15 +481,15 @@
     }
     .stress-label {
       position: absolute;
-      left: -190px;
+      left: -210px;
       top: 30px;
-      width: 168px;
+      width: 188px;
       padding: 10px 12px;
       border-radius: 14px;
       background: var(--panel-soft);
       border: 1px solid var(--line);
       font-weight: 800;
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--gold);
@@ -473,10 +497,11 @@
     .stress-label small {
       display: block;
       color: var(--muted-2);
-      font-size: 0.62rem;
+      font-size: 0.6rem;
       margin-top: 4px;
       letter-spacing: 0.04em;
       text-transform: none;
+      font-weight: 600;
     }
     .stress-bar {
       position: absolute;
@@ -509,16 +534,13 @@
     }
 
     /* ============================================================
-       LATENCY ARCS — visible only when latency mode is on
+       LATENCY SVG OVERLAY
        ============================================================ */
     .latency-svg {
       position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
+      left: 0; right: 0;
+      top: 0; bottom: 0;
+      width: 100%; height: 100%;
       pointer-events: none;
       z-index: 4;
       display: none;
@@ -527,7 +549,7 @@
     .latency-svg.visible { display: block; }
     .latency-arc {
       fill: none;
-      stroke: rgba(247, 201, 72, 0.45);
+      stroke: rgba(247, 201, 72, 0.5);
       stroke-width: 1.5;
       stroke-dasharray: 4 4;
     }
@@ -543,7 +565,7 @@
        ============================================================ */
     .legend {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
       gap: 8px;
       margin: 14px 0 0;
     }
@@ -556,13 +578,25 @@
       border: 1px solid var(--line-soft);
       border-radius: 14px;
       padding: 8px 12px;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
     }
-    .legend-dot {
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
+    .legend-shape {
+      width: 12px; height: 12px;
       box-shadow: 0 0 14px currentColor;
+      flex: 0 0 auto;
+    }
+    .legend-shape.dot { border-radius: 50%; }
+    .legend-shape.diamond { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+    .legend-shape.triangle { clip-path: polygon(50% 100%, 0% 0%, 100% 0%); }
+    .legend-section-label {
+      grid-column: 1 / -1;
+      color: var(--muted-2);
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-top: 4px;
+      padding-left: 4px;
     }
 
     /* ============================================================
@@ -594,7 +628,7 @@
       margin-left: 10px;
       padding: 3px 10px;
       border-radius: 999px;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       font-weight: 700;
@@ -609,7 +643,29 @@
     .event-description {
       color: var(--muted);
       line-height: 1.65;
-      margin: 0 0 18px;
+      margin: 0 0 16px;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+    }
+    .tag.collapse-tag {
+      color: #ffd3d8;
+      border-color: rgba(255,77,93,0.4);
+      background: rgba(255,77,93,0.12);
     }
     .event-fieldnote {
       display: inline-flex;
@@ -645,10 +701,10 @@
       background: rgba(255, 255, 255, 0.035);
       color: var(--muted);
       line-height: 1.5;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
     }
     .system-list strong { color: var(--text); }
-    .note { color: var(--muted); line-height: 1.65; margin: 0; }
+    .note { color: var(--muted); line-height: 1.65; margin: 0; font-size: 0.92rem; }
 
     .companion {
       margin-top: 16px;
@@ -656,7 +712,7 @@
       border-top: 1px solid var(--line-soft);
     }
     .companion-label {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--muted-2);
       letter-spacing: 0.14em;
       text-transform: uppercase;
@@ -666,7 +722,9 @@
     .companion a {
       color: var(--gold);
       text-decoration: none;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
+      display: block;
+      padding: 4px 0;
     }
     .companion a:hover { text-decoration: underline; }
 
@@ -676,8 +734,8 @@
     @media (max-width: 860px) {
       .timeline-page { padding-top: 18px; }
       .detail-panel { grid-template-columns: 1fr; }
-      .timeline { min-width: 1280px; padding-left: 168px; }
-      .layer-label, .stress-label { left: -154px; width: 134px; font-size: 0.7rem; }
+      .timeline { min-width: 1480px; padding-left: 178px; }
+      .layer-label, .stress-label { left: -158px; width: 138px; font-size: 0.66rem; }
       h1 { font-size: 2.2rem; }
     }
   </style>
@@ -685,7 +743,7 @@
 <body>
 
 <!-- ============================================================
-     SUITE NAV — links to sister pages
+     SUITE NAV
      ============================================================ -->
 <nav class="suite-nav" aria-label="Site navigation">
   <div class="suite-nav-inner">
@@ -699,23 +757,23 @@
 
 <main class="timeline-page">
 
-  <!-- ============================================================
-       HERO
-       ============================================================ -->
+  <!-- HERO -->
   <section class="hero">
     <p class="eyebrow">Layered History System · 200,000 BCE → 2026 CE</p>
     <h1>The Evolution of <em>Reality</em></h1>
     <p class="intro">
-      Five layers — biology, climate, technology, civilization, and information — running in parallel through deep time. Where they reinforce each other, civilization rises. Where they fail together, civilization reorganizes.
+      A synchronized timeline of biology, climate, technology, civilization, and meaning systems —
+      showing how human history unfolds through material pressures, belief systems, ideological
+      fracture, collapse, and reorganization.
     </p>
     <div class="hero-thesis">
-      Read the <em>Stress Index</em> at the bottom of the chart. It rises wherever multiple layers register events in the same window. Spikes mark the coupled-failure moments — Ugarit's warning, ours.
+      Read the <em>Stress Index</em> at the bottom of the chart. It rises wherever multiple layers
+      register events in the same window, weighted by collapse severity. Spikes mark the
+      coupled-failure moments — Ugarit's warning, ours.
     </div>
   </section>
 
-  <!-- ============================================================
-       CONTROLS
-       ============================================================ -->
+  <!-- CONTROLS -->
   <section class="controls" aria-label="Timeline controls">
     <div class="controls-group">
       <button class="filter-button active" data-filter="all">All Layers</button>
@@ -723,8 +781,16 @@
       <button class="filter-button" data-filter="climate">Climate</button>
       <button class="filter-button" data-filter="technology">Technology</button>
       <button class="filter-button" data-filter="civilization">Civilization</button>
-      <button class="filter-button" data-filter="information">Information</button>
+      <button class="filter-button" data-filter="information">Meaning Systems</button>
       <button class="filter-button" data-filter="shock">System Shocks</button>
+    </div>
+    <div class="controls-divider"></div>
+    <div class="controls-group">
+      <button class="filter-button" data-filter="religion">Religion</button>
+      <button class="filter-button" data-filter="philosophy">Philosophy</button>
+      <button class="filter-button" data-filter="ideology">Ideology</button>
+      <button class="filter-button" data-filter="media">Media</button>
+      <button class="filter-button" data-filter="ai">AI</button>
     </div>
     <div class="controls-divider"></div>
     <div class="controls-group">
@@ -734,9 +800,7 @@
     </div>
   </section>
 
-  <!-- ============================================================
-       TIMELINE
-       ============================================================ -->
+  <!-- TIMELINE -->
   <section class="timeline-shell" aria-label="Layered timeline visualization">
     <div class="timeline" id="timeline">
       <div class="time-axis" id="timeAxis"></div>
@@ -744,48 +808,60 @@
     </div>
   </section>
 
-  <!-- ============================================================
-       LEGEND
-       ============================================================ -->
+  <!-- LEGEND -->
   <section class="legend" aria-label="Legend">
-    <div class="legend-item"><span class="legend-dot" style="background: var(--biology);"></span>Biology / Evolution</div>
-    <div class="legend-item"><span class="legend-dot" style="background: var(--climate);"></span>Climate / Earth System</div>
-    <div class="legend-item"><span class="legend-dot" style="background: var(--tech);"></span>Technology / Energy</div>
-    <div class="legend-item"><span class="legend-dot" style="background: var(--civilization);"></span>Civilization / Power</div>
-    <div class="legend-item"><span class="legend-dot" style="background: var(--information);"></span>Information / Belief</div>
-    <div class="legend-item"><span class="legend-dot" style="background: var(--shock);"></span>System Shock</div>
-    <div class="legend-item" style="grid-column: span 2;">
-      <span class="legend-dot" style="background: var(--gold); box-shadow: 0 0 14px var(--gold), 0 0 0 2px rgba(247,201,72,0.35);"></span>
-      Has Fieldnotes dispatch (ringed nodes)
+    <div class="legend-section-label">Material Layers</div>
+    <div class="legend-item"><span class="legend-shape dot" style="color: var(--biology); background: var(--biology);"></span>Biology / Evolution</div>
+    <div class="legend-item"><span class="legend-shape dot" style="color: var(--climate); background: var(--climate);"></span>Climate / Earth System</div>
+    <div class="legend-item"><span class="legend-shape dot" style="color: var(--tech); background: var(--tech);"></span>Technology / Energy</div>
+    <div class="legend-item"><span class="legend-shape dot" style="color: var(--civilization); background: var(--civilization);"></span>Civilization / Power</div>
+
+    <div class="legend-section-label">Meaning Systems (Information Layer)</div>
+    <div class="legend-item"><span class="legend-shape diamond" style="color: var(--religion); background: var(--religion);"></span>Religion</div>
+    <div class="legend-item"><span class="legend-shape diamond" style="color: var(--philosophy); background: var(--philosophy);"></span>Philosophy</div>
+    <div class="legend-item"><span class="legend-shape diamond" style="color: var(--ideology); background: var(--ideology);"></span>Ideology</div>
+    <div class="legend-item"><span class="legend-shape diamond" style="color: var(--media); background: var(--media);"></span>Media</div>
+    <div class="legend-item"><span class="legend-shape diamond" style="color: var(--ai); background: var(--ai);"></span>AI</div>
+    <div class="legend-item"><span class="legend-shape diamond" style="color: var(--information); background: var(--information);"></span>Other / Meaning</div>
+
+    <div class="legend-section-label">Shocks &amp; Indicators</div>
+    <div class="legend-item"><span class="legend-shape triangle" style="color: var(--shock); background: var(--shock);"></span>System Shock (S2–S5)</div>
+    <div class="legend-item">
+      <span class="legend-shape dot" style="background: var(--gold); box-shadow: 0 0 14px var(--gold), 0 0 0 2px rgba(247,201,72,0.35);"></span>
+      Has Fieldnotes dispatch
     </div>
   </section>
 
-  <!-- ============================================================
-       DETAIL PANEL
-       ============================================================ -->
+  <!-- DETAIL PANEL -->
   <section class="detail-panel">
     <article class="card" id="detailCard">
       <div class="event-date">Click a node</div>
       <h2 class="event-title">The Layered Timeline</h2>
       <p class="event-description">
-        Each event lives in one layer. Click any node to see how it fits into the larger system. Nodes ringed in gold link to a related Fieldnotes dispatch.
+        Each event lives in one layer; meaning-systems events appear as diamonds and split into
+        five subtypes. Click any node to see how it fits into the larger system. Nodes ringed in
+        gold link to a related Fieldnotes dispatch.
       </p>
     </article>
 
     <aside class="card">
-      <h3>Civilization as a System</h3>
+      <h3>Meaning Systems Pattern</h3>
       <p class="note">
-        Human history is not a sequence of dates. It is a feedback loop between biology, climate, energy, power, and information. When those layers reinforce each other, civilizations rise. When they fall out of alignment, collapse follows.
+        Religion, philosophy, ideology, media, and AI are subtypes of the same Information /
+        Meaning layer. They determine how civilizations explain reality, legitimize authority,
+        coordinate action, and fracture under stress.
       </p>
       <ul class="system-list">
-        <li><strong>Integration:</strong> trade, language, agriculture, and law bind groups together.</li>
-        <li><strong>Complexity:</strong> cities, empires, priesthoods, armies, and supply chains emerge.</li>
-        <li><strong>Fragility:</strong> drought, war, migration, disease, and resource stress can cascade.</li>
-        <li><strong>Reorganization:</strong> collapse rarely ends history — it rearranges it.</li>
+        <li><strong>Unification:</strong> shared myths, scriptures, laws, and ideologies stabilize large groups.</li>
+        <li><strong>Expansion:</strong> new media technologies spread ideas beyond local memory.</li>
+        <li><strong>Fragmentation:</strong> competing interpretations split shared reality.</li>
+        <li><strong>Collapse risk:</strong> meaning failure amplifies political, biological, climate, and technological shocks.</li>
       </ul>
       <div class="companion">
         <div class="companion-label">Companion Reading</div>
         <a href="https://jefrix.github.io/Fieldnotes/ugarit-warning.html">№02 — The Ugarit Warning ↗</a>
+        <a href="https://jefrix.github.io/Fieldnotes/liars-dividend.html">№09 — The Liar's Dividend ↗</a>
+        <a href="https://jefrix.github.io/Fieldnotes/5000-day-gap.html">№10 — The 5,000-Day Gap ↗</a>
       </div>
     </aside>
   </section>
@@ -795,8 +871,6 @@
 <script>
 /* ============================================================
    DATA
-   The events array is the single source of truth.
-   `link` references a Fieldnotes dispatch when one exists.
    ============================================================ */
 
 const layers = [
@@ -804,196 +878,376 @@ const layers = [
   { id: 'climate',      label: 'Climate / Earth System',  color: 'var(--climate)' },
   { id: 'technology',   label: 'Technology / Energy',     color: 'var(--tech)' },
   { id: 'civilization', label: 'Civilization / Power',    color: 'var(--civilization)' },
-  { id: 'information',  label: 'Information / Belief',    color: 'var(--information)' }
+  { id: 'information',  label: 'Information / Meaning',   color: 'var(--information)' },
 ];
 
+const subtypeColors = {
+  religion:   'var(--religion)',
+  philosophy: 'var(--philosophy)',
+  ideology:   'var(--ideology)',
+  media:      'var(--media)',
+  ai:         'var(--ai)',
+};
+
+// Events (merged + extended set — every event from the new file plus
+// the modern Fieldnotes-linked entries, with Fieldnotes link metadata
+// where applicable).
 const events = [
-  // ===== Original deep-time events =====
-  { year: -200000, layer: 'biology',      title: 'Emergence of Homo sapiens',           short: 'Homo sapiens',  date: 'c. 200,000 BCE',
+  // ===== Deep prehistory =====
+  { year: -200000, layer: 'biology', title: 'Emergence of Homo sapiens', short: 'Homo sapiens', date: 'c. 200,000 BCE',
+    tags: ['Biology'],
     description: 'Anatomically modern humans emerge in Africa, eventually becoming the only surviving branch of the human family tree.' },
-  { year: -115000, layer: 'climate',      title: 'Last Glacial Period',                  short: 'Ice Age',       date: 'c. 115,000–11,700 BCE',
+  { year: -115000, layer: 'climate', title: 'Last Glacial Period', short: 'Ice Age', date: 'c. 115,000–11,700 BCE',
+    tags: ['Climate'],
     description: 'Global cooling expands ice sheets, lowers sea levels, and reshapes migration routes, coastlines, and ecological pressure.' },
-  { year: -90000,  layer: 'technology',   title: 'Specialized Fishing Tools',            short: 'Fishing tools', date: 'c. 90,000 BCE',
+  { year: -90000, layer: 'technology', title: 'Specialized Fishing Tools', short: 'Fishing tools', date: 'c. 90,000 BCE',
+    tags: ['Technology', 'Biology'],
     description: 'Modern humans develop specialized tools for fishing, expanding diet, mobility, and coastal survival strategies.' },
-  { year: -77000,  layer: 'information',  title: 'Recorded Information on Objects',      short: 'Symbols',       date: 'c. 77,000 BCE',
-    description: 'Early symbolic marking suggests humans were storing meaning outside the body — a foundation for later writing, memory, and culture.' },
-  { year: -74000,  layer: 'shock',        title: 'Toba Supereruption / Population Bottleneck', short: 'Toba',  date: 'c. 74,000 BCE',
-    description: 'A possible near-extinction bottleneck linked to the Toba supereruption. Severity remains debated, but the marker is a powerful early system shock.' },
-  { year: -70000,  layer: 'biology',      title: 'Cognitive and Cultural Acceleration',  short: 'Cognition',     date: 'c. 70,000 BCE',
+  { year: -77000, layer: 'information', subtype: 'religion', title: 'Early Symbolic Recording', short: 'Symbols', date: 'c. 77,000 BCE',
+    tags: ['Information', 'Meaning', 'Proto-ritual'],
+    description: 'Early symbolic marking suggests humans were storing meaning outside the body — a foundation for later ritual, myth, writing, and culture.' },
+  { year: -74000, layer: 'shock', title: 'Toba Supereruption / Population Bottleneck', short: 'Toba shock', date: 'c. 74,000 BCE',
+    collapseScore: 2, tags: ['Climate', 'Biology', 'Shock'],
+    description: 'A possible near-extinction bottleneck linked to the Toba supereruption. Severity remains debated, but it is a powerful early system shock marker.' },
+  { year: -70000, layer: 'biology', title: 'Cognitive and Cultural Acceleration', short: 'Cognition', date: 'c. 70,000 BCE',
+    tags: ['Biology', 'Information'],
     description: 'Symbolic thought, long-range planning, language complexity, and mythic imagination expand the human capacity for cooperation.' },
-  { year: -65000,  layer: 'civilization', title: 'Aboriginal Australian Culture Begins', short: 'Australia',     date: 'c. 65,000–50,000 BCE',
+  { year: -65000, layer: 'civilization', title: 'Aboriginal Australian Culture Begins', short: 'Australia', date: 'c. 65,000–50,000 BCE',
+    tags: ['Civilization', 'Meaning'],
     description: 'Humans reach Australia and establish one of the deepest continuous cultural traditions on Earth.' },
-  { year: -40000,  layer: 'biology',      title: 'Modern Humans Reach Europe',           short: 'Europe',        date: 'c. 40,000 BCE',
+  { year: -40000, layer: 'biology', title: 'Modern Humans Reach Europe', short: 'Europe', date: 'c. 40,000 BCE',
+    tags: ['Biology'],
     description: 'Homo sapiens expand into Europe and encounter remaining Neanderthal populations.' },
-  { year: -28000,  layer: 'biology',      title: 'Neanderthals Disappear',               short: 'Neanderthals',  date: 'c. 28,000 BCE',
+  { year: -28000, layer: 'biology', title: 'Neanderthals Disappear', short: 'Neanderthals', date: 'c. 28,000 BCE',
+    tags: ['Biology'],
     description: 'Neanderthals vanish as a distinct population, though genetic traces survive in many modern humans.' },
-  { year: -24000,  layer: 'climate',      title: 'Last Glacial Maximum',                 short: 'LGM',           date: 'c. 24,000–17,000 BCE',
-    description: 'Ice sheets reach their greatest extent, locking up water, lowering sea levels, and altering migration corridors.' },
-  { year: -15000,  layer: 'biology',      title: 'Humans Reach the Americas',            short: 'Americas',      date: 'c. 15,000 BCE',
+  { year: -24000, layer: 'climate', title: 'Last Glacial Maximum', short: 'LGM', date: 'c. 24,000–17,000 BCE',
+    tags: ['Climate'],
+    description: 'Ice sheets reach their greatest extent, locking up water, lowering sea levels, and altering human migration corridors.' },
+  { year: -15000, layer: 'biology', title: 'Humans Reach the Americas', short: 'Americas', date: 'c. 15,000 BCE',
+    tags: ['Biology', 'Civilization'],
     description: 'Modern humans spread into the Americas, adapting rapidly to new ecosystems and megafauna-rich landscapes.' },
-  { year: -12900,  layer: 'climate',      title: 'Younger Dryas',                        short: 'Younger Dryas', date: 'c. 12,900–11,700 BCE',
+  { year: -12900, layer: 'climate', title: 'Younger Dryas', short: 'Younger Dryas', date: 'c. 12,900–11,700 BCE',
+    tags: ['Climate'],
     description: 'A sudden return to colder conditions interrupts post-glacial warming just before the Holocene.' },
-  { year: -11700,  layer: 'climate',      title: 'Beginning of the Holocene',            short: 'Holocene',      date: 'c. 11,700 BCE',
+  { year: -11700, layer: 'climate', title: 'Beginning of the Holocene', short: 'Holocene', date: 'c. 11,700 BCE',
+    tags: ['Climate', 'Civilization'],
     description: 'The current interglacial period begins, bringing warmer temperatures, retreating ice sheets, rising seas, and new ecological opportunities.' },
-  { year: -10000,  layer: 'technology',   title: 'Neolithic Revolution',                 short: 'Agriculture',   date: 'c. 10,000 BCE',
-    description: 'Agriculture begins transforming small nomadic bands into larger settlements, food surpluses, population growth, and social hierarchy.' },
-  { year: -9600,   layer: 'civilization', title: 'Göbekli Tepe',                         short: 'Göbekli Tepe',  date: 'c. 9600 BCE',
+
+  // ===== Neolithic & early urban =====
+  { year: -10000, layer: 'technology', title: 'Neolithic Revolution', short: 'Agriculture', date: 'c. 10,000 BCE',
+    tags: ['Technology', 'Civilization', 'Biology'],
+    description: 'Agriculture transforms small nomadic bands into settlements, food surpluses, population growth, and social hierarchy.' },
+  { year: -9600, layer: 'civilization', title: 'Göbekli Tepe', short: 'Göbekli Tepe', date: 'c. 9600 BCE',
+    tags: ['Civilization', 'Religion'],
     description: 'Monumental ritual architecture appears before full agricultural urban civilization, suggesting belief and social organization helped drive settlement.' },
-  { year: -8200,   layer: 'shock',        title: '8.2 Kiloyear Climate Event',           short: '8.2k event',    date: 'c. 8200 BCE',
-    description: 'A sudden cooling and drying event disrupts early Holocene communities and tests the resilience of emerging farming systems.' },
-  { year: -8000,   layer: 'civilization', title: 'Çatalhöyük',                           short: 'Çatalhöyük',    date: 'c. 8000 BCE',
+  { year: -8200, layer: 'shock', title: '8.2 Kiloyear Climate Event', short: '8.2k event', date: 'c. 8200 BCE',
+    collapseScore: 2, tags: ['Climate', 'Civilization', 'Shock'],
+    description: 'A sudden cooling and drying event disrupts early Holocene communities and tests emerging farming systems.' },
+  { year: -8000, layer: 'civilization', title: 'Çatalhöyük', short: 'Çatalhöyük', date: 'c. 8000 BCE',
+    tags: ['Civilization'],
     description: 'One of the world\u2019s earliest known dense urban settlements appears in Anatolia.' },
-  { year: -5200,   layer: 'shock',        title: '5.2 Kiloyear Event',                   short: '5.2k event',    date: 'c. 5200 BCE',
+  { year: -5200, layer: 'shock', title: '5.2 Kiloyear Event', short: '5.2k event', date: 'c. 5200 BCE',
+    collapseScore: 2, tags: ['Climate', 'Civilization', 'Shock'],
     description: 'A widespread cold and arid event contributes to cultural shifts and migration.' },
-  { year: -5000,   layer: 'civilization', title: 'Stonehenge Construction Begins',       short: 'Stonehenge',    date: 'c. 5000 BCE',
-    description: 'A long-lived monumental landscape begins developing in Britain.' },
-  { year: -3500,   layer: 'civilization', title: 'Uruk and Sumerian City-States',        short: 'Uruk',          date: 'c. 3500 BCE',
+
+  // ===== Bronze Age =====
+  { year: -3500, layer: 'civilization', title: 'Uruk and Sumerian City-States', short: 'Uruk', date: 'c. 3500 BCE',
+    tags: ['Civilization', 'Technology'],
     description: 'Urbanism, temple economies, bureaucracy, and city-state power emerge in southern Mesopotamia.' },
-  { year: -3500,   layer: 'technology',   title: 'Wheel Invented',                       short: 'Wheel',         date: 'c. 3500–3000 BCE',
+  { year: -3500, layer: 'technology', title: 'Wheel Invented', short: 'Wheel', date: 'c. 3500–3000 BCE',
+    tags: ['Technology'],
     description: 'The wheel transforms transport, craft production, trade, warfare, and mechanical thinking.' },
-  { year: -3200,   layer: 'information',  title: 'Hieroglyphic and Early Writing',       short: 'Writing',       date: 'c. 3200 BCE',
-    description: 'Writing systems emerge in Egypt and Mesopotamia, allowing states to store memory, taxes, law, myth, and power across generations.' },
-  { year: -3000,   layer: 'civilization', title: 'Minoan Civilization',                  short: 'Minoans',       date: 'c. 3000–1450 BCE',
-    description: 'Palatial civilization develops on Crete, becoming a maritime, artistic, and administrative power of the Aegean Bronze Age.' },
-  { year: -2600,   layer: 'civilization', title: 'Indus Valley Civilization',            short: 'Indus',         date: 'c. 2600 BCE',
+  { year: -3200, layer: 'information', subtype: 'religion', title: 'Writing Systems and Temple Administration', short: 'Writing', date: 'c. 3200 BCE',
+    tags: ['Information', 'Religion', 'Civilization'],
+    description: 'Writing systems emerge in Egypt and Mesopotamia, allowing states and temples to store memory, taxes, law, myth, and power across generations.' },
+  { year: -2600, layer: 'civilization', title: 'Indus Valley Civilization', short: 'Indus', date: 'c. 2600 BCE',
+    tags: ['Civilization'],
     description: 'Urban civilization emerges in present-day Pakistan and India, with planned cities, trade, craft specialization, and undeciphered script.' },
-  { year: -2300,   layer: 'civilization', title: 'Akkadian Empire',                      short: 'Akkad',         date: 'c. 2300 BCE',
+  { year: -2300, layer: 'civilization', title: 'Akkadian Empire', short: 'Akkad', date: 'c. 2300 BCE',
+    tags: ['Civilization'],
     description: 'Akkad becomes one of the earliest known empires, consolidating power across Mesopotamia.' },
-  { year: -2200,   layer: 'shock',        title: '4.2 Kiloyear Event',                   short: '4.2k event',    date: 'c. 2200 BCE',
+  { year: -2200, layer: 'shock', title: '4.2 Kiloyear Event', short: '4.2k event', date: 'c. 2200 BCE',
+    collapseScore: 3, tags: ['Climate', 'Civilization', 'Shock'],
     description: 'A severe aridification event stresses Egypt, Mesopotamia, the Indus, and surrounding systems, contributing to political disruption.' },
-  { year: -1600,   layer: 'shock',        title: 'Santorini / Thera Eruption',           short: 'Thera',         date: 'c. 1600 BCE',
+  { year: -1600, layer: 'shock', title: 'Santorini / Thera Eruption', short: 'Thera', date: 'c. 1600 BCE',
+    collapseScore: 2, tags: ['Climate', 'Civilization', 'Shock'],
     description: 'A major Aegean eruption disrupts the eastern Mediterranean and is often connected to later memories of catastrophe.' },
-  { year: -1500,   layer: 'civilization', title: 'Phoenician Maritime Civilization',     short: 'Phoenicians',   date: 'c. 1500–300 BCE',
+  { year: -1500, layer: 'civilization', title: 'Phoenician Maritime Civilization', short: 'Phoenicians', date: 'c. 1500–300 BCE',
+    tags: ['Civilization', 'Information'],
     description: 'Levantine maritime traders build networks across the Mediterranean and help spread alphabetic writing.' },
-  { year: -1400,   layer: 'technology',   title: 'Early Iron Tools and Weapons',         short: 'Iron',          date: 'c. 1400 BCE',
+  { year: -1400, layer: 'technology', title: 'Early Iron Tools and Weapons', short: 'Iron', date: 'c. 1400 BCE',
+    tags: ['Technology'],
     description: 'Iron technology begins to develop in the Near East before later becoming widespread after the Bronze Age collapse.' },
-  // The Bronze Age cluster — coupled failure moment, with link to Ugarit Warning
-  { year: -1250,   layer: 'climate',      title: 'Anatolian Megadrought',                short: 'Megadrought',   date: 'c. 1250–1196 BCE',
-    description: 'Dendrochronology from central Anatolia records an unusually severe multi-year dry episode around 1198–1196 BCE — the kind of compounding stress that overwhelms even well-organized agricultural societies. The drought thinned the buffer that the palace economies relied on.' },
-  { year: -1250,   layer: 'civilization', title: 'Trojan War (traditional)',             short: 'Trojan War',    date: 'c. 1250 BCE',
+  // Bronze Age coupled-failure cluster
+  { year: -1250, layer: 'climate', title: 'Anatolian Megadrought', short: 'Megadrought', date: 'c. 1250–1196 BCE',
+    tags: ['Climate', 'Civilization'],
+    description: 'Dendrochronology from central Anatolia records an unusually severe multi-year dry episode around 1198–1196 BCE — the kind of compounding stress that overwhelms even well-organized agricultural societies.',
+    link: { url: 'https://jefrix.github.io/Fieldnotes/ugarit-warning.html', label: '№02 — The Ugarit Warning' } },
+  { year: -1250, layer: 'civilization', title: 'Trojan War (traditional)', short: 'Trojan War', date: 'c. 1250 BCE',
+    tags: ['Civilization', 'Meaning'],
     description: 'Traditional dating places the Trojan War in the Late Bronze Age, near the period of broader eastern Mediterranean instability.' },
-  { year: -1200,   layer: 'shock',        title: 'Bronze Age Collapse',                  short: 'Bronze Collapse', date: 'c. 1208–1176 BCE',
+  { year: -1200, layer: 'shock', title: 'Bronze Age Collapse / Sea Peoples', short: 'Bronze Collapse', date: 'c. 1208–1176 BCE',
+    collapseScore: 4, tags: ['Climate', 'Civilization', 'Technology', 'Information', 'Shock'],
     description: 'A regional systems collapse disrupts Mycenaean Greece, Anatolia, the Levant, and Egypt through war, migration, trade disruption, drought, and political fragmentation. The textbook example of coupled failure: climate stress, trade hollowing, and small-scale raiding combining to topple a system that any one shock alone could have absorbed.',
     link: { url: 'https://jefrix.github.io/Fieldnotes/ugarit-warning.html', label: '№02 — The Ugarit Warning' } },
-  { year: -1185,   layer: 'civilization', title: 'Ugarit Falls',                         short: 'Ugarit',        date: 'c. 1185 BCE',
+  { year: -1185, layer: 'civilization', title: 'Ugarit Falls', short: 'Ugarit', date: 'c. 1185 BCE',
+    tags: ['Civilization', 'Information', 'Shock'],
     description: 'A scribe in the palace of Ugarit presses cuneiform tablets recording urgent appeals for help. The fleet is in Lycia, enemies are off the coast, grain promised to the Hittites never arrives. Ugarit burns. The tablets survive because the fire baked the clay.',
     link: { url: 'https://jefrix.github.io/Fieldnotes/ugarit-warning.html', label: '№02 — The Ugarit Warning' } },
-  { year: -1000,   layer: 'information',  title: 'Phoenician Alphabet Spreads',          short: 'Alphabet',      date: 'c. 1000 BCE',
+  { year: -1000, layer: 'information', subtype: 'media', title: 'Phoenician Alphabet Spreads', short: 'Alphabet', date: 'c. 1000 BCE',
+    tags: ['Information', 'Media'],
     description: 'Alphabetic writing helps simplify literacy and influences Greek, Latin, Hebrew, Aramaic, and later writing traditions.' },
-  { year: -800,    layer: 'information',  title: 'Axial Age Begins',                     short: 'Axial Age',     date: 'c. 800–200 BCE',
+
+  // ===== Axial Age =====
+  { year: -800, layer: 'information', subtype: 'philosophy', title: 'Axial Age Begins', short: 'Axial Age', date: 'c. 800–200 BCE',
+    tags: ['Information', 'Philosophy', 'Religion', 'Civilization'],
     description: 'Greek philosophy, Hebrew prophecy, Buddhism, Jainism, Confucianism, and Daoism reshape ethics, metaphysics, law, and human identity.' },
-  { year: -509,    layer: 'civilization', title: 'Roman Republic Established',           short: 'Rome',          date: '509 BCE',
+  { year: -600, layer: 'information', subtype: 'religion', title: 'Buddhism Emerges', short: 'Buddha', date: 'c. 600 BCE',
+    tags: ['Religion', 'Philosophy'],
+    description: 'The teachings of Siddhartha Gautama establish Buddhism, focusing on suffering, impermanence, liberation, and disciplined consciousness.' },
+  { year: -550, layer: 'information', subtype: 'philosophy', title: 'Confucian Ethics', short: 'Confucius', date: 'c. 551–479 BCE',
+    tags: ['Philosophy', 'Civilization'],
+    description: 'Confucian thought links ethics, family order, education, and statecraft into one of history\u2019s most durable governance philosophies.' },
+  { year: -500, layer: 'information', subtype: 'religion', title: 'Hebrew Prophetic Monotheism', short: 'Prophets', date: 'c. 600–400 BCE',
+    tags: ['Religion', 'Ethics'],
+    description: 'Hebrew prophetic traditions develop ethical monotheism, covenantal identity, social-justice themes, and historical consciousness.' },
+  { year: -400, layer: 'information', subtype: 'philosophy', title: 'Classical Greek Philosophy', short: 'Greek thought', date: 'c. 400 BCE',
+    tags: ['Philosophy'],
+    description: 'Socrates, Plato, and Aristotle formalize logic, metaphysics, political philosophy, ethics, and systematic inquiry.' },
+  { year: -509, layer: 'civilization', title: 'Roman Republic Established', short: 'Rome', date: '509 BCE',
+    tags: ['Civilization', 'Ideology'],
     description: 'Rome establishes a republican system that later becomes the foundation for one of history\u2019s most influential empires.' },
-  { year: -322,    layer: 'civilization', title: 'Maurya Empire',                        short: 'Maurya',        date: '322–185 BCE',
+  { year: -322, layer: 'civilization', title: 'Maurya Empire', short: 'Maurya', date: '322–185 BCE',
+    tags: ['Civilization', 'Religion'],
     description: 'The Maurya Empire unifies much of India and spreads Buddhism under Ashoka.' },
-  { year: -45,     layer: 'information',  title: 'Julian Calendar',                      short: 'Calendar',      date: '45 BCE',
+  { year: -45, layer: 'information', subtype: 'media', title: 'Julian Calendar', short: 'Calendar', date: '45 BCE',
+    tags: ['Information', 'Civilization'],
     description: 'Julius Caesar introduces the Julian calendar, standardizing Roman timekeeping and influencing later Western calendars.' },
+  { year: -4, layer: 'information', subtype: 'religion', title: 'Birth of Jesus of Nazareth', short: 'Jesus', date: 'c. 4 BCE',
+    tags: ['Religion'],
+    description: 'The traditional historical dating of Jesus\u2019s birth becomes a central anchor for later Christian civilization and Western chronology.' },
 
-  // ===== Post-Roman / Medieval / Early Modern bridge =====
-  { year: 476,     layer: 'civilization', title: 'Western Roman Empire Falls',           short: 'Rome falls',    date: '476 CE',
-    description: 'The Western Roman Empire formally ends. The eastern half continues for nearly another millennium as Byzantium.' },
-  { year: 540,     layer: 'shock',        title: 'Late Antique Little Ice Age',          short: 'LALIA',         date: '536–660 CE',
-    description: 'A volcanic dust veil and decades of cooling combine with the Justinianic Plague to stress what remains of the late-antique world. Another coupled failure: climate + pandemic + political fragmentation.' },
-  { year: 622,     layer: 'information',  title: 'Hijra · Founding of Islam',            short: 'Hijra',         date: '622 CE',
-    description: 'Muhammad\u2019s migration from Mecca to Medina marks Year 1 of the Islamic calendar and the beginning of a new civilizational system.' },
-  { year: 1347,    layer: 'shock',        title: 'Black Death',                          short: 'Black Death',   date: '1347–1351 CE',
-    description: 'The Yersinia pestis pandemic arrives in Europe via Mediterranean trade routes, killing roughly a third of the European population. Demographic collapse triggers wage shifts, peasant revolts, and the unraveling of feudal labor norms — a population shock that reorganizes the system.' },
-  { year: 1440,    layer: 'technology',   title: 'Movable-Type Printing',                short: 'Printing',      date: 'c. 1440 CE',
-    description: 'Gutenberg\u2019s press radically lowers the cost of producing text, accelerating literacy, scientific exchange, religious reform, and the volume of cultural memory in circulation.' },
-  { year: 1492,    layer: 'civilization', title: 'Columbian Exchange Begins',            short: 'Columbian',     date: '1492 CE',
-    description: 'European contact with the Americas initiates massive transfers of crops, animals, diseases, and people. Indigenous populations collapse by ~90%; the global ecology and economy reorganize permanently.' },
-  { year: 1610,    layer: 'climate',      title: 'Little Ice Age peak',                  short: 'Little Ice Age',date: 'c. 1300–1850 CE',
-    description: 'A multi-century cooling stresses agricultural systems across the Northern Hemisphere, contributing to crises from the Thirty Years\u2019 War to the Ming-Qing transition.' },
-  { year: 1687,    layer: 'information',  title: 'Newtonian Synthesis',                  short: 'Newton',        date: '1687 CE',
-    description: 'The Principia formalizes a mechanical worldview. The Scientific Revolution gives the West an information layer capable of cumulative, correctable knowledge.' },
-  { year: 1769,    layer: 'technology',   title: 'Watt\u2019s Steam Engine',             short: 'Steam',         date: '1769 CE',
-    description: 'Watt\u2019s improved steam engine catalyzes the Industrial Revolution. Energy stops being constrained by what land can grow.' },
-  { year: 1859,    layer: 'biology',      title: 'Darwin\u2019s Origin of Species',      short: 'Darwin',        date: '1859 CE',
-    description: 'Natural selection becomes the unifying principle of biology, reshaping how humans understand themselves as a species among species.' },
-  { year: 1914,    layer: 'shock',        title: 'World War I',                          short: 'WWI',           date: '1914–1918 CE',
-    description: 'Industrial-scale war ends the long 19th century and reshapes the global order. The first demonstration of how 19th-century imperial systems behave when modern technology is poured into them.' },
-  { year: 1918,    layer: 'shock',        title: '1918 Influenza Pandemic',              short: 'Spanish Flu',   date: '1918–1920 CE',
-    description: 'A global influenza pandemic kills tens of millions during and after WWI. A coupled failure: war mobilization accelerates spread; pandemic accelerates political collapse.' },
-  { year: 1945,    layer: 'technology',   title: 'Nuclear Age Begins',                   short: 'Nuclear',       date: '1945 CE',
-    description: 'The first atomic weapons are used. Humanity acquires a technology capable of ending civilization within an afternoon.' },
-  { year: 1969,    layer: 'information',  title: 'ARPANET',                              short: 'ARPANET',       date: '1969 CE',
-    description: 'The first nodes of what becomes the internet connect. Information stops being constrained by physical distribution.' },
+  // ===== Late Antiquity =====
+  { year: 27, layer: 'civilization', title: 'Roman Empire', short: 'Roman Empire', date: '27 BCE–476 CE',
+    tags: ['Civilization', 'Technology', 'Information'],
+    description: 'Rome dominates the Mediterranean, establishing infrastructure, law, governance, and trade networks that unify vast regions.' },
+  { year: 100, layer: 'information', subtype: 'religion', title: 'Rise of Christianity', short: 'Christianity', date: '1st century CE',
+    tags: ['Religion', 'Civilization'],
+    description: 'Christianity rises from the teachings of Jesus and spreads through the Roman world as a new universal religious identity.' },
+  { year: 165, layer: 'shock', title: 'Antonine Plague', short: 'Antonine', date: '165–180 CE',
+    collapseScore: 2, tags: ['Biology', 'Civilization', 'Shock'],
+    description: 'A major epidemic weakens the Roman Empire through population loss, economic strain, and military disruption.' },
+  { year: 250, layer: 'shock', title: 'Plague of Cyprian', short: 'Cyprian', date: 'c. 250–270 CE',
+    collapseScore: 2, tags: ['Biology', 'Civilization', 'Shock'],
+    description: 'A severe epidemic contributes to instability during the Roman third-century crisis.' },
+  { year: 313, layer: 'information', subtype: 'religion', title: 'Edict of Milan', short: 'Milan', date: '313 CE',
+    tags: ['Religion', 'Civilization'],
+    description: 'Christianity is legalized in the Roman Empire, changing the relationship between belief, state power, and social legitimacy.' },
+  { year: 325, layer: 'information', subtype: 'religion', title: 'Council of Nicaea', short: 'Nicaea', date: '325 CE',
+    tags: ['Religion', 'Civilization'],
+    description: 'Christian doctrine is standardized, showing how empires stabilize belief by defining orthodoxy.' },
+  { year: 380, layer: 'information', subtype: 'religion', title: 'Christianity Becomes Roman State Religion', short: 'State church', date: '380 CE',
+    tags: ['Religion', 'Civilization'],
+    description: 'Christianity becomes the official religion of Rome, fusing imperial structure with universal religious identity.' },
+  { year: 476, layer: 'shock', title: 'Fall of Western Roman Empire', short: 'Fall of Rome', date: '476 CE',
+    collapseScore: 4, tags: ['Civilization', 'Technology', 'Information', 'Shock'],
+    description: 'The Western Roman Empire falls, marking the transition from classical antiquity to the early medieval period in Europe.' },
+  { year: 536, layer: 'shock', title: 'Late Antique Little Ice Age', short: '536 winter', date: 'c. 536–550 CE',
+    collapseScore: 3, tags: ['Climate', 'Civilization', 'Shock'],
+    description: 'Major volcanic eruptions trigger global cooling, crop failures, famine, and widespread societal stress.' },
+  { year: 541, layer: 'shock', title: 'Plague of Justinian', short: 'Justinian', date: '541–750 CE',
+    collapseScore: 3, tags: ['Biology', 'Civilization', 'Shock'],
+    description: 'Pandemic disease devastates Byzantine and Mediterranean populations, weakening imperial recovery.' },
 
-  // ===== Modern Fieldnotes-linked events (the "second node loading") =====
-  { year: 2020,    layer: 'shock',        title: 'COVID-19 Pandemic',                    short: 'COVID',         date: '2020–2023 CE',
-    description: 'A global respiratory pandemic triggers the largest peacetime mobilization in history. Reveals the speed at which globally integrated supply chains can break and the latency between scientific knowledge and institutional response.' },
-  { year: 2022,    layer: 'technology',   title: 'Generative AI Goes Mainstream',        short: 'Generative AI', date: '2022–2026 CE',
+  // ===== Medieval =====
+  { year: 610, layer: 'information', subtype: 'religion', title: 'Rise of Islam', short: 'Islam', date: '7th century CE',
+    tags: ['Religion', 'Civilization'],
+    description: 'Islam rises under Muhammad, creating a unified religious, legal, and political system that rapidly reshapes the Middle East and beyond.' },
+  { year: 750, layer: 'information', subtype: 'philosophy', title: 'Islamic Golden Age', short: 'Golden Age', date: 'c. 750–1200 CE',
+    tags: ['Religion', 'Philosophy', 'Technology'],
+    description: 'Islamic civilization preserves, translates, and expands scientific, mathematical, medical, and philosophical knowledge.' },
+  { year: 800, layer: 'climate', title: 'Medieval Warm Period', short: 'Warm Period', date: 'c. 800–1200 CE',
+    tags: ['Climate', 'Civilization'],
+    description: 'Relatively stable warm conditions support agricultural expansion and population growth in parts of Europe and Asia.' },
+  { year: 900, layer: 'civilization', title: 'Feudal Systems Dominate Europe', short: 'Feudalism', date: 'c. 800–1300 CE',
+    tags: ['Civilization'],
+    description: 'European society becomes organized around land ownership, military obligation, aristocratic power, and decentralized governance.' },
+  { year: 960, layer: 'technology', title: 'Song Dynasty Innovation', short: 'Song', date: '960–1279 CE',
+    tags: ['Civilization', 'Technology'],
+    description: 'Song China drives major economic, technological, and urban development, including paper currency, printing, and proto-industrialization.' },
+  { year: 1000, layer: 'information', subtype: 'religion', title: 'Christianity Dominates Europe', short: 'Christendom', date: 'c. 300–1500 CE',
+    tags: ['Religion', 'Civilization'],
+    description: 'Christianity shapes European law, politics, art, timekeeping, education, kingship, and the meaning of social order.' },
+  { year: 1095, layer: 'information', subtype: 'religion', title: 'Crusades', short: 'Crusades', date: '1095–1291 CE',
+    tags: ['Religion', 'Civilization', 'Ideology'],
+    description: 'The Crusades merge religion and geopolitics, showing how sacred narratives can mobilize war, migration, and empire.' },
+  { year: 1100, layer: 'information', subtype: 'philosophy', title: 'Scholasticism and Universities', short: 'Scholasticism', date: 'c. 1100–1300 CE',
+    tags: ['Philosophy', 'Religion', 'Civilization'],
+    description: 'Medieval universities and scholastic thinkers integrate Christian theology, Aristotle, logic, law, and systematic education.' },
+  { year: 1347, layer: 'shock', title: 'Black Death', short: 'Black Death', date: '1347–1351 CE',
+    collapseScore: 3, tags: ['Biology', 'Civilization', 'Shock'],
+    description: 'Pandemic disease kills a large share of Eurasian populations, destabilizing labor systems, economies, and religious confidence.' },
+
+  // ===== Early Modern =====
+  { year: 1400, layer: 'civilization', title: 'Age of Exploration', short: 'Exploration', date: 'c. 1400–1700 CE',
+    tags: ['Civilization', 'Technology'],
+    description: 'European maritime expansion connects the Americas, Europe, Africa, and Asia into a single global trade system.' },
+  { year: 1440, layer: 'information', subtype: 'media', title: 'Printing Press', short: 'Printing', date: 'c. 1440 CE',
+    tags: ['Information', 'Media', 'Technology'],
+    description: 'Gutenberg\u2019s printing press accelerates the spread of books, literacy, religious texts, scientific ideas, and ideological fracture.' },
+  { year: 1492, layer: 'shock', title: 'Columbian Exchange', short: 'Columbian', date: '1492 CE',
+    collapseScore: 3, tags: ['Biology', 'Civilization', 'Technology', 'Shock'],
+    description: 'Plants, animals, diseases, people, and empires move between the Old and New Worlds, transforming global ecology and society.' },
+  { year: 1517, layer: 'information', subtype: 'religion', title: 'Protestant Reformation', short: 'Reformation', date: '1517 CE',
+    tags: ['Religion', 'Media', 'Civilization'],
+    description: 'The Reformation fractures Christian unity in Europe, showing how printing-powered information expansion can destabilize centralized belief authority.' },
+  { year: 1600, layer: 'climate', title: 'Little Ice Age Stress', short: 'Little Ice Age', date: 'c. 1500–1700 CE',
+    tags: ['Climate', 'Civilization'],
+    description: 'Cooler temperatures and agricultural instability contribute to social unrest, famine, migration, and political pressure in many regions.' },
+  { year: 1600, layer: 'information', subtype: 'philosophy', title: 'Scientific Revolution', short: 'Science', date: 'c. 1600–1800 CE',
+    tags: ['Philosophy', 'Information', 'Technology'],
+    description: 'Natural philosophy becomes modern science, transforming astronomy, physics, experiment, evidence, and the authority of reason.' },
+  { year: 1618, layer: 'shock', title: 'Thirty Years\u2019 War', short: '30 Years War', date: '1618–1648 CE',
+    collapseScore: 3, tags: ['Religion', 'Civilization', 'Information', 'Shock'],
+    description: 'Religious fragmentation, dynastic politics, and geopolitical rivalry devastate Central Europe and reshape the European state system.' },
+  { year: 1637, layer: 'information', subtype: 'philosophy', title: 'Descartes and Modern Subjectivity', short: 'Descartes', date: '1637 CE',
+    tags: ['Philosophy'],
+    description: 'Descartes publishes "I think, therefore I am," centering modern philosophy on consciousness, doubt, method, and the knowing subject.' },
+  { year: 1700, layer: 'technology', title: 'Industrial Revolution', short: 'Industry', date: 'c. 1700–1900 CE',
+    tags: ['Technology', 'Civilization', 'Climate'],
+    description: 'Mechanized production, fossil-fuel energy, factories, railroads, and urbanization transform economies and begin large-scale anthropogenic climate impact.' },
+  { year: 1720, layer: 'information', subtype: 'philosophy', title: 'Enlightenment', short: 'Enlightenment', date: 'c. 1600–1800 CE',
+    tags: ['Philosophy', 'Ideology', 'Technology'],
+    description: 'Enlightenment thought emphasizes reason, science, individual rights, skepticism of inherited authority, and political reform.' },
+  { year: 1776, layer: 'information', subtype: 'ideology', title: 'Declaration of Independence', short: '1776', date: '1776 CE',
+    tags: ['Ideology', 'Civilization'],
+    description: 'The American Revolution reframes political authority around rights, consent, republicanism, and self-government.' },
+  { year: 1789, layer: 'information', subtype: 'ideology', title: 'French Revolution', short: '1789', date: '1789 CE',
+    tags: ['Ideology', 'Civilization'],
+    description: 'The French Revolution challenges monarchy, divine right, aristocracy, and inherited power while spreading modern political ideology.' },
+  { year: 1800, layer: 'information', subtype: 'ideology', title: 'Nationalism Rises', short: 'Nationalism', date: '1800s CE',
+    tags: ['Ideology', 'Civilization'],
+    description: 'Nationalism becomes a powerful identity framework, binding people through language, territory, history, symbols, and imagined community.' },
+  { year: 1848, layer: 'information', subtype: 'ideology', title: 'Communist Manifesto', short: 'Marxism', date: '1848 CE',
+    tags: ['Ideology', 'Civilization'],
+    description: 'Marx and Engels introduce a revolutionary ideology centered on class struggle, capitalism, labor, and historical transformation.' },
+  { year: 1880, layer: 'information', subtype: 'ideology', title: 'Capitalism Solidifies as Modern Ideology', short: 'Capitalism', date: 'late 1800s CE',
+    tags: ['Ideology', 'Civilization'],
+    description: 'Industrial capitalism becomes not only an economic system but a cultural belief structure around markets, growth, labor, ownership, and progress.' },
+
+  // ===== 20th century =====
+  { year: 1914, layer: 'shock', title: 'World War I', short: 'WWI', date: '1914–1918 CE',
+    collapseScore: 4, tags: ['Civilization', 'Technology', 'Ideology', 'Shock'],
+    description: 'The first large-scale industrial global conflict leads to mass casualties and the collapse of several empires.' },
+  { year: 1918, layer: 'shock', title: 'Spanish Flu', short: 'Spanish Flu', date: '1918–1920 CE',
+    collapseScore: 3, tags: ['Biology', 'Civilization', 'Shock'],
+    description: 'A global pandemic infects a large portion of humanity, killing tens of millions and compounding postwar instability.' },
+  { year: 1920, layer: 'information', subtype: 'media', title: 'Radio and Television Mass Media Era', short: 'Broadcast', date: 'c. 1920–2000 CE',
+    tags: ['Media', 'Civilization'],
+    description: 'Broadcast media centralizes information and narrative control, giving states, corporations, and movements unprecedented ability to shape public reality.' },
+  { year: 1939, layer: 'shock', title: 'World War II', short: 'WWII', date: '1939–1945 CE',
+    collapseScore: 4, tags: ['Civilization', 'Technology', 'Ideology', 'Shock'],
+    description: 'Total war reshapes global power, destroys fascist regimes, accelerates nuclear technology, and produces the postwar international system.' },
+  { year: 1945, layer: 'civilization', title: 'Postwar Global Order', short: 'UN / IMF', date: '1945 CE',
+    tags: ['Civilization', 'Information'],
+    description: 'International institutions such as the United Nations, IMF, and World Bank emerge to stabilize the postwar system.' },
+  { year: 1947, layer: 'information', subtype: 'ideology', title: 'Cold War Ideological Division', short: 'Cold War', date: '1947 CE',
+    tags: ['Ideology', 'Civilization', 'Technology'],
+    description: 'The world divides into competing ideological blocs: liberal capitalism, communism, nuclear deterrence, proxy conflict, and propaganda systems.' },
+  { year: 1970, layer: 'technology', title: 'Digital Revolution Begins', short: 'Digital', date: 'c. 1970–2000 CE',
+    tags: ['Technology', 'Information'],
+    description: 'Computers, networks, software, and early internet systems begin shifting civilization into a digital operating environment.' },
+  { year: 1989, layer: 'information', subtype: 'ideology', title: 'Fall of the Soviet Bloc', short: '1989', date: '1989 CE',
+    tags: ['Ideology', 'Civilization'],
+    description: 'The collapse of Soviet power shifts the global ideological balance and briefly strengthens the sense of liberal-democratic triumph.' },
+
+  // ===== Present moment =====
+  { year: 2000, layer: 'civilization', title: 'Peak Globalization', short: 'Globalization', date: 'c. 2000 CE–Present',
+    tags: ['Civilization', 'Technology', 'Information'],
+    description: 'Global trade, digital connectivity, financial integration, and supply chains create the most interconnected human system yet.' },
+  { year: 2000, layer: 'information', subtype: 'media', title: 'Internet Decentralizes Information', short: 'Internet', date: 'c. 2000 CE',
+    tags: ['Media', 'Technology', 'Information'],
+    description: 'The internet breaks the monopoly of centralized publishers and broadcasters, enabling distributed knowledge, communities, and conflict.' },
+  { year: 2010, layer: 'information', subtype: 'media', title: 'Social Media Fragments Shared Reality', short: 'Social media', date: 'c. 2010 CE–Present',
+    tags: ['Media', 'Ideology', 'Civilization'],
+    description: 'Algorithmic feeds, virality, memes, and online tribes fragment shared reality into competing narratives.' },
+  { year: 2020, layer: 'shock', title: 'COVID-19 Pandemic', short: 'COVID', date: '2020 CE',
+    collapseScore: 4, tags: ['Biology', 'Civilization', 'Information', 'Shock'],
+    description: 'The pandemic disrupts global systems and exposes vulnerabilities in supply chains, healthcare, governance, and institutional trust.' },
+  { year: 2022, layer: 'information', subtype: 'ai', title: 'Generative AI Goes Mainstream', short: 'Generative AI', date: '2022–2026 CE',
+    tags: ['AI', 'Technology', 'Information'],
     description: 'Large language models reach mass deployment. Knowledge work begins to face the kind of automation pressure that physical labor has lived with for two centuries. The displacement signal is now visible in hiring data; the institutional response is not.',
     link: { url: 'https://jefrix.github.io/Fieldnotes/5000-day-gap.html', label: '№10 — The 5,000-Day Gap' } },
-  { year: 2024,    layer: 'information',  title: 'The Liar\u2019s Dividend',             short: 'Deepfakes',     date: '2024 CE',
+  { year: 2024, layer: 'information', subtype: 'media', title: 'The Liar\u2019s Dividend', short: 'Deepfakes', date: '2024 CE',
+    tags: ['Media', 'Information', 'Ideology'],
     description: 'Cheap synthetic media reaches a quality threshold where elections, courts, and institutions can no longer assume that recorded reality is what it appears to be. The information layer\u2019s long-trusted substrate begins to dissolve.',
     link: { url: 'https://jefrix.github.io/Fieldnotes/liars-dividend.html', label: '№09 — The Liar\u2019s Dividend' } },
-  { year: 2025,    layer: 'civilization', title: 'Memetic Statecraft',                   short: '280-char Cabinet', date: '2025 CE',
+  { year: 2025, layer: 'information', subtype: 'ideology', title: 'Memetic Statecraft', short: '280-char Cabinet', date: '2025 CE',
+    tags: ['Ideology', 'Media'],
     description: 'A new mode of governance — running on social-media tempo rather than institutional tempo — runs ahead of the institutions designed to constrain it.',
     link: { url: 'https://jefrix.github.io/Fieldnotes/280-character-cabinet.html', label: '№06 — The 280-Character Cabinet' } },
-  { year: 2026,    layer: 'shock',        title: 'Hormuz Energy Shock',                  short: 'Hormuz',        date: '2026 CE',
+  { year: 2026, layer: 'shock', title: 'Hormuz Energy Shock', short: 'Hormuz', date: '2026 CE',
+    collapseScore: 4, tags: ['Civilization', 'Technology', 'Shock'],
     description: 'Sustained closure-by-stress of the Strait of Hormuz puts ~20% of global oil and a fifth of LNG trade under regime-changing pressure. The first node loads.',
     link: { url: 'https://jefrix.github.io/Fieldnotes/dual-blockade.html', label: '№11 — The Dual Blockade' } },
-  { year: 2026,    layer: 'shock',        title: 'AI Labor Displacement Curve',          short: 'AI Labor',      date: '2026 CE',
+  { year: 2026, layer: 'shock', title: 'AI Labor Displacement Curve', short: 'AI Labor', date: '2026 CE',
+    collapseScore: 3, tags: ['Technology', 'Civilization', 'Shock'],
     description: 'Hiring freezes, vanishing entry-level positions, and quiet workflow automation begin to register in the labor data. The second node loads — at the same moment as the first.',
     link: { url: 'https://jefrix.github.io/Fieldnotes/5000-day-gap.html', label: '№10 — The 5,000-Day Gap' } },
-  { year: 2026,    layer: 'biology',      title: 'Immune System Gap',                    short: 'Immune Gap',    date: '2026 CE',
+  { year: 2026, layer: 'biology', title: 'Immune System Gap', short: 'Immune Gap', date: '2026 CE',
+    tags: ['Biology', 'Civilization'],
     description: 'Pathogen surveillance and pandemic-response apparatus is dismantled at a moment when the biological threat landscape is accelerating. The latency between dismantling and rebuilding is where the danger lives.',
     link: { url: 'https://jefrix.github.io/Fieldnotes/immune-response.html', label: '№08 — The Immune Response' } },
 ];
 
 const shocks = events.filter(e => e.layer === 'shock');
 
-// ============================================================
-// LATENCY EDGES
-// Manually curated — each shock paired with the prior stressor
-// that, in your essays' framework, fed into it. The number is
-// the gap in years between when the stressor began and when the
-// shock crystallized.
-// ============================================================
+/* ============================================================
+   LATENCY EDGES — manually curated stressor → shock pairs
+   ============================================================ */
 const latencyEdges = [
   { from: -1250, to: -1200, label: 'Megadrought → Bronze Collapse · ~50 yr' },
   { from: -1200, to: -1185, label: 'Collapse → Ugarit falls · ~15 yr' },
   { from: 1347,  to: 1440,  label: 'Black Death → Printing · ~93 yr' },
+  { from: 1440,  to: 1517,  label: 'Printing → Reformation · ~77 yr' },
+  { from: 1517,  to: 1618,  label: 'Reformation → 30 Years\u2019 War · ~101 yr' },
   { from: 2022,  to: 2026,  label: 'Generative AI → Labor shock · ~4 yr' },
   { from: 2024,  to: 2026,  label: 'Liar\u2019s Dividend → ongoing' },
   { from: 2020,  to: 2026,  label: 'COVID → Immune Gap · ~6 yr' },
 ];
 
-// ============================================================
-// TIME SCALE — piecewise to give the recent millennia room
-// 0%    -> 200,000 BCE
-// 28%   -> 20,000 BCE   (deep prehistory compressed via log)
-// 55%   -> 1 CE         (antiquity = the most space)
-// 78%   -> 1500 CE
-// 100%  -> 2026 CE
-// ============================================================
-function yearToPercent(y) {
-  const yearsAgoFrom = (yr) => 2026 - yr;
-  if (y <= -20000) {
-    // Log-warp from 200,000 BCE -> 20,000 BCE
-    const a = 200000 - 2026;        // years ago at start (rough)
-    const b = 20000 - 2026 * -1;    // hmm — let me just use simple numbers
-    // simpler: t over [-200000, -20000] mapped via log
-    const yMax = 200000, yMin = 20000;
-    const lt = (Math.log(yMax) - Math.log(-y)) / (Math.log(yMax) - Math.log(yMin));
-    return lt * 28;
-  } else if (y <= 0) {
-    // -20000 .. 0
-    const lt = (y + 20000) / 20000;
-    return 28 + lt * 27;
-  } else if (y <= 1500) {
-    const lt = (y) / 1500;
-    return 55 + lt * 23;
-  } else {
-    const lt = (y - 1500) / (2026 - 1500);
-    return 78 + lt * 22;
+/* ============================================================
+   TIME SCALE — 3-segment piecewise (from new file)
+   0–34%   → 200,000 BCE → 20,000 BCE  (log-warped)
+   34–62%  → 20,000 BCE → 1000 BCE
+   62–100% → 1000 BCE → 2026 CE
+   ============================================================ */
+function yearToPercent(year) {
+  const start = -200000;
+  const bend1 = -20000;
+  const bend2 = -1000;
+  const end = 2026;
+  if (year <= bend1) {
+    // Log-warp the deep past so 200k–100k doesn't take half the screen
+    const yMax = -start, yMin = -bend1;
+    const lt = (Math.log(yMax) - Math.log(-year)) / (Math.log(yMax) - Math.log(yMin));
+    return lt * 34;
   }
+  if (year <= bend2) {
+    return 34 + ((year - bend1) / (bend2 - bend1)) * 28;
+  }
+  return 62 + ((year - bend2) / (end - bend2)) * 38;
 }
 
-// ============================================================
-// BUILD
-// ============================================================
+/* ============================================================
+   BUILD HELPERS
+   ============================================================ */
+function getNodeColor(event, layerColor) {
+  if (event.subtype && subtypeColors[event.subtype]) return subtypeColors[event.subtype];
+  if (event.layer === 'shock') return 'var(--shock)';
+  return layerColor;
+}
 
 function buildEras() {
   const timeline = document.getElementById('timeline');
@@ -1013,7 +1267,10 @@ function buildEras() {
     band.className = 'era-band';
     band.style.left = left + '%';
     band.style.width = width + '%';
-    band.innerHTML = `<span class="era-band-label">${era.label}</span>`;
+    // Hide label if band is too narrow to fit it without colliding with neighbor labels
+    if (width >= 4.5) {
+      band.innerHTML = `<span class="era-band-label">${era.label}</span>`;
+    }
     timeline.appendChild(band);
   });
 }
@@ -1027,16 +1284,13 @@ function buildAxis() {
     { year: -20000,  label: '20k BCE' },
     { year: -10000,  label: '10k BCE' },
     { year: -5000,   label: '5000 BCE' },
-    { year: -3000,   label: '3000 BCE' },
     { year: -1200,   label: '1200 BCE' },
     { year: 0,       label: '0' },
     { year: 500,     label: '500 CE' },
-    { year: 1000,    label: '1000 CE' },
-    { year: 1500,    label: '1500 CE' },
-    { year: 1800,    label: '1800' },
+    { year: 1000,    label: '1000' },
+    { year: 1500,    label: '1500' },
     { year: 1900,    label: '1900' },
-    { year: 2000,    label: '2000' },
-    { year: 2026,    label: 'now' },
+    { year: 2026,    label: 'Now' },
   ];
   ticks.forEach(t => {
     const el = document.createElement('div');
@@ -1044,6 +1298,66 @@ function buildAxis() {
     el.style.left = yearToPercent(t.year) + '%';
     el.innerHTML = `<span>${t.label}</span>`;
     axis.appendChild(el);
+  });
+}
+
+function createNode(event, color) {
+  const node = document.createElement('button');
+  node.className = 'event-node';
+  if (event.layer === 'information') node.classList.add('meaning-node');
+  if (event.link) node.classList.add('has-link');
+  node.style.setProperty('--node-color', color);
+  node.style.left = yearToPercent(event.year) + '%';
+  node.dataset.layer = event.layer;
+  node.dataset.subtype = event.subtype || '';
+  node.dataset.tags = (event.tags || []).join(' ').toLowerCase();
+  node.dataset.short = event.short;
+  node.dataset.year = event.year;
+  node.setAttribute('aria-label', `${event.date}: ${event.title}`);
+  if (event.collapseScore) {
+    const s = document.createElement('span');
+    s.className = 'collapse-score';
+    s.textContent = `S${event.collapseScore}`;
+    node.appendChild(s);
+  }
+  node.addEventListener('click', () => selectEvent(event, node));
+  return node;
+}
+
+function buildShocksRow() {
+  const timeline = document.getElementById('timeline');
+  const row = document.createElement('div');
+  row.className = 'shocks-row';
+  row.dataset.layer = 'shock';
+  const lbl = document.createElement('div');
+  lbl.className = 'layer-label';
+  lbl.textContent = 'System Shocks';
+  row.appendChild(lbl);
+  shocks.forEach(s => row.appendChild(createNode(s, 'var(--shock)')));
+  timeline.appendChild(row);
+}
+
+function buildLayers() {
+  const timeline = document.getElementById('timeline');
+  layers.forEach(layer => {
+    const el = document.createElement('div');
+    el.className = 'layer';
+    el.dataset.layer = layer.id;
+    const lbl = document.createElement('div');
+    lbl.className = 'layer-label';
+    lbl.style.color = layer.color;
+    lbl.textContent = layer.label;
+    const ln = document.createElement('div');
+    ln.className = 'layer-line';
+    el.appendChild(lbl); el.appendChild(ln);
+    if (layer.id === 'climate') {
+      const b = document.createElement('div');
+      b.className = 'climate-band';
+      el.appendChild(b);
+    }
+    events.filter(e => e.layer === layer.id).forEach(e =>
+      el.appendChild(createNode(e, getNodeColor(e, layer.color))));
+    timeline.appendChild(el);
   });
 }
 
@@ -1058,100 +1372,42 @@ function buildShockLines(timelineHeight) {
   });
 }
 
-function createNode(event, color) {
-  const node = document.createElement('button');
-  node.className = 'event-node';
-  if (event.link) node.classList.add('has-link');
-  node.style.setProperty('--node-color', color);
-  node.style.left = yearToPercent(event.year) + '%';
-  node.dataset.layer = event.layer;
-  node.dataset.short = event.short;
-  node.dataset.year = event.year;
-  node.setAttribute('aria-label', `${event.date}: ${event.title}`);
-  node.addEventListener('click', () => selectEvent(event, node));
-  return node;
-}
-
-function buildShocksRow() {
-  const timeline = document.getElementById('timeline');
-  const row = document.createElement('div');
-  row.className = 'shocks-row';
-  row.dataset.layer = 'shock';
-
-  const lbl = document.createElement('div');
-  lbl.className = 'layer-label';
-  lbl.textContent = 'System Shocks';
-  row.appendChild(lbl);
-
-  shocks.forEach(s => {
-    const node = createNode(s, 'var(--shock)');
-    row.appendChild(node);
-  });
-
-  timeline.appendChild(row);
-}
-
-function buildLayers() {
-  const timeline = document.getElementById('timeline');
-  layers.forEach(layer => {
-    const el = document.createElement('div');
-    el.className = 'layer';
-    el.dataset.layer = layer.id;
-
-    const lbl = document.createElement('div');
-    lbl.className = 'layer-label';
-    lbl.style.color = layer.color;
-    lbl.textContent = layer.label;
-
-    const ln = document.createElement('div');
-    ln.className = 'layer-line';
-
-    el.appendChild(lbl);
-    el.appendChild(ln);
-
-    if (layer.id === 'climate') {
-      const band = document.createElement('div');
-      band.className = 'climate-band';
-      el.appendChild(band);
-    }
-
-    events
-      .filter(e => e.layer === layer.id)
-      .forEach(e => el.appendChild(createNode(e, layer.color)));
-
-    timeline.appendChild(el);
-  });
-}
-
-// Stagger labels to prevent overlap. For each layer, walk nodes
-// left-to-right and assign vertical stagger values when a node sits
-// too close (in screen space) to its predecessor.
+/* ============================================================
+   LABEL STAGGERING
+   For each row, walk nodes left-to-right and assign vertical
+   stagger slots so labels don't overlap.
+   ============================================================ */
 function staggerLabels() {
-  const minSpacingPct = 4;  // % of timeline width
-  document.querySelectorAll('.layer, .shocks-row').forEach(layer => {
-    const nodes = Array.from(layer.querySelectorAll('.event-node'))
+  const minSpacingPct = 3.5;
+  document.querySelectorAll('.layer, .shocks-row').forEach(row => {
+    const nodes = Array.from(row.querySelectorAll('.event-node'))
       .sort((a, b) => parseFloat(a.style.left) - parseFloat(b.style.left));
-    let lastPositions = [];
+    let recent = [];
     nodes.forEach(node => {
       const x = parseFloat(node.style.left);
-      const usedStaggers = lastPositions
+      const used = recent
         .filter(p => x - p.x < minSpacingPct)
         .map(p => p.stagger);
       let chosen = 0;
-      for (const candidate of [0, 1, 2, -1]) {
-        if (!usedStaggers.includes(candidate)) { chosen = candidate; break; }
+      for (const c of [0, 1, 2, 3, -1]) {
+        if (!used.includes(c)) { chosen = c; break; }
       }
       if (chosen !== 0) node.dataset.stagger = chosen;
-      lastPositions.push({ x, stagger: chosen });
-      lastPositions = lastPositions.filter(p => x - p.x < minSpacingPct);
+      recent.push({ x, stagger: chosen });
+      recent = recent.filter(p => x - p.x < minSpacingPct);
     });
   });
 }
-// For each time bucket, count distinct layers with events.
-// Buckets are non-uniform — they follow the same piecewise scale
-// so a "century" bucket means something different in deep time
-// vs the modern era. Coupled-failure moments = high stress.
-// ============================================================
+
+/* ============================================================
+   STRESS INDEX
+   Severity-weighted rather than just count of layers.
+   Each event contributes 1 to its bucket's "layer set"
+   (a Set keyed by layer, so duplicates within one layer don't
+   over-count). Shocks contribute their collapseScore as bonus
+   weight, so a window with one S5 + 2 layers reads higher than
+   one with 3 layers and no shock.
+   ============================================================ */
 function buildStressRow() {
   const timeline = document.getElementById('timeline');
   const row = document.createElement('div');
@@ -1160,75 +1416,78 @@ function buildStressRow() {
 
   const lbl = document.createElement('div');
   lbl.className = 'stress-label';
-  lbl.innerHTML = 'Stress Index <small>distinct layers active in window</small>';
+  lbl.innerHTML = 'Stress Index <small>layers active &amp; severity in window</small>';
   row.appendChild(lbl);
 
-  // Compute stress: bucket by yearToPercent (i.e. position on screen)
-  // so that buckets are uniform in space but variable in years.
-  const bucketCount = 80;
-  const buckets = Array.from({ length: bucketCount }, () => new Set());
+  const bucketCount = 90;
+  const buckets = Array.from({ length: bucketCount }, () => ({
+    layers: new Set(),
+    score: 0,
+    representative: null,
+  }));
 
   events.forEach(e => {
     const pct = yearToPercent(e.year);
     const idx = Math.min(bucketCount - 1, Math.max(0, Math.floor(pct / 100 * bucketCount)));
-    // Count layer (treat shock as its own layer for this purpose)
-    buckets[idx].add(e.layer);
+    // Use 'shock' as its own pseudo-layer in addition to whatever layer
+    // the event lives in (shocks are layer:'shock', so they count once).
+    // For shocks, also add their layer-of-effect via tags.
+    buckets[idx].layers.add(e.layer);
+    if (e.layer === 'shock') {
+      buckets[idx].score += (e.collapseScore || 2);
+      // Pick the highest-collapse-score shock as representative for label
+      if (!buckets[idx].representative ||
+          (e.collapseScore || 0) > (buckets[idx].representative.collapseScore || 0)) {
+        buckets[idx].representative = e;
+      }
+    }
   });
 
-  // Find peak buckets to label
-  const counts = buckets.map(s => s.size);
-  const maxCount = Math.max(...counts);
+  // Compose composite weight: distinct layers + severity bonus
+  const composite = buckets.map(b => b.layers.size + Math.min(b.score, 6) * 0.6);
+  const maxComp = Math.max(...composite, 1);
 
-  buckets.forEach((s, i) => {
-    if (s.size === 0) return;
+  buckets.forEach((b, i) => {
+    if (b.layers.size === 0) return;
+    const weight = composite[i];
+    const heightPct = (weight / maxComp) * 100;
     const bar = document.createElement('div');
     bar.className = 'stress-bar';
-    const heightPct = (s.size / Math.max(maxCount, 1)) * 100;
-    bar.style.height = (heightPct * 0.6) + 'px';   // 60px max bar height
+    bar.style.height = (heightPct * 0.6) + 'px';
     bar.style.left = ((i + 0.5) / bucketCount * 100) + '%';
-    if (s.size >= 3) bar.classList.add('high');
-    if (s.size === maxCount && maxCount >= 3) {
+    if (weight >= 3) bar.classList.add('high');
+    if (weight >= maxComp * 0.92) {
       bar.classList.add('peak');
-      // Label with the cluster name — use the most representative event in this bucket
-      const eventsInBucket = events.filter(e => {
-        const pct = yearToPercent(e.year);
-        const idx = Math.floor(pct / 100 * bucketCount);
-        return idx === i;
-      });
-      const shockInBucket = eventsInBucket.find(e => e.layer === 'shock');
-      bar.dataset.peakLabel = shockInBucket ? shockInBucket.short : '';
+      bar.dataset.peakLabel = b.representative ? b.representative.short : '';
     }
-    bar.title = `${s.size} layers: ${[...s].join(', ')}`;
+    bar.title = `${b.layers.size} layers (${[...b.layers].join(', ')})${b.score ? ' · severity ' + b.score : ''}`;
     row.appendChild(bar);
   });
 
   timeline.appendChild(row);
 }
 
-// ============================================================
-// LATENCY ARCS — drawn into the SVG layer
-// ============================================================
+/* ============================================================
+   LATENCY ARCS
+   ============================================================ */
 function buildLatencyArcs() {
   const svg = document.getElementById('latencySvg');
   const timeline = document.getElementById('timeline');
   const tlRect = timeline.getBoundingClientRect();
-  const left = 210;
-  const right = 60;
+  const left = 230, right = 60;
   const usableWidth = tlRect.width - left - right;
 
-  // Find a shock node so we can match its actual y-position on screen.
+  // Anchor arcs to the actual on-screen position of shock nodes
   const shockNode = timeline.querySelector('.shocks-row .event-node');
-  let arcY = 102;   // sensible fallback
+  let arcY = 102;
   if (shockNode) {
     const sRect = shockNode.getBoundingClientRect();
-    // shock node y in timeline-relative coords
     arcY = sRect.top + sRect.height / 2 - tlRect.top;
   }
 
   svg.setAttribute('viewBox', `0 0 ${tlRect.width} ${tlRect.height}`);
   svg.style.width = tlRect.width + 'px';
   svg.style.height = tlRect.height + 'px';
-  // Clear previous content
   svg.innerHTML = '';
 
   function xForYear(y) {
@@ -1243,11 +1502,8 @@ function buildLatencyArcs() {
     const span = Math.abs(x2 - x1);
     let peakHeight = Math.max(45, Math.min(95, 45 + (80 - Math.min(span, 80)) * 0.7));
     peakHeight += (i % 3) * 18;
-
     const peakY = arcY - peakHeight;
     const midX = (x1 + x2) / 2;
-
-    // For very short spans, widen the curve via control point offset
     const ctrlOffset = Math.max(0, 30 - span);
     const ctrlX1 = x1 - ctrlOffset;
     const ctrlX2 = x2 + ctrlOffset;
@@ -1272,26 +1528,27 @@ function buildLatencyArcs() {
       dot.setAttribute('cy', arcY);
       dot.setAttribute('r', 4);
       dot.setAttribute('fill', 'rgba(247, 201, 72, 0.95)');
-      dot.setAttribute('stroke', 'rgba(247, 201, 72, 0.4)');
+      dot.setAttribute('stroke', 'rgba(247, 201, 72, 0.3)');
       dot.setAttribute('stroke-width', 6);
       svg.appendChild(dot);
     });
   });
 }
 
-// ============================================================
-// EVENT SELECTION
-// ============================================================
-const layerLabelMap = Object.fromEntries(
-  layers.map(l => [l.id, l.label]).concat([['shock', 'System Shock']])
-);
+/* ============================================================
+   EVENT SELECTION
+   ============================================================ */
+const layerLabelMap = {
+  biology: 'Biology', climate: 'Climate', technology: 'Technology',
+  civilization: 'Civilization', information: 'Meaning System', shock: 'System Shock',
+};
+const subtypeLabelMap = {
+  religion: 'Religion', philosophy: 'Philosophy', ideology: 'Ideology',
+  media: 'Media', ai: 'AI',
+};
 const layerColorMap = {
-  biology: 'var(--biology)',
-  climate: 'var(--climate)',
-  technology: 'var(--tech)',
-  civilization: 'var(--civilization)',
-  information: 'var(--information)',
-  shock: 'var(--shock)',
+  biology: 'var(--biology)', climate: 'var(--climate)', technology: 'var(--tech)',
+  civilization: 'var(--civilization)', information: 'var(--information)', shock: 'var(--shock)',
 };
 
 function selectEvent(event, node) {
@@ -1299,38 +1556,61 @@ function selectEvent(event, node) {
   node.classList.add('selected');
 
   const card = document.getElementById('detailCard');
-  const tagColor = layerColorMap[event.layer];
+  let tagColor = layerColorMap[event.layer];
+  let layerLabel = layerLabelMap[event.layer] || event.layer;
+  if (event.subtype && subtypeColors[event.subtype]) {
+    tagColor = subtypeColors[event.subtype];
+    layerLabel = subtypeLabelMap[event.subtype] || event.subtype;
+  }
+
+  const tags = (event.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+  const collapse = event.collapseScore
+    ? `<span class="tag collapse-tag">Collapse Score ${event.collapseScore}/5</span>`
+    : '';
   const linkHTML = event.link
     ? `<a class="event-fieldnote" href="${event.link.url}" target="_blank" rel="noopener">Read ${event.link.label}</a>`
     : '';
+
   card.innerHTML = `
     <div class="event-date">${event.date}
-      <span class="event-layer-tag" style="color: ${tagColor};">${layerLabelMap[event.layer]}</span>
+      <span class="event-layer-tag" style="color: ${tagColor};">${layerLabel}</span>
     </div>
     <h2 class="event-title">${event.title}</h2>
     <p class="event-description">${event.description}</p>
+    <div class="tags">${tags}${collapse}</div>
     ${linkHTML}
   `;
 }
 
-// ============================================================
-// FILTERS
-// ============================================================
+/* ============================================================
+   FILTERS
+   ============================================================ */
 function applyFilter(filter) {
+  const subtypeFilters = ['religion', 'philosophy', 'ideology', 'media', 'ai'];
+  const isSubtype = subtypeFilters.includes(filter);
+
   document.querySelectorAll('.event-node').forEach(node => {
-    const visible = filter === 'all' || node.dataset.layer === filter;
+    if (filter === 'all') { node.classList.remove('dimmed'); return; }
+    const layerMatch = node.dataset.layer === filter;
+    const subtypeMatch = isSubtype && node.dataset.subtype === filter;
+    const tagMatch = node.dataset.tags.includes(filter);
+    const visible = layerMatch || subtypeMatch || tagMatch;
     node.classList.toggle('dimmed', !visible);
   });
+
   document.querySelectorAll('.layer').forEach(layer => {
-    const visible = filter === 'all' || layer.dataset.layer === filter;
+    const visible = filter === 'all'
+      || layer.dataset.layer === filter
+      || (isSubtype && layer.dataset.layer === 'information');
     layer.style.opacity = visible ? '1' : '0.32';
   });
-  // Shocks row visibility separate from the regular layers
+
   const shocksRow = document.querySelector('.shocks-row');
   if (shocksRow) {
     const visible = filter === 'all' || filter === 'shock';
     shocksRow.style.opacity = visible ? '1' : '0.32';
   }
+
   document.querySelectorAll('.shock-line').forEach(line => {
     line.style.opacity = (filter === 'all' || filter === 'shock') ? '1' : '0.16';
   });
@@ -1346,9 +1626,9 @@ function setupFilters() {
   });
 }
 
-// ============================================================
-// LATENCY MODE
-// ============================================================
+/* ============================================================
+   LATENCY MODE
+   ============================================================ */
 function setupLatencyToggle() {
   const btn = document.getElementById('latencyToggle');
   const svg = document.getElementById('latencySvg');
@@ -1358,20 +1638,18 @@ function setupLatencyToggle() {
   });
 }
 
-// ============================================================
-// INIT
-// ============================================================
+/* ============================================================
+   INIT
+   ============================================================ */
 function init() {
   buildEras();
   buildAxis();
   buildShocksRow();
   buildLayers();
   staggerLabels();
-  // Compute timeline height for shock lines now that layers exist
   const tlHeight = document.getElementById('timeline').getBoundingClientRect().height - 70;
   buildShockLines(tlHeight);
   buildStressRow();
-  // Build arcs after stress row so the SVG covers the full thing
   setTimeout(buildLatencyArcs, 50);
   setupFilters();
   setupLatencyToggle();
@@ -1383,7 +1661,6 @@ if (document.readyState === 'loading') {
   init();
 }
 
-// Rebuild latency arcs on resize
 let resizeTimer;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
