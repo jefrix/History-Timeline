@@ -203,7 +203,7 @@ img[alt="Visitor Counter"] { display: none !important; }
   pointer-events: none;
 }
 
-.tu-nav-toggle, .tu-filter-toggle {
+.tu-nav-toggle, .tu-filter-toggle, .tu-time-toggle {
   background: none;
   border: 1px solid var(--border);
   color: var(--text);
@@ -214,14 +214,234 @@ img[alt="Visitor Counter"] { display: none !important; }
   white-space: nowrap;
   font-family: var(--sans);
 }
-.tu-nav-toggle:hover, .tu-filter-toggle:hover {
+.tu-nav-toggle:hover, .tu-filter-toggle:hover, .tu-time-toggle:hover {
   border-color: var(--accent);
   color: var(--accent);
 }
-.tu-filter-toggle.active {
+.tu-filter-toggle.active, .tu-time-toggle.active {
   border-color: var(--accent);
   color: var(--accent);
   background: var(--accent-soft);
+}
+
+/* ============================================================
+   TIME-SLIDER BAR (sticky, under the topbar)
+   ============================================================ */
+.tu-timebar {
+  background: var(--bg-elev);
+  border-bottom: 1px solid var(--border);
+  padding: 0.7rem 1.25rem;
+  display: none;
+}
+.tu-timebar.open { display: block; }
+.tu-timebar-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.tu-time-clear {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.85rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.tu-time-clear:hover { border-color: var(--accent); color: var(--accent); }
+.tu-time-readout {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  color: var(--accent);
+  min-width: 110px;
+  flex-shrink: 0;
+}
+.tu-time-count {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  min-width: 80px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Slider (shared style for both topbar and explorer) */
+.tu-time-slider, .tu-explorer-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: linear-gradient(90deg, var(--bg-elev-2) 0%, var(--accent-dim) 100%);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+.tu-time-slider::-webkit-slider-thumb,
+.tu-explorer-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  cursor: grab;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  transition: transform 0.1s;
+}
+.tu-time-slider::-webkit-slider-thumb:active,
+.tu-explorer-slider::-webkit-slider-thumb:active {
+  transform: scale(1.2);
+  cursor: grabbing;
+}
+.tu-time-slider::-moz-range-thumb,
+.tu-explorer-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  cursor: grab;
+}
+
+/* ============================================================
+   TIME EXPLORER PANEL (the dedicated section at the top)
+   ============================================================ */
+.tu-explorer {
+  max-width: 1280px;
+  margin: 1rem auto 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, var(--bg-elev) 0%, var(--bg-elev-2) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  position: relative;
+  z-index: 2;
+  box-shadow: var(--shadow);
+}
+.tu-explorer-header h2 {
+  margin: 0 !important;
+  font-size: 1.4rem !important;
+  text-align: left !important;
+}
+.tu-explorer-help {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  margin: 0.3rem 0 1.2rem;
+  max-width: 70ch;
+}
+.tu-explorer-readout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-bottom: 1rem;
+}
+.tu-explorer-year {
+  font-family: var(--serif);
+  font-size: 2rem;
+  color: var(--accent);
+  min-width: 220px;
+  text-align: center;
+  font-weight: 600;
+}
+.tu-explorer-step {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+.tu-explorer-step:hover { border-color: var(--accent); color: var(--accent); }
+
+.tu-explorer-reset {
+  margin-left: 0.5rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.tu-explorer-reset:hover { border-color: var(--accent); color: var(--accent); }
+
+.tu-explorer-track-wrap {
+  position: relative;
+  padding: 1.4rem 0 0;
+}
+.tu-explorer-slider {
+  display: block;
+  width: 100%;
+  margin: 0;
+}
+.tu-era-bands {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1.1rem;
+  pointer-events: none;
+}
+.tu-era-band {
+  position: absolute;
+  top: 0;
+  height: 1.1rem;
+  border-left: 1px solid var(--accent-dim);
+  padding-left: 4px;
+}
+.tu-era-band:last-child { border-right: 1px solid var(--accent-dim); }
+.tu-era-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+.tu-explorer-ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+.tu-explorer-stats {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text);
+  font-size: 0.92rem;
+}
+.tu-explorer-stats strong { color: var(--accent); }
+
+/* ============================================================
+   ROW STATES under the time slider
+   ============================================================ */
+.tu-time-dim {
+  opacity: 0.18;
+  transition: opacity 0.2s;
+}
+.tu-time-hit {
+  background: var(--accent-soft) !important;
+  box-shadow: inset 3px 0 0 var(--accent);
+  transition: background 0.15s;
 }
 
 /* ============================================================

@@ -20,6 +20,159 @@
   'use strict';
 
   // -----------------------------------------------------------
+  // 0. HISTORICAL DATE PARSER
+  // -----------------------------------------------------------
+  // Parses every date format I observed in the original file
+  // (e.g. "200,000 BCE", "c. 115,000-11,700 BCE", "circa 1230-1200 BCE",
+  // "1184 BCE (approx.)", "10th-8th centuries BCE", "c. 100 CE - 940 CE")
+  // and returns {start, end} in signed years (BCE = negative, CE = positive),
+  // or null if no parseable date is found.
+  function parseHistoricalDate(text) {
+    if (!text) return null;
+    let s = text
+      .replace(/\u00a0/g, ' ')
+      .replace(/[\u2013\u2014]/g, '-')        // en/em dash -> hyphen
+      .replace(/\(approx\.?\)/gi, '')
+      .replace(/\bcirca\b/gi, '')
+      .replace(/\bc\.\s*/gi, '')
+      .replace(/[~]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    // Centuries: "10th century BCE" / "10th-8th centuries BCE"
+    const cent = s.match(/(\d+)(?:st|nd|rd|th)\s*(?:-\s*(\d+)(?:st|nd|rd|th))?\s*centur(?:y|ies)\s*(BCE|CE|BC|AD)/i);
+    if (cent) {
+      const era = /BCE|BC/i.test(cent[3]) ? -1 : 1;
+      const c1 = parseInt(cent[1], 10);
+      const c2 = cent[2] ? parseInt(cent[2], 10) : c1;
+      if (era < 0) {
+        const startYear = -(Math.max(c1, c2)) * 100;
+        const endYear   = -((Math.min(c1, c2) - 1) * 100 + 1);
+        return { start: startYear, end: endYear };
+      } else {
+        const startYear = (Math.min(c1, c2) - 1) * 100 + 1;
+        const endYear   = Math.max(c1, c2) * 100;
+        return { start: startYear, end: endYear };
+      }
+    }
+
+    // Pull out all "<number> [BCE|CE]" tokens in order
+    const tokens = [];
+    const re = /(\d[\d,]*)\s*(BCE|BC|CE|AD)?/gi;
+    let m;
+    while ((m = re.exec(s)) !== null) {
+      const n = parseInt(m[1].replace(/,/g, ''), 10);
+      if (isNaN(n)) continue;
+      tokens.push({ n, era: m[2] ? m[2].toUpperCase() : null });
+    }
+    if (tokens.length === 0) return null;
+
+    // Find rightmost era marker — that's the default era
+    let lastEra = null;
+    for (let i = tokens.length - 1; i >= 0; i--) {
+      if (tokens[i].era) { lastEra = tokens[i].era; break; }
+    }
+    if (!lastEra) return null;
+
+    // Each token inherits the era of the next-rightward marker
+    let inherited = lastEra;
+    for (let i = tokens.length - 1; i >= 0; i--) {
+      if (tokens[i].era) inherited = tokens[i].era;
+      tokens[i].resolvedEra = inherited;
+    }
+    function toYear(t) {
+      const sign = (t.resolvedEra === 'BCE' || t.resolvedEra === 'BC') ? -1 : 1;
+      return sign * t.n;
+    }
+
+    if (tokens.length === 1) {
+      const y = toYear(tokens[0]);
+      return { start: y, end: y };
+    }
+    const a = toYear(tokens[0]);
+    const b = toYear(tokens[1]);
+    return { start: Math.min(a, b), end: Math.max(a, b) };
+  }
+
+  // -----------------------------------------------------------
+  // SLIDER STATE
+  // -----------------------------------------------------------
+  // We use a non-linear (logarithmic) scale because dates span
+  // 200,000 BCE to 2025 CE — far too wide for a linear slider.
+  // Pre-history compresses, the historical era expands.
+  const SLIDER_MIN_YEAR = -200000;   // 200,000 BCE
+  const SLIDER_MAX_YEAR = 2025;
+  const SLIDER_STEPS = 1000;          // 0..1000 maps to year range
+
+  // Era markers shown on the slider track
+  const ERAS = [
+    { label: 'Stone Age',     start: -200000, end: -3300 },
+    { label: 'Bronze Age',    start: -3300,   end: -1200 },
+    { label: 'Iron Age',      start: -1200,   end: 500   },
+    { label: 'Middle Ages',   start: 500,     end: 1500  },
+    { label: 'Early Modern',  start: 1500,    end: 1800  },
+    { label: 'Modern',        start: 1800,    end: 2025  },
+  ];
+
+  // Map slider step (0..1000) -> year, using a piecewise scale that
+  // gives each major era roughly proportional space:
+  //   0%     -> 200,000 BCE
+  //   25%    -> 10,000 BCE   (deep prehistory compressed)
+  //   55%    -> 1 CE         (antiquity gets the most room)
+  //   75%    -> 1500 CE      (medieval / early modern)
+  //   100%   -> 2025 CE
+  function stepToYear(step) {
+    const t = step / SLIDER_STEPS;
+    if (t <= 0.25) {
+      // 200,000 BCE -> 10,000 BCE, log-warped so deep past compresses
+      const lt = t / 0.25;
+      const yMax = 200000, yMin = 10000;
+      const logY = Math.log(yMax) - lt * (Math.log(yMax) - Math.log(yMin));
+      return Math.round(-Math.exp(logY));
+    } else if (t <= 0.55) {
+      // 10,000 BCE -> 1 CE (linear, antiquity)
+      const lt = (t - 0.25) / 0.30;
+      return Math.round(-10000 + lt * 10001);
+    } else if (t <= 0.75) {
+      // 1 CE -> 1500 CE (linear)
+      const lt = (t - 0.55) / 0.20;
+      return Math.round(1 + lt * 1499);
+    } else {
+      // 1500 CE -> 2025 CE (linear)
+      const lt = (t - 0.75) / 0.25;
+      return Math.round(1500 + lt * 525);
+    }
+  }
+  function yearToStep(year) {
+    if (year <= -10000) {
+      const yMax = 200000, yMin = 10000;
+      const lt = (Math.log(yMax) - Math.log(-year)) / (Math.log(yMax) - Math.log(yMin));
+      return Math.round(lt * 0.25 * SLIDER_STEPS);
+    } else if (year <= 0) {
+      // -10000 .. 0
+      const lt = (year + 10000) / 10000;
+      return Math.round((0.25 + lt * 0.30) * SLIDER_STEPS);
+    } else if (year <= 1500) {
+      const lt = (year - 1) / 1499;
+      return Math.round((0.55 + lt * 0.20) * SLIDER_STEPS);
+    } else {
+      const lt = (year - 1500) / 525;
+      return Math.round((0.75 + lt * 0.25) * SLIDER_STEPS);
+    }
+  }
+  function formatYear(year) {
+    if (year < 0) {
+      return Math.abs(year).toLocaleString() + ' BCE';
+    }
+    return year.toLocaleString() + ' CE';
+  }
+
+  // Index of every dated row on the page: its date range + element
+  let datedRows = [];
+  let currentYear = null;   // null = slider inactive (show everything)
+
+
+  // -----------------------------------------------------------
   // 1. INJECT TOPBAR + SIDE NAV + FILTER BAR + BACK-TO-TOP
   // -----------------------------------------------------------
   function buildChrome() {
@@ -73,8 +226,19 @@
                  aria-label="Search timeline">
           <span class="tu-search-count" id="tuSearchCount"></span>
         </div>
+        <button class="tu-time-toggle" id="tuTimeToggle" aria-label="Time slider">⏱ Time</button>
         <button class="tu-filter-toggle" id="tuFilterToggle" aria-label="Filter sections">⚑ Filter</button>
         <button class="tu-nav-toggle" id="tuNavToggle" aria-label="Open navigation">☰ Sections</button>
+      </div>
+      <div class="tu-timebar" id="tuTimebar">
+        <div class="tu-timebar-inner">
+          <button class="tu-time-clear" id="tuTimeClear" title="Show all dates">✕</button>
+          <span class="tu-time-readout" id="tuTimeReadout">200,000 BCE</span>
+          <input type="range" min="0" max="${SLIDER_STEPS}" value="0" step="1"
+                 class="tu-time-slider" id="tuTimeSlider"
+                 aria-label="Year slider">
+          <span class="tu-time-count" id="tuTimeCount"></span>
+        </div>
       </div>
       <div class="tu-filterbar" id="tuFilterbar">
         <div class="tu-filterbar-inner">
@@ -111,6 +275,185 @@
     const anchor = document.createElement('div');
     anchor.id = 'tu-top';
     topbar.parentNode.insertBefore(anchor, topbar);
+  }
+
+  // -----------------------------------------------------------
+  // 1b. INJECT TIME EXPLORER PANEL
+  // A standalone widget at the top of the content with a wider
+  // slider, era band markers, and a count of visible items.
+  // -----------------------------------------------------------
+  function buildTimeExplorer() {
+    const panel = document.createElement('section');
+    panel.className = 'tu-explorer';
+    panel.id = 'tuExplorer';
+
+    // Build era band markers (Stone Age, Bronze Age, etc.) positioned
+    // on the slider track using the same log scale as the slider.
+    let eraBands = '';
+    ERAS.forEach(era => {
+      const startPct = (yearToStep(era.start) / SLIDER_STEPS) * 100;
+      const endPct = (yearToStep(era.end) / SLIDER_STEPS) * 100;
+      const width = endPct - startPct;
+      eraBands += `
+        <div class="tu-era-band" style="left:${startPct}%; width:${width}%;">
+          <span class="tu-era-label">${era.label}</span>
+        </div>`;
+    });
+
+    panel.innerHTML = `
+      <div class="tu-explorer-header">
+        <h2 style="cursor:default;border:none;padding:0;margin:0;">Time Explorer</h2>
+        <p class="tu-explorer-help">Drag the slider to a year. Every dated event on the page that overlaps that moment will be highlighted; everything else dims. The scale is logarithmic — recent millennia get more room than the deep past.</p>
+      </div>
+      <div class="tu-explorer-readout">
+        <button class="tu-explorer-step" data-dir="-1" aria-label="Earlier">‹</button>
+        <span class="tu-explorer-year" id="tuExplorerYear">All time</span>
+        <button class="tu-explorer-step" data-dir="1" aria-label="Later">›</button>
+        <button class="tu-explorer-reset" id="tuExplorerReset" title="Show all dates">Reset</button>
+      </div>
+      <div class="tu-explorer-track-wrap">
+        <div class="tu-era-bands">${eraBands}</div>
+        <input type="range" min="0" max="${SLIDER_STEPS}" value="0" step="1"
+               class="tu-explorer-slider" id="tuExplorerSlider"
+               aria-label="Year slider">
+        <div class="tu-explorer-ticks">
+          <span>200K BCE</span>
+          <span>10K BCE</span>
+          <span>3000 BCE</span>
+          <span>1000 BCE</span>
+          <span>1 CE</span>
+          <span>1500 CE</span>
+          <span>2025 CE</span>
+        </div>
+      </div>
+      <div class="tu-explorer-stats" id="tuExplorerStats">
+        Loading dated events…
+      </div>
+    `;
+
+    // Insert after the very first <h1>/<h2>/<h4> intro headings,
+    // before the first <section>.
+    const firstSection = document.querySelector('section[id]');
+    if (firstSection) {
+      firstSection.parentNode.insertBefore(panel, firstSection);
+    } else {
+      document.body.appendChild(panel);
+    }
+  }
+
+  // -----------------------------------------------------------
+  // INDEX every dated row on the page
+  // For each <tr>, take the first <td> as the date column,
+  // parse it, and remember the {start, end} range alongside the row.
+  // -----------------------------------------------------------
+  function indexDatedRows() {
+    datedRows = [];
+    document.querySelectorAll('section table tbody tr, section table tr').forEach(tr => {
+      // Skip header rows
+      if (tr.querySelector('th')) return;
+      const firstCell = tr.querySelector('td');
+      if (!firstCell) return;
+      const range = parseHistoricalDate(firstCell.textContent);
+      if (range) datedRows.push({ tr, range });
+    });
+  }
+
+  // -----------------------------------------------------------
+  // APPLY the slider: dim rows whose date range doesn't include
+  // the current year, highlight those that do.
+  // null currentYear = slider inactive, show everything.
+  // -----------------------------------------------------------
+  function applyTimeFilter() {
+    const total = datedRows.length;
+
+    if (currentYear === null) {
+      datedRows.forEach(({ tr }) => {
+        tr.classList.remove('tu-time-dim', 'tu-time-hit');
+      });
+      document.getElementById('tuTimeCount').textContent = '';
+      document.getElementById('tuExplorerStats').innerHTML =
+        `Showing all <strong>${total}</strong> dated events.`;
+      return;
+    }
+
+    let hits = 0;
+    datedRows.forEach(({ tr, range }) => {
+      const inRange = currentYear >= range.start && currentYear <= range.end;
+      if (inRange) {
+        tr.classList.add('tu-time-hit');
+        tr.classList.remove('tu-time-dim');
+        hits++;
+      } else {
+        tr.classList.add('tu-time-dim');
+        tr.classList.remove('tu-time-hit');
+      }
+    });
+
+    document.getElementById('tuTimeCount').textContent =
+      hits + ' / ' + total;
+    document.getElementById('tuExplorerStats').innerHTML =
+      `<strong>${hits}</strong> of ${total} events overlap ${formatYear(currentYear)}.`;
+
+    // Auto-expand sections that have a hit so the user sees their result
+    document.querySelectorAll('section.tu-section.collapsed').forEach(sec => {
+      if (sec.querySelector('.tu-time-hit')) sec.classList.remove('collapsed');
+    });
+  }
+
+  // -----------------------------------------------------------
+  // WIRE up the topbar slider + explorer panel slider so they stay
+  // in sync, and the time-toggle button shows/hides the bar.
+  // -----------------------------------------------------------
+  function wireTimeSlider() {
+    const topbarSlider = document.getElementById('tuTimeSlider');
+    const explorerSlider = document.getElementById('tuExplorerSlider');
+    const readout = document.getElementById('tuTimeReadout');
+    const explorerYear = document.getElementById('tuExplorerYear');
+    const timebar = document.getElementById('tuTimebar');
+    const timeToggle = document.getElementById('tuTimeToggle');
+    const timeClear = document.getElementById('tuTimeClear');
+
+    function setStep(step, sourceEl) {
+      currentYear = stepToYear(step);
+      readout.textContent = formatYear(currentYear);
+      explorerYear.textContent = formatYear(currentYear);
+      if (topbarSlider !== sourceEl) topbarSlider.value = step;
+      if (explorerSlider !== sourceEl) explorerSlider.value = step;
+      applyTimeFilter();
+    }
+
+    function clearSlider() {
+      currentYear = null;
+      readout.textContent = 'All time';
+      explorerYear.textContent = 'All time';
+      topbarSlider.value = 0;
+      explorerSlider.value = 0;
+      applyTimeFilter();
+    }
+
+    topbarSlider.addEventListener('input', e => setStep(parseInt(e.target.value, 10), e.target));
+    explorerSlider.addEventListener('input', e => setStep(parseInt(e.target.value, 10), e.target));
+    timeClear.addEventListener('click', clearSlider);
+    document.getElementById('tuExplorerReset').addEventListener('click', clearSlider);
+
+    // Step buttons in the explorer panel
+    document.querySelectorAll('.tu-explorer-step').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const dir = parseInt(btn.dataset.dir, 10);
+        const cur = parseInt(explorerSlider.value, 10);
+        const next = Math.max(0, Math.min(SLIDER_STEPS, cur + dir * 10));
+        setStep(next, null);
+      });
+    });
+
+    // Toggle the topbar timebar
+    timeToggle.addEventListener('click', () => {
+      timebar.classList.toggle('open');
+      timeToggle.classList.toggle('active');
+    });
+
+    // Initialize readout
+    clearSlider();
   }
 
   // -----------------------------------------------------------
@@ -348,12 +691,15 @@
   // -----------------------------------------------------------
   function init() {
     buildChrome();
+    buildTimeExplorer();
     enhanceSections();
     buildFilterChips();
     wireSideNav();
     wireFilterBar();
     indexSearchables();
+    indexDatedRows();
     wireSearch();
+    wireTimeSlider();
     wireBackToTop();
   }
 

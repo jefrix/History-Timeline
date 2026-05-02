@@ -5,6 +5,7 @@ Three files that bolt onto your existing `index.html` and add:
 - A sticky topbar with **live search** across every event (Cmd/Ctrl-K to focus, Esc to clear)
 - A **side-drawer navigation** rebuilt automatically from your existing `<nav class="main-nav">` menu
 - A **filter chip bar** that lets readers show only Civilizations, Religions, Wars, Texts, etc.
+- A **Time Explorer slider** — drag a handle along a timeline from 200,000 BCE to 2025 CE, and every dated row on the page that includes that moment lights up; everything else dims
 - **Collapsible sections** — click any section heading to expand/collapse
 - A **back-to-top** button
 - The new dark-ink + parchment + gold aesthetic, applied automatically to every existing `<table>` and `<section>`
@@ -41,7 +42,32 @@ These aren't required, but will improve the result:
 
 - Strip inline `style="..."` attributes from individual table rows and cells where you can. The CSS overrides them, but cleaner HTML loads faster and is easier to maintain.
 - Remove the hidden `<img alt="Visitor Counter">` if it isn't actually counting anything useful.
-- Fix the unclosed `<section>` tags (several sections in the original file are nested inside each other rather than as siblings — search for `<section id="SeaPeoples"` etc. and check that each one is closed with `</section>` before the next opens).
+- Fix the unclosed `<section>` tags — several sections in the original file are nested inside each other rather than as siblings, which used to cause the "narrowing border" bug. The CSS now compensates, but cleaner markup is still better.
+
+---
+
+## How the Time Explorer works
+
+The slider parses the date in the **first cell** of every table row across the page, using a parser that handles every format I observed in your file:
+
+- `200,000 BCE`, `c. 164,000 BCE`, `~1600 BCE`, `1184 BCE (approx.)`
+- Ranges: `1208-1176 BCE`, `c. 115,000-11,700 BCE`, `c. 2000 BCE-1540 CE`
+- Centuries: `10th-8th centuries BCE`
+- Both eras: `4 BCE`, `45 BCE`, `100 CE`, `c. 1070 BCE – 350 CE`
+
+A row is shown as a **hit** (gold left-border, gold tint background) if the slider's current year falls within its date range. Otherwise it's **dimmed** (~18% opacity). Rows with unparseable date columns are left untouched.
+
+The slider uses a **piecewise scale** that gives each major era roughly proportional space:
+- 0–25% covers 200,000 BCE to 10,000 BCE (deep prehistory, log-warped)
+- 25–55% covers 10,000 BCE to 1 CE (antiquity, where most of your content lives)
+- 55–75% covers 1 CE to 1500 CE (medieval)
+- 75–100% covers 1500 CE to 2025 CE (early modern + modern)
+
+Two ways to use it:
+- **Time Explorer panel** at the top of the page — the dedicated widget with the big year display, era markers, and step buttons
+- **Compact slider** in the topbar — click "⏱ Time" to open it and drag without scrolling back to the top
+
+Both stay in sync. Press the **Reset** button (or the ✕ in the topbar) to clear the slider and show everything again.
 
 ---
 
@@ -49,8 +75,8 @@ These aren't required, but will improve the result:
 
 | File | What it is |
 |---|---|
-| `timeline-upgrade.css` | Stylesheet that overrides the original look. ~16 KB. |
-| `timeline-upgrade.js` | Script that builds the topbar, side-nav, search, filter, collapse, and back-to-top behaviors. ~10 KB. |
+| `timeline-upgrade.css` | Stylesheet that overrides the original look. ~21 KB. |
+| `timeline-upgrade.js` | Script that builds the topbar, side-nav, search, filter, time slider, collapse, and back-to-top behaviors. ~17 KB. |
 | `index.html` | A working demo page showing the upgrade applied to a representative slice of your original markup. Open this in a browser to see the result before you touch your real file. |
 
 ---
@@ -116,3 +142,6 @@ If you want to use the heading font that ships with Cormorant Garamond (instead 
 ## If something looks off
 
 The most likely cause is an inline `style="..."` attribute on an element that the override didn't anticipate. The CSS uses `!important` aggressively for table cells and headings precisely because the original file has many inline styles, but a few unusual ones might slip through. If you spot one, paste me the markup and I'll add a targeted override.
+
+For the time slider specifically: if a row that should match the current year isn't lighting up, check that its first `<td>` cell contains a date in one of the recognized formats listed above. Notes, footnotes, or rows with non-date first columns will be ignored by the slider (which is the correct behavior — they're left visible regardless of date).
+
