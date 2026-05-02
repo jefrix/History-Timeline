@@ -3,59 +3,119 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Layered Human History Timeline</title>
+  <title>The Evolution of Reality — Layered History System</title>
+  <meta name="description" content="A layered timeline of biology, climate, technology, civilization, and information — from 200,000 BCE to the present moment." />
   <style>
+    /* ============================================================
+       DESIGN TOKENS
+       ============================================================ */
     :root {
       --bg: #07090f;
+      --bg-2: #0a0d18;
       --panel: rgba(14, 18, 30, 0.86);
       --panel-soft: rgba(20, 26, 42, 0.72);
       --line: rgba(255, 255, 255, 0.14);
+      --line-soft: rgba(255, 255, 255, 0.06);
       --text: #f5f1e8;
       --muted: #a8adba;
+      --muted-2: #6f7585;
       --gold: #f7c948;
+      --gold-soft: rgba(247, 201, 72, 0.16);
+
+      /* Layer colors — stable across all UI elements */
       --biology: #58e08f;
       --climate: #54b8ff;
       --tech: #ffb347;
       --civilization: #d7a55f;
       --information: #b78cff;
       --shock: #ff4d5d;
+
       --warm: #ff8a4c;
       --cold: #3977ff;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at 20% 10%, rgba(247, 201, 72, 0.11), transparent 28%),
-        radial-gradient(circle at 80% 25%, rgba(183, 140, 255, 0.10), transparent 28%),
+        radial-gradient(circle at 20% 10%, rgba(247, 201, 72, 0.10), transparent 28%),
+        radial-gradient(circle at 80% 25%, rgba(183, 140, 255, 0.09), transparent 28%),
         linear-gradient(180deg, #05060a 0%, #090d16 45%, #05060a 100%);
       color: var(--text);
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ============================================================
+       SUITE NAV — links to the three sister pages + Fieldnotes
+       ============================================================ */
+    .suite-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(7, 9, 15, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .suite-nav-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .suite-brand {
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: var(--gold);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      margin-right: auto;
+    }
+    .suite-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      letter-spacing: 0.04em;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: 160ms ease;
+    }
+    .suite-nav a:hover { color: var(--text); border-color: var(--line); }
+    .suite-nav a.active {
+      color: var(--gold);
+      border-color: rgba(247, 201, 72, 0.32);
+      background: var(--gold-soft);
     }
 
     .timeline-page {
       width: min(1440px, 100%);
       margin: 0 auto;
-      padding: 48px 18px 72px;
+      padding: 32px 18px 72px;
     }
 
+    /* ============================================================
+       HERO
+       ============================================================ */
     .hero {
       position: relative;
       overflow: hidden;
       border: 1px solid var(--line);
       border-radius: 28px;
-      padding: clamp(28px, 5vw, 64px);
+      padding: clamp(28px, 5vw, 56px);
       background:
         linear-gradient(135deg, rgba(247, 201, 72, 0.12), transparent 35%),
         linear-gradient(90deg, rgba(15, 19, 33, 0.92), rgba(8, 11, 20, 0.92));
       box-shadow: 0 26px 80px rgba(0, 0, 0, 0.42);
     }
-
     .hero::before {
       content: "";
       position: absolute;
@@ -67,7 +127,6 @@
       mask-image: linear-gradient(90deg, black, transparent 82%);
       pointer-events: none;
     }
-
     .eyebrow {
       position: relative;
       z-index: 1;
@@ -78,82 +137,112 @@
       font-size: 0.76rem;
       font-weight: 800;
     }
-
     h1 {
       position: relative;
       z-index: 1;
       margin: 0;
       max-width: 900px;
-      font-size: clamp(2.2rem, 6vw, 5.2rem);
+      font-size: clamp(2.2rem, 6vw, 4.8rem);
       line-height: 0.95;
-      letter-spacing: -0.06em;
+      letter-spacing: -0.05em;
     }
-
-    .hero p {
+    h1 em {
+      font-style: italic;
+      color: var(--gold);
+      font-weight: 400;
+    }
+    .hero p.intro {
       position: relative;
       z-index: 1;
       max-width: 780px;
       margin: 22px 0 0;
       color: var(--muted);
-      font-size: clamp(1rem, 2vw, 1.28rem);
+      font-size: clamp(1rem, 1.6vw, 1.18rem);
       line-height: 1.65;
     }
+    .hero-thesis {
+      position: relative;
+      z-index: 1;
+      margin: 28px 0 0;
+      padding: 18px 22px;
+      border-left: 3px solid var(--gold);
+      background: rgba(247, 201, 72, 0.06);
+      border-radius: 0 12px 12px 0;
+      color: var(--text);
+      font-size: 0.96rem;
+      line-height: 1.6;
+    }
+    .hero-thesis em { color: var(--gold); font-style: normal; font-weight: 600; }
 
+    /* ============================================================
+       CONTROLS — filter chips + mode toggles
+       ============================================================ */
     .controls {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       align-items: center;
-      margin: 26px 0 18px;
+      margin: 26px 0 14px;
     }
-
-    .filter-button {
+    .controls-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .controls-divider {
+      width: 1px;
+      height: 28px;
+      background: var(--line);
+      margin: 0 4px;
+    }
+    .filter-button, .mode-button {
       appearance: none;
       border: 1px solid var(--line);
       color: var(--text);
-      background: rgba(255, 255, 255, 0.055);
-      border-radius: 999px;
-      padding: 10px 14px;
-      cursor: pointer;
-      font-weight: 750;
-      transition: 160ms ease;
-    }
-
-    .filter-button:hover,
-    .filter-button.active {
-      transform: translateY(-1px);
-      border-color: rgba(247, 201, 72, 0.62);
-      background: rgba(247, 201, 72, 0.14);
-    }
-
-    .legend {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 10px;
-      margin: 18px 0 18px;
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--muted);
       background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 10px 12px;
+      border-radius: 999px;
+      padding: 9px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: 160ms ease;
+      font-family: inherit;
     }
-
-    .legend-dot {
-      width: 12px;
-      height: 12px;
+    .filter-button:hover, .mode-button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(247, 201, 72, 0.4);
+    }
+    .filter-button.active, .mode-button.active {
+      border-color: rgba(247, 201, 72, 0.62);
+      background: var(--gold-soft);
+      color: var(--gold);
+    }
+    .mode-button .mode-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      box-shadow: 0 0 18px currentColor;
+      background: var(--muted-2);
+      margin-right: 6px;
+      vertical-align: middle;
     }
+    .mode-button.active .mode-dot { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
 
+    /* Layer-specific filter button colors when active */
+    .filter-button[data-filter="biology"].active     { border-color: var(--biology); background: rgba(88, 224, 143, 0.12); color: var(--biology); }
+    .filter-button[data-filter="climate"].active     { border-color: var(--climate); background: rgba(84, 184, 255, 0.12); color: var(--climate); }
+    .filter-button[data-filter="technology"].active  { border-color: var(--tech);    background: rgba(255, 179, 71, 0.12); color: var(--tech); }
+    .filter-button[data-filter="civilization"].active{ border-color: var(--civilization); background: rgba(215, 165, 95, 0.12); color: var(--civilization); }
+    .filter-button[data-filter="information"].active { border-color: var(--information); background: rgba(183, 140, 255, 0.12); color: var(--information); }
+    .filter-button[data-filter="shock"].active       { border-color: var(--shock);   background: rgba(255, 77, 93, 0.14);  color: var(--shock); }
+
+    /* ============================================================
+       TIMELINE CONTAINER
+       ============================================================ */
     .timeline-shell {
       position: relative;
-      margin-top: 18px;
+      margin-top: 16px;
       border: 1px solid var(--line);
       border-radius: 28px;
       overflow-x: auto;
@@ -163,163 +252,328 @@
         rgba(6, 9, 17, 0.9);
       box-shadow: 0 26px 80px rgba(0, 0, 0, 0.35);
     }
-
     .timeline {
       position: relative;
-      min-width: 1280px;
-      padding: 34px 28px 46px 210px;
+      min-width: 1680px;
+      padding: 28px 60px 24px 210px;
+    }
+
+    /* Era band — labelled background regions */
+    .era-band {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      pointer-events: none;
+      border-left: 1px dashed rgba(255,255,255,0.07);
+    }
+    .era-band:last-child { border-right: 1px dashed rgba(255,255,255,0.07); }
+    .era-band-label {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      color: var(--muted-2);
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 700;
+      white-space: nowrap;
+      opacity: 0.7;
     }
 
     .time-axis {
       position: relative;
-      height: 72px;
+      height: 56px;
       border-bottom: 1px solid var(--line);
-      margin-bottom: 18px;
+      margin-bottom: 14px;
     }
-
     .tick {
       position: absolute;
       bottom: 0;
       width: 1px;
-      height: 20px;
+      height: 14px;
       background: rgba(255,255,255,0.18);
     }
-
     .tick span {
       position: absolute;
-      bottom: 26px;
+      bottom: 18px;
       left: 50%;
       transform: translateX(-50%);
       color: var(--muted);
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       white-space: nowrap;
     }
 
+    /* ============================================================
+       LAYER ROWS
+       ============================================================ */
+    /* Dedicated thin shocks row — sits at the top, just under the axis.
+       Provides clickable affordance for shock events (whose vertical
+       lines have pointer-events: none for visual reasons). */
+    .shocks-row {
+      position: relative;
+      height: 38px;
+      border-bottom: 1px solid var(--line-soft);
+      margin-bottom: 4px;
+    }
+    .shocks-row .layer-label {
+      top: 4px;
+      padding: 6px 10px;
+      font-size: 0.68rem;
+      color: var(--shock);
+    }
+    .shocks-row .event-node { top: 18px; }
+
     .layer {
       position: relative;
-      height: 106px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.075);
+      height: 88px;
+      border-bottom: 1px solid var(--line-soft);
+      transition: opacity 0.2s;
     }
-
-    .layer:last-child {
-      border-bottom: 0;
-    }
+    .layer:last-of-type { border-bottom: 0; }
 
     .layer-label {
       position: absolute;
       left: -190px;
-      top: 24px;
+      top: 18px;
       width: 168px;
-      padding: 12px 12px;
-      border-radius: 18px;
+      padding: 10px 12px;
+      border-radius: 14px;
       background: var(--panel-soft);
       border: 1px solid var(--line);
-      font-weight: 900;
-      font-size: 0.82rem;
-      letter-spacing: 0.08em;
+      font-weight: 800;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
     }
-
     .layer-line {
       position: absolute;
       left: 0;
       right: 0;
-      top: 52px;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
+      top: 44px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
     }
 
+    /* Climate gradient band */
+    .climate-band {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 8px;
+      height: 72px;
+      border-radius: 14px;
+      opacity: 0.42;
+      background: linear-gradient(90deg,
+        var(--cold) 0%, #3168d9 18%, #4d9aff 34%,
+        #ffc45a 55%, var(--warm) 72%, #d24b39 100%);
+    }
+
+    /* ============================================================
+       EVENT NODES
+       ============================================================ */
     .event-node {
       --node-color: var(--gold);
       position: absolute;
-      top: 52px;
+      top: 44px;
       transform: translate(-50%, -50%);
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       background: var(--node-color);
-      box-shadow: 0 0 0 5px rgba(255,255,255,0.06), 0 0 22px var(--node-color);
+      box-shadow: 0 0 0 4px rgba(255,255,255,0.05), 0 0 18px var(--node-color);
       cursor: pointer;
       transition: transform 160ms ease, opacity 160ms ease;
       z-index: 6;
+      border: none;
+      padding: 0;
     }
-
-    .event-node:hover,
-    .event-node.selected {
-      transform: translate(-50%, -50%) scale(1.45);
+    .event-node:hover, .event-node.selected {
+      transform: translate(-50%, -50%) scale(1.5);
       z-index: 20;
     }
+    .event-node.selected {
+      box-shadow: 0 0 0 6px rgba(247, 201, 72, 0.18), 0 0 24px var(--node-color);
+    }
+    .event-node.dimmed { opacity: 0.16; pointer-events: none; }
 
-    .event-node.dimmed {
-      opacity: 0.18;
+    /* Event with a Fieldnotes link gets a small ring */
+    .event-node.has-link::before {
+      content: "";
+      position: absolute;
+      inset: -7px;
+      border-radius: 50%;
+      border: 1px solid rgba(247, 201, 72, 0.55);
+      pointer-events: none;
     }
 
     .event-node::after {
       content: attr(data-short);
       position: absolute;
       left: 50%;
-      top: 22px;
+      top: 18px;
       transform: translateX(-50%);
       width: max-content;
-      max-width: 150px;
+      max-width: 110px;
       color: var(--muted);
-      font-size: 0.68rem;
+      font-size: 0.62rem;
       text-align: center;
       pointer-events: none;
+      opacity: 0.85;
+      line-height: 1.1;
     }
+    /* Alternate label positions vertically to reduce overlap */
+    .event-node[data-stagger="1"]::after { top: 30px; }
+    .event-node[data-stagger="2"]::after { top: 42px; }
+    .event-node[data-stagger="-1"]::after { top: -16px; }
 
-    .climate-band {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 12px;
-      height: 80px;
-      border-radius: 18px;
-      opacity: 0.48;
-      background: linear-gradient(90deg,
-        var(--cold) 0%,
-        #3168d9 18%,
-        #4d9aff 34%,
-        #ffc45a 55%,
-        var(--warm) 72%,
-        #d24b39 100%);
-      filter: blur(0.2px);
-    }
-
+    /* ============================================================
+       SHOCK LINES — vertical lines that pierce all layers
+       ============================================================ */
     .shock-line {
       position: absolute;
-      top: 106px;
-      bottom: 34px;
+      top: 110px;       /* below time axis + shocks row */
       width: 2px;
       transform: translateX(-50%);
-      background: linear-gradient(180deg, transparent, rgba(255, 77, 93, 0.86), transparent);
-      box-shadow: 0 0 24px rgba(255, 77, 93, 0.84);
+      background: linear-gradient(180deg, transparent, rgba(255, 77, 93, 0.55), rgba(255, 77, 93, 0.3));
+      box-shadow: 0 0 14px rgba(255, 77, 93, 0.4);
       z-index: 3;
       pointer-events: none;
     }
-
     .shock-line::before {
-      content: attr(data-label);
+      content: "";
+    }
+
+    /* ============================================================
+       STRESS INDEX ROW
+       Computed bar chart — the visual proof of coupled failure.
+       Rises wherever multiple layers have simultaneous events.
+       ============================================================ */
+    .stress-row {
+      position: relative;
+      height: 96px;
+      border-top: 2px solid var(--line);
+      margin-top: 10px;
+      padding-top: 24px;
+    }
+    .stress-label {
       position: absolute;
-      top: -24px;
+      left: -190px;
+      top: 30px;
+      width: 168px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      font-weight: 800;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .stress-label small {
+      display: block;
+      color: var(--muted-2);
+      font-size: 0.62rem;
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+      text-transform: none;
+    }
+    .stress-bar {
+      position: absolute;
+      bottom: 0;
+      width: 6px;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, var(--gold), rgba(247, 201, 72, 0.3));
+      border-radius: 3px 3px 0 0;
+      transition: opacity 0.2s;
+    }
+    .stress-bar.high {
+      background: linear-gradient(180deg, var(--shock), rgba(255, 77, 93, 0.4));
+      box-shadow: 0 0 12px rgba(255, 77, 93, 0.5);
+    }
+    .stress-bar.peak::before {
+      content: attr(data-peak-label);
+      position: absolute;
+      bottom: 100%;
       left: 50%;
       transform: translateX(-50%);
       color: #ffd3d8;
-      background: rgba(255, 77, 93, 0.12);
-      border: 1px solid rgba(255, 77, 93, 0.36);
+      background: rgba(255, 77, 93, 0.16);
+      border: 1px solid rgba(255, 77, 93, 0.4);
       border-radius: 999px;
-      padding: 5px 9px;
-      font-size: 0.68rem;
+      padding: 3px 8px;
+      font-size: 0.6rem;
       white-space: nowrap;
+      font-weight: 700;
+      margin-bottom: 6px;
     }
 
+    /* ============================================================
+       LATENCY ARCS — visible only when latency mode is on
+       ============================================================ */
+    .latency-svg {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 4;
+      display: none;
+      overflow: visible;
+    }
+    .latency-svg.visible { display: block; }
+    .latency-arc {
+      fill: none;
+      stroke: rgba(247, 201, 72, 0.45);
+      stroke-width: 1.5;
+      stroke-dasharray: 4 4;
+    }
+    .latency-arc-label {
+      fill: var(--gold);
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    /* ============================================================
+       LEGEND
+       ============================================================ */
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+      margin: 14px 0 0;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line-soft);
+      border-radius: 14px;
+      padding: 8px 12px;
+      font-size: 0.82rem;
+    }
+    .legend-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      box-shadow: 0 0 14px currentColor;
+    }
+
+    /* ============================================================
+       DETAIL PANEL
+       ============================================================ */
     .detail-panel {
       margin-top: 18px;
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
       gap: 18px;
     }
-
     .card {
       border: 1px solid var(--line);
       border-radius: 24px;
@@ -327,31 +581,55 @@
       background: var(--panel);
       box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
     }
-
-    .card h2,
-    .card h3 {
-      margin: 0 0 10px;
-    }
-
+    .card h2, .card h3 { margin: 0 0 10px; }
     .event-date {
       color: var(--gold);
-      font-weight: 900;
+      font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
     }
-
+    .event-layer-tag {
+      display: inline-block;
+      margin-left: 10px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 700;
+      border: 1px solid currentColor;
+    }
     .event-title {
-      margin: 8px 0 10px;
-      font-size: clamp(1.45rem, 3vw, 2.3rem);
-      letter-spacing: -0.04em;
+      margin: 8px 0 12px;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
     }
-
     .event-description {
       color: var(--muted);
       line-height: 1.65;
-      margin: 0;
+      margin: 0 0 18px;
     }
+    .event-fieldnote {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: var(--gold-soft);
+      border: 1px solid rgba(247, 201, 72, 0.32);
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+      transition: 160ms ease;
+    }
+    .event-fieldnote:hover {
+      background: rgba(247, 201, 72, 0.22);
+      transform: translateX(2px);
+    }
+    .event-fieldnote::after { content: " →"; }
 
     .system-list {
       margin: 14px 0 0;
@@ -360,58 +638,86 @@
       display: grid;
       gap: 10px;
     }
-
     .system-list li {
-      padding: 12px 14px;
-      border-radius: 16px;
+      padding: 10px 14px;
+      border-radius: 14px;
       border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.045);
+      background: rgba(255, 255, 255, 0.035);
       color: var(--muted);
       line-height: 1.5;
+      font-size: 0.9rem;
     }
+    .system-list strong { color: var(--text); }
+    .note { color: var(--muted); line-height: 1.65; margin: 0; }
 
-    .system-list strong {
-      color: var(--text);
+    .companion {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line-soft);
     }
-
-    .note {
-      color: var(--muted);
-      line-height: 1.65;
+    .companion-label {
+      font-size: 0.72rem;
+      color: var(--muted-2);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
+    .companion a {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 0.88rem;
+    }
+    .companion a:hover { text-decoration: underline; }
 
+    /* ============================================================
+       MOBILE
+       ============================================================ */
     @media (max-width: 860px) {
-      .timeline-page {
-        padding-top: 24px;
-      }
-
-      .detail-panel {
-        grid-template-columns: 1fr;
-      }
-
-      .timeline {
-        min-width: 1100px;
-        padding-left: 172px;
-      }
-
-      .layer-label {
-        left: -154px;
-        width: 136px;
-        font-size: 0.68rem;
-      }
+      .timeline-page { padding-top: 18px; }
+      .detail-panel { grid-template-columns: 1fr; }
+      .timeline { min-width: 1280px; padding-left: 168px; }
+      .layer-label, .stress-label { left: -154px; width: 134px; font-size: 0.7rem; }
+      h1 { font-size: 2.2rem; }
     }
   </style>
 </head>
 <body>
-  <main class="timeline-page">
-    <section class="hero">
-      <p class="eyebrow">Layered History System</p>
-      <h1>The Evolution of Reality</h1>
-      <p>
-        A synchronized timeline of biology, climate, technology, civilization, and information systems — showing how human history unfolds through layered pressures, breakthroughs, collapses, and reorganizations.
-      </p>
-    </section>
 
-    <section class="controls" aria-label="Timeline filters">
+<!-- ============================================================
+     SUITE NAV — links to sister pages
+     ============================================================ -->
+<nav class="suite-nav" aria-label="Site navigation">
+  <div class="suite-nav-inner">
+    <span class="suite-brand">◆ The Reality Latency Project</span>
+    <a href="index.html">Reference Almanac</a>
+    <a href="history-timeline.html" class="active">Layered Timeline</a>
+    <a href="cinematic-history-timeline.html">Cinematic Essay</a>
+    <a href="https://jefrix.github.io/Fieldnotes/index.html">Fieldnotes ↗</a>
+  </div>
+</nav>
+
+<main class="timeline-page">
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero">
+    <p class="eyebrow">Layered History System · 200,000 BCE → 2026 CE</p>
+    <h1>The Evolution of <em>Reality</em></h1>
+    <p class="intro">
+      Five layers — biology, climate, technology, civilization, and information — running in parallel through deep time. Where they reinforce each other, civilization rises. Where they fail together, civilization reorganizes.
+    </p>
+    <div class="hero-thesis">
+      Read the <em>Stress Index</em> at the bottom of the chart. It rises wherever multiple layers register events in the same window. Spikes mark the coupled-failure moments — Ugarit's warning, ours.
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTROLS
+       ============================================================ -->
+  <section class="controls" aria-label="Timeline controls">
+    <div class="controls-group">
       <button class="filter-button active" data-filter="all">All Layers</button>
       <button class="filter-button" data-filter="biology">Biology</button>
       <button class="filter-button" data-filter="climate">Climate</button>
@@ -419,522 +725,673 @@
       <button class="filter-button" data-filter="civilization">Civilization</button>
       <button class="filter-button" data-filter="information">Information</button>
       <button class="filter-button" data-filter="shock">System Shocks</button>
-    </section>
+    </div>
+    <div class="controls-divider"></div>
+    <div class="controls-group">
+      <button class="mode-button" id="latencyToggle" title="Show latency arcs from each shock back to its preceding stressor">
+        <span class="mode-dot"></span>Latency Mode
+      </button>
+    </div>
+  </section>
 
-    <section class="legend" aria-label="Legend">
-      <div class="legend-item"><span class="legend-dot" style="color: var(--biology); background: var(--biology);"></span>Biology / Evolution</div>
-      <div class="legend-item"><span class="legend-dot" style="color: var(--climate); background: var(--climate);"></span>Climate / Earth System</div>
-      <div class="legend-item"><span class="legend-dot" style="color: var(--tech); background: var(--tech);"></span>Technology / Energy</div>
-      <div class="legend-item"><span class="legend-dot" style="color: var(--civilization); background: var(--civilization);"></span>Civilization / Power</div>
-      <div class="legend-item"><span class="legend-dot" style="color: var(--information); background: var(--information);"></span>Information / Belief</div>
-      <div class="legend-item"><span class="legend-dot" style="color: var(--shock); background: var(--shock);"></span>System Shock</div>
-    </section>
+  <!-- ============================================================
+       TIMELINE
+       ============================================================ -->
+  <section class="timeline-shell" aria-label="Layered timeline visualization">
+    <div class="timeline" id="timeline">
+      <div class="time-axis" id="timeAxis"></div>
+      <svg class="latency-svg" id="latencySvg" preserveAspectRatio="none"></svg>
+    </div>
+  </section>
 
-    <section class="timeline-shell" aria-label="Layered timeline visualization">
-      <div class="timeline" id="timeline">
-        <div class="time-axis" id="timeAxis"></div>
+  <!-- ============================================================
+       LEGEND
+       ============================================================ -->
+  <section class="legend" aria-label="Legend">
+    <div class="legend-item"><span class="legend-dot" style="background: var(--biology);"></span>Biology / Evolution</div>
+    <div class="legend-item"><span class="legend-dot" style="background: var(--climate);"></span>Climate / Earth System</div>
+    <div class="legend-item"><span class="legend-dot" style="background: var(--tech);"></span>Technology / Energy</div>
+    <div class="legend-item"><span class="legend-dot" style="background: var(--civilization);"></span>Civilization / Power</div>
+    <div class="legend-item"><span class="legend-dot" style="background: var(--information);"></span>Information / Belief</div>
+    <div class="legend-item"><span class="legend-dot" style="background: var(--shock);"></span>System Shock</div>
+    <div class="legend-item" style="grid-column: span 2;">
+      <span class="legend-dot" style="background: var(--gold); box-shadow: 0 0 14px var(--gold), 0 0 0 2px rgba(247,201,72,0.35);"></span>
+      Has Fieldnotes dispatch (ringed nodes)
+    </div>
+  </section>
+
+  <!-- ============================================================
+       DETAIL PANEL
+       ============================================================ -->
+  <section class="detail-panel">
+    <article class="card" id="detailCard">
+      <div class="event-date">Click a node</div>
+      <h2 class="event-title">The Layered Timeline</h2>
+      <p class="event-description">
+        Each event lives in one layer. Click any node to see how it fits into the larger system. Nodes ringed in gold link to a related Fieldnotes dispatch.
+      </p>
+    </article>
+
+    <aside class="card">
+      <h3>Civilization as a System</h3>
+      <p class="note">
+        Human history is not a sequence of dates. It is a feedback loop between biology, climate, energy, power, and information. When those layers reinforce each other, civilizations rise. When they fall out of alignment, collapse follows.
+      </p>
+      <ul class="system-list">
+        <li><strong>Integration:</strong> trade, language, agriculture, and law bind groups together.</li>
+        <li><strong>Complexity:</strong> cities, empires, priesthoods, armies, and supply chains emerge.</li>
+        <li><strong>Fragility:</strong> drought, war, migration, disease, and resource stress can cascade.</li>
+        <li><strong>Reorganization:</strong> collapse rarely ends history — it rearranges it.</li>
+      </ul>
+      <div class="companion">
+        <div class="companion-label">Companion Reading</div>
+        <a href="https://jefrix.github.io/Fieldnotes/ugarit-warning.html">№02 — The Ugarit Warning ↗</a>
       </div>
-    </section>
+    </aside>
+  </section>
 
-    <section class="detail-panel">
-      <article class="card" id="detailCard">
-        <div class="event-date">Select an event</div>
-        <h2 class="event-title">Layered Timeline</h2>
-        <p class="event-description">
-          Click any node to reveal how that event fits into the larger system of human history.
-        </p>
-      </article>
+</main>
 
-      <aside class="card">
-        <h3>Civilization as a System</h3>
-        <p class="note">
-          Human history is not just a sequence of dates. It is a feedback loop between biology, climate, energy, power, and information. When those layers reinforce each other, civilizations rise. When they fall out of alignment, collapse follows.
-        </p>
-        <ul class="system-list">
-          <li><strong>Integration:</strong> trade, language, agriculture, and law bind groups together.</li>
-          <li><strong>Complexity:</strong> cities, empires, priesthoods, armies, and supply chains emerge.</li>
-          <li><strong>Fragility:</strong> drought, war, migration, disease, or resource stress can cascade.</li>
-          <li><strong>Reorganization:</strong> collapse rarely ends history — it rearranges it.</li>
-        </ul>
-      </aside>
-    </section>
-  </main>
+<script>
+/* ============================================================
+   DATA
+   The events array is the single source of truth.
+   `link` references a Fieldnotes dispatch when one exists.
+   ============================================================ */
 
-  <script>
-    const timelineStart = -200000;
-    const timelineEnd = -4;
+const layers = [
+  { id: 'biology',      label: 'Biology / Evolution',     color: 'var(--biology)' },
+  { id: 'climate',      label: 'Climate / Earth System',  color: 'var(--climate)' },
+  { id: 'technology',   label: 'Technology / Energy',     color: 'var(--tech)' },
+  { id: 'civilization', label: 'Civilization / Power',    color: 'var(--civilization)' },
+  { id: 'information',  label: 'Information / Belief',    color: 'var(--information)' }
+];
 
-    const layers = [
-      { id: 'biology', label: 'Biology / Evolution', color: 'var(--biology)' },
-      { id: 'climate', label: 'Climate / Earth System', color: 'var(--climate)' },
-      { id: 'technology', label: 'Technology / Energy', color: 'var(--tech)' },
-      { id: 'civilization', label: 'Civilization / Power', color: 'var(--civilization)' },
-      { id: 'information', label: 'Information / Belief', color: 'var(--information)' }
-    ];
+const events = [
+  // ===== Original deep-time events =====
+  { year: -200000, layer: 'biology',      title: 'Emergence of Homo sapiens',           short: 'Homo sapiens',  date: 'c. 200,000 BCE',
+    description: 'Anatomically modern humans emerge in Africa, eventually becoming the only surviving branch of the human family tree.' },
+  { year: -115000, layer: 'climate',      title: 'Last Glacial Period',                  short: 'Ice Age',       date: 'c. 115,000–11,700 BCE',
+    description: 'Global cooling expands ice sheets, lowers sea levels, and reshapes migration routes, coastlines, and ecological pressure.' },
+  { year: -90000,  layer: 'technology',   title: 'Specialized Fishing Tools',            short: 'Fishing tools', date: 'c. 90,000 BCE',
+    description: 'Modern humans develop specialized tools for fishing, expanding diet, mobility, and coastal survival strategies.' },
+  { year: -77000,  layer: 'information',  title: 'Recorded Information on Objects',      short: 'Symbols',       date: 'c. 77,000 BCE',
+    description: 'Early symbolic marking suggests humans were storing meaning outside the body — a foundation for later writing, memory, and culture.' },
+  { year: -74000,  layer: 'shock',        title: 'Toba Supereruption / Population Bottleneck', short: 'Toba',  date: 'c. 74,000 BCE',
+    description: 'A possible near-extinction bottleneck linked to the Toba supereruption. Severity remains debated, but the marker is a powerful early system shock.' },
+  { year: -70000,  layer: 'biology',      title: 'Cognitive and Cultural Acceleration',  short: 'Cognition',     date: 'c. 70,000 BCE',
+    description: 'Symbolic thought, long-range planning, language complexity, and mythic imagination expand the human capacity for cooperation.' },
+  { year: -65000,  layer: 'civilization', title: 'Aboriginal Australian Culture Begins', short: 'Australia',     date: 'c. 65,000–50,000 BCE',
+    description: 'Humans reach Australia and establish one of the deepest continuous cultural traditions on Earth.' },
+  { year: -40000,  layer: 'biology',      title: 'Modern Humans Reach Europe',           short: 'Europe',        date: 'c. 40,000 BCE',
+    description: 'Homo sapiens expand into Europe and encounter remaining Neanderthal populations.' },
+  { year: -28000,  layer: 'biology',      title: 'Neanderthals Disappear',               short: 'Neanderthals',  date: 'c. 28,000 BCE',
+    description: 'Neanderthals vanish as a distinct population, though genetic traces survive in many modern humans.' },
+  { year: -24000,  layer: 'climate',      title: 'Last Glacial Maximum',                 short: 'LGM',           date: 'c. 24,000–17,000 BCE',
+    description: 'Ice sheets reach their greatest extent, locking up water, lowering sea levels, and altering migration corridors.' },
+  { year: -15000,  layer: 'biology',      title: 'Humans Reach the Americas',            short: 'Americas',      date: 'c. 15,000 BCE',
+    description: 'Modern humans spread into the Americas, adapting rapidly to new ecosystems and megafauna-rich landscapes.' },
+  { year: -12900,  layer: 'climate',      title: 'Younger Dryas',                        short: 'Younger Dryas', date: 'c. 12,900–11,700 BCE',
+    description: 'A sudden return to colder conditions interrupts post-glacial warming just before the Holocene.' },
+  { year: -11700,  layer: 'climate',      title: 'Beginning of the Holocene',            short: 'Holocene',      date: 'c. 11,700 BCE',
+    description: 'The current interglacial period begins, bringing warmer temperatures, retreating ice sheets, rising seas, and new ecological opportunities.' },
+  { year: -10000,  layer: 'technology',   title: 'Neolithic Revolution',                 short: 'Agriculture',   date: 'c. 10,000 BCE',
+    description: 'Agriculture begins transforming small nomadic bands into larger settlements, food surpluses, population growth, and social hierarchy.' },
+  { year: -9600,   layer: 'civilization', title: 'Göbekli Tepe',                         short: 'Göbekli Tepe',  date: 'c. 9600 BCE',
+    description: 'Monumental ritual architecture appears before full agricultural urban civilization, suggesting belief and social organization helped drive settlement.' },
+  { year: -8200,   layer: 'shock',        title: '8.2 Kiloyear Climate Event',           short: '8.2k event',    date: 'c. 8200 BCE',
+    description: 'A sudden cooling and drying event disrupts early Holocene communities and tests the resilience of emerging farming systems.' },
+  { year: -8000,   layer: 'civilization', title: 'Çatalhöyük',                           short: 'Çatalhöyük',    date: 'c. 8000 BCE',
+    description: 'One of the world\u2019s earliest known dense urban settlements appears in Anatolia.' },
+  { year: -5200,   layer: 'shock',        title: '5.2 Kiloyear Event',                   short: '5.2k event',    date: 'c. 5200 BCE',
+    description: 'A widespread cold and arid event contributes to cultural shifts and migration.' },
+  { year: -5000,   layer: 'civilization', title: 'Stonehenge Construction Begins',       short: 'Stonehenge',    date: 'c. 5000 BCE',
+    description: 'A long-lived monumental landscape begins developing in Britain.' },
+  { year: -3500,   layer: 'civilization', title: 'Uruk and Sumerian City-States',        short: 'Uruk',          date: 'c. 3500 BCE',
+    description: 'Urbanism, temple economies, bureaucracy, and city-state power emerge in southern Mesopotamia.' },
+  { year: -3500,   layer: 'technology',   title: 'Wheel Invented',                       short: 'Wheel',         date: 'c. 3500–3000 BCE',
+    description: 'The wheel transforms transport, craft production, trade, warfare, and mechanical thinking.' },
+  { year: -3200,   layer: 'information',  title: 'Hieroglyphic and Early Writing',       short: 'Writing',       date: 'c. 3200 BCE',
+    description: 'Writing systems emerge in Egypt and Mesopotamia, allowing states to store memory, taxes, law, myth, and power across generations.' },
+  { year: -3000,   layer: 'civilization', title: 'Minoan Civilization',                  short: 'Minoans',       date: 'c. 3000–1450 BCE',
+    description: 'Palatial civilization develops on Crete, becoming a maritime, artistic, and administrative power of the Aegean Bronze Age.' },
+  { year: -2600,   layer: 'civilization', title: 'Indus Valley Civilization',            short: 'Indus',         date: 'c. 2600 BCE',
+    description: 'Urban civilization emerges in present-day Pakistan and India, with planned cities, trade, craft specialization, and undeciphered script.' },
+  { year: -2300,   layer: 'civilization', title: 'Akkadian Empire',                      short: 'Akkad',         date: 'c. 2300 BCE',
+    description: 'Akkad becomes one of the earliest known empires, consolidating power across Mesopotamia.' },
+  { year: -2200,   layer: 'shock',        title: '4.2 Kiloyear Event',                   short: '4.2k event',    date: 'c. 2200 BCE',
+    description: 'A severe aridification event stresses Egypt, Mesopotamia, the Indus, and surrounding systems, contributing to political disruption.' },
+  { year: -1600,   layer: 'shock',        title: 'Santorini / Thera Eruption',           short: 'Thera',         date: 'c. 1600 BCE',
+    description: 'A major Aegean eruption disrupts the eastern Mediterranean and is often connected to later memories of catastrophe.' },
+  { year: -1500,   layer: 'civilization', title: 'Phoenician Maritime Civilization',     short: 'Phoenicians',   date: 'c. 1500–300 BCE',
+    description: 'Levantine maritime traders build networks across the Mediterranean and help spread alphabetic writing.' },
+  { year: -1400,   layer: 'technology',   title: 'Early Iron Tools and Weapons',         short: 'Iron',          date: 'c. 1400 BCE',
+    description: 'Iron technology begins to develop in the Near East before later becoming widespread after the Bronze Age collapse.' },
+  // The Bronze Age cluster — coupled failure moment, with link to Ugarit Warning
+  { year: -1250,   layer: 'climate',      title: 'Anatolian Megadrought',                short: 'Megadrought',   date: 'c. 1250–1196 BCE',
+    description: 'Dendrochronology from central Anatolia records an unusually severe multi-year dry episode around 1198–1196 BCE — the kind of compounding stress that overwhelms even well-organized agricultural societies. The drought thinned the buffer that the palace economies relied on.' },
+  { year: -1250,   layer: 'civilization', title: 'Trojan War (traditional)',             short: 'Trojan War',    date: 'c. 1250 BCE',
+    description: 'Traditional dating places the Trojan War in the Late Bronze Age, near the period of broader eastern Mediterranean instability.' },
+  { year: -1200,   layer: 'shock',        title: 'Bronze Age Collapse',                  short: 'Bronze Collapse', date: 'c. 1208–1176 BCE',
+    description: 'A regional systems collapse disrupts Mycenaean Greece, Anatolia, the Levant, and Egypt through war, migration, trade disruption, drought, and political fragmentation. The textbook example of coupled failure: climate stress, trade hollowing, and small-scale raiding combining to topple a system that any one shock alone could have absorbed.',
+    link: { url: 'https://jefrix.github.io/Fieldnotes/ugarit-warning.html', label: '№02 — The Ugarit Warning' } },
+  { year: -1185,   layer: 'civilization', title: 'Ugarit Falls',                         short: 'Ugarit',        date: 'c. 1185 BCE',
+    description: 'A scribe in the palace of Ugarit presses cuneiform tablets recording urgent appeals for help. The fleet is in Lycia, enemies are off the coast, grain promised to the Hittites never arrives. Ugarit burns. The tablets survive because the fire baked the clay.',
+    link: { url: 'https://jefrix.github.io/Fieldnotes/ugarit-warning.html', label: '№02 — The Ugarit Warning' } },
+  { year: -1000,   layer: 'information',  title: 'Phoenician Alphabet Spreads',          short: 'Alphabet',      date: 'c. 1000 BCE',
+    description: 'Alphabetic writing helps simplify literacy and influences Greek, Latin, Hebrew, Aramaic, and later writing traditions.' },
+  { year: -800,    layer: 'information',  title: 'Axial Age Begins',                     short: 'Axial Age',     date: 'c. 800–200 BCE',
+    description: 'Greek philosophy, Hebrew prophecy, Buddhism, Jainism, Confucianism, and Daoism reshape ethics, metaphysics, law, and human identity.' },
+  { year: -509,    layer: 'civilization', title: 'Roman Republic Established',           short: 'Rome',          date: '509 BCE',
+    description: 'Rome establishes a republican system that later becomes the foundation for one of history\u2019s most influential empires.' },
+  { year: -322,    layer: 'civilization', title: 'Maurya Empire',                        short: 'Maurya',        date: '322–185 BCE',
+    description: 'The Maurya Empire unifies much of India and spreads Buddhism under Ashoka.' },
+  { year: -45,     layer: 'information',  title: 'Julian Calendar',                      short: 'Calendar',      date: '45 BCE',
+    description: 'Julius Caesar introduces the Julian calendar, standardizing Roman timekeeping and influencing later Western calendars.' },
 
-    const events = [
-      {
-        year: -200000,
-        layer: 'biology',
-        title: 'Emergence of Homo sapiens',
-        short: 'Homo sapiens',
-        date: 'c. 200,000 BCE',
-        description: 'Anatomically modern humans emerge in Africa, eventually becoming the only surviving branch of the human family tree.'
-      },
-      {
-        year: -115000,
-        layer: 'climate',
-        title: 'Last Glacial Period',
-        short: 'Ice Age',
-        date: 'c. 115,000–11,700 BCE',
-        description: 'Global cooling expands ice sheets, lowers sea levels, and reshapes migration routes, coastlines, and ecological pressure.'
-      },
-      {
-        year: -90000,
-        layer: 'technology',
-        title: 'Specialized Fishing Tools',
-        short: 'Fishing tools',
-        date: 'c. 90,000 BCE',
-        description: 'Modern humans develop specialized tools for fishing, expanding diet, mobility, and coastal survival strategies.'
-      },
-      {
-        year: -77000,
-        layer: 'information',
-        title: 'Recorded Information on Objects',
-        short: 'Symbols',
-        date: 'c. 77,000 BCE',
-        description: 'Early symbolic marking suggests that humans were storing meaning outside the body — a foundation for later writing, memory systems, and culture.'
-      },
-      {
-        year: -74000,
-        layer: 'shock',
-        title: 'Toba Supereruption / Population Bottleneck',
-        short: 'Toba shock',
-        date: 'c. 74,000 BCE',
-        description: 'A possible near-extinction bottleneck linked to the Toba supereruption. The severity of this bottleneck remains debated, but it is a powerful system-shock marker.'
-      },
-      {
-        year: -70000,
-        layer: 'biology',
-        title: 'Cognitive and Cultural Acceleration',
-        short: 'Cognition',
-        date: 'c. 70,000 BCE',
-        description: 'Symbolic thought, long-range planning, language complexity, and mythic imagination expand the human capacity for cooperation.'
-      },
-      {
-        year: -65000,
-        layer: 'civilization',
-        title: 'Aboriginal Australian Culture Begins',
-        short: 'Australia',
-        date: 'c. 65,000–50,000 BCE',
-        description: 'Humans reach Australia and establish one of the deepest continuous cultural traditions on Earth.'
-      },
-      {
-        year: -40000,
-        layer: 'biology',
-        title: 'Modern Humans Reach Europe',
-        short: 'Europe',
-        date: 'c. 40,000 BCE',
-        description: 'Homo sapiens expand into Europe and encounter remaining Neanderthal populations.'
-      },
-      {
-        year: -28000,
-        layer: 'biology',
-        title: 'Neanderthals Disappear',
-        short: 'Neanderthals',
-        date: 'c. 28,000 BCE',
-        description: 'Neanderthals vanish as a distinct population, though genetic traces survive in many modern humans.'
-      },
-      {
-        year: -24000,
-        layer: 'climate',
-        title: 'Last Glacial Maximum',
-        short: 'LGM',
-        date: 'c. 24,000–17,000 BCE',
-        description: 'Ice sheets reach their greatest extent, locking up water, lowering sea levels, and altering human migration corridors.'
-      },
-      {
-        year: -15000,
-        layer: 'biology',
-        title: 'Humans Reach the Americas',
-        short: 'Americas',
-        date: 'c. 15,000 BCE',
-        description: 'Modern humans spread into the Americas, adapting rapidly to new ecosystems and megafauna-rich landscapes.'
-      },
-      {
-        year: -12900,
-        layer: 'climate',
-        title: 'Younger Dryas',
-        short: 'Younger Dryas',
-        date: 'c. 12,900–11,700 BCE',
-        description: 'A sudden return to colder conditions interrupts post-glacial warming just before the Holocene.'
-      },
-      {
-        year: -11700,
-        layer: 'climate',
-        title: 'Beginning of the Holocene',
-        short: 'Holocene',
-        date: 'c. 11,700 BCE',
-        description: 'The current interglacial period begins, bringing warmer temperatures, retreating ice sheets, rising seas, and new ecological opportunities.'
-      },
-      {
-        year: -10000,
-        layer: 'technology',
-        title: 'Neolithic Revolution',
-        short: 'Agriculture',
-        date: 'c. 10,000 BCE',
-        description: 'Agriculture begins transforming small nomadic bands into larger settlements, food surpluses, population growth, and social hierarchy.'
-      },
-      {
-        year: -9600,
-        layer: 'civilization',
-        title: 'Göbekli Tepe',
-        short: 'Göbekli Tepe',
-        date: 'c. 9600 BCE',
-        description: 'Monumental ritual architecture appears before full agricultural urban civilization, suggesting belief and social organization helped drive settlement.'
-      },
-      {
-        year: -8200,
-        layer: 'shock',
-        title: '8.2 Kiloyear Climate Event',
-        short: '8.2k event',
-        date: 'c. 8200 BCE',
-        description: 'A sudden cooling and drying event disrupts early Holocene communities and tests the resilience of emerging farming systems.'
-      },
-      {
-        year: -8000,
-        layer: 'civilization',
-        title: 'Çatalhöyük',
-        short: 'Çatalhöyük',
-        date: 'c. 8000 BCE',
-        description: 'One of the world’s earliest known dense urban settlements appears in Anatolia.'
-      },
-      {
-        year: -6200,
-        layer: 'information',
-        title: 'Proto-Writing Misdated Marker',
-        short: 'Proto-writing',
-        date: 'c. 6200 BCE',
-        description: 'Use this as a placeholder for symbolic accounting systems, but true proto-cuneiform belongs much later, around the late 4th millennium BCE.'
-      },
-      {
-        year: -5200,
-        layer: 'shock',
-        title: '5.2 Kiloyear Event',
-        short: '5.2k event',
-        date: 'c. 5200 BCE',
-        description: 'A widespread cold and arid event contributes to cultural shifts and migration.'
-      },
-      {
-        year: -5000,
-        layer: 'civilization',
-        title: 'Stonehenge Construction Begins',
-        short: 'Stonehenge',
-        date: 'c. 5000 BCE',
-        description: 'A long-lived monumental landscape begins developing in Britain, later becoming one of the most iconic ritual sites in Europe.'
-      },
-      {
-        year: -3500,
-        layer: 'civilization',
-        title: 'Uruk and Sumerian City-States',
-        short: 'Uruk',
-        date: 'c. 3500 BCE',
-        description: 'Urbanism, temple economies, bureaucracy, and city-state power emerge in southern Mesopotamia.'
-      },
-      {
-        year: -3500,
-        layer: 'technology',
-        title: 'Wheel Invented',
-        short: 'Wheel',
-        date: 'c. 3500–3000 BCE',
-        description: 'The wheel transforms transport, craft production, trade, warfare, and mechanical thinking.'
-      },
-      {
-        year: -3200,
-        layer: 'information',
-        title: 'Hieroglyphic and Early Writing Systems',
-        short: 'Writing',
-        date: 'c. 3200 BCE',
-        description: 'Writing systems emerge in Egypt and Mesopotamia, allowing states to store memory, taxes, law, myth, and power across generations.'
-      },
-      {
-        year: -3000,
-        layer: 'civilization',
-        title: 'Minoan Civilization',
-        short: 'Minoans',
-        date: 'c. 3000–1450 BCE',
-        description: 'Palatial civilization develops on Crete, becoming a maritime, artistic, and administrative power of the Aegean Bronze Age.'
-      },
-      {
-        year: -2600,
-        layer: 'civilization',
-        title: 'Indus Valley Civilization',
-        short: 'Indus',
-        date: 'c. 2600 BCE',
-        description: 'Urban civilization emerges in present-day Pakistan and India, with planned cities, trade, craft specialization, and undeciphered script.'
-      },
-      {
-        year: -2300,
-        layer: 'civilization',
-        title: 'Akkadian Empire',
-        short: 'Akkad',
-        date: 'c. 2300 BCE',
-        description: 'Akkad becomes one of the earliest known empires, consolidating power across Mesopotamia.'
-      },
-      {
-        year: -2200,
-        layer: 'shock',
-        title: '4.2 Kiloyear Event',
-        short: '4.2k event',
-        date: 'c. 2200 BCE',
-        description: 'A severe aridification event stresses Egypt, Mesopotamia, the Indus region, and surrounding systems, contributing to political disruption.'
-      },
-      {
-        year: -1600,
-        layer: 'shock',
-        title: 'Santorini / Thera Eruption',
-        short: 'Thera',
-        date: 'c. 1600 BCE',
-        description: 'A major Aegean eruption disrupts the eastern Mediterranean world and is often connected to later memories of catastrophe.'
-      },
-      {
-        year: -1500,
-        layer: 'civilization',
-        title: 'Phoenician Maritime Civilization',
-        short: 'Phoenicians',
-        date: 'c. 1500–300 BCE',
-        description: 'Levantine maritime traders build networks across the Mediterranean and help spread alphabetic writing.'
-      },
-      {
-        year: -1400,
-        layer: 'technology',
-        title: 'Early Iron Tools and Weapons',
-        short: 'Iron',
-        date: 'c. 1400 BCE',
-        description: 'Iron technology begins to develop in the Near East before later becoming widespread after the Bronze Age collapse.'
-      },
-      {
-        year: -1250,
-        layer: 'civilization',
-        title: 'Traditional Start of the Trojan War',
-        short: 'Trojan War',
-        date: 'c. 1250 BCE',
-        description: 'Traditional dating places the Trojan War in the Late Bronze Age, near the period of broader eastern Mediterranean instability.'
-      },
-      {
-        year: -1200,
-        layer: 'shock',
-        title: 'Bronze Age Collapse / Sea Peoples',
-        short: 'Collapse',
-        date: 'c. 1208–1176 BCE',
-        description: 'A regional systems collapse disrupts Mycenaean Greece, Anatolia, the Levant, and Egypt through war, migration, trade disruption, drought, and political fragmentation.'
-      },
-      {
-        year: -1000,
-        layer: 'information',
-        title: 'Phoenician Alphabet Spreads',
-        short: 'Alphabet',
-        date: 'c. 1000 BCE',
-        description: 'Alphabetic writing helps simplify literacy and influence Greek, Latin, Hebrew, Aramaic, and later writing traditions.'
-      },
-      {
-        year: -800,
-        layer: 'information',
-        title: 'Axial Age Begins',
-        short: 'Axial Age',
-        date: 'c. 800–200 BCE',
-        description: 'Greek philosophy, Hebrew prophecy, Buddhism, Jainism, Confucianism, and Daoism reshape ethics, metaphysics, law, and human identity.'
-      },
-      {
-        year: -509,
-        layer: 'civilization',
-        title: 'Roman Republic Established',
-        short: 'Rome',
-        date: '509 BCE',
-        description: 'Rome establishes a republican system that later becomes the foundation for one of history’s most influential empires.'
-      },
-      {
-        year: -322,
-        layer: 'civilization',
-        title: 'Maurya Empire',
-        short: 'Maurya',
-        date: '322–185 BCE',
-        description: 'The Maurya Empire unifies much of India and spreads Buddhism under Ashoka.'
-      },
-      {
-        year: -45,
-        layer: 'information',
-        title: 'Julian Calendar',
-        short: 'Calendar',
-        date: '45 BCE',
-        description: 'Julius Caesar introduces the Julian calendar, standardizing Roman timekeeping and influencing later Western calendars.'
-      },
-      {
-        year: -4,
-        layer: 'information',
-        title: 'Birth of Jesus of Nazareth',
-        short: 'Jesus',
-        date: 'c. 4 BCE',
-        description: 'The traditional historical dating of Jesus’s birth becomes a central anchor for later Christian civilization and Western chronology.'
+  // ===== Post-Roman / Medieval / Early Modern bridge =====
+  { year: 476,     layer: 'civilization', title: 'Western Roman Empire Falls',           short: 'Rome falls',    date: '476 CE',
+    description: 'The Western Roman Empire formally ends. The eastern half continues for nearly another millennium as Byzantium.' },
+  { year: 540,     layer: 'shock',        title: 'Late Antique Little Ice Age',          short: 'LALIA',         date: '536–660 CE',
+    description: 'A volcanic dust veil and decades of cooling combine with the Justinianic Plague to stress what remains of the late-antique world. Another coupled failure: climate + pandemic + political fragmentation.' },
+  { year: 622,     layer: 'information',  title: 'Hijra · Founding of Islam',            short: 'Hijra',         date: '622 CE',
+    description: 'Muhammad\u2019s migration from Mecca to Medina marks Year 1 of the Islamic calendar and the beginning of a new civilizational system.' },
+  { year: 1347,    layer: 'shock',        title: 'Black Death',                          short: 'Black Death',   date: '1347–1351 CE',
+    description: 'The Yersinia pestis pandemic arrives in Europe via Mediterranean trade routes, killing roughly a third of the European population. Demographic collapse triggers wage shifts, peasant revolts, and the unraveling of feudal labor norms — a population shock that reorganizes the system.' },
+  { year: 1440,    layer: 'technology',   title: 'Movable-Type Printing',                short: 'Printing',      date: 'c. 1440 CE',
+    description: 'Gutenberg\u2019s press radically lowers the cost of producing text, accelerating literacy, scientific exchange, religious reform, and the volume of cultural memory in circulation.' },
+  { year: 1492,    layer: 'civilization', title: 'Columbian Exchange Begins',            short: 'Columbian',     date: '1492 CE',
+    description: 'European contact with the Americas initiates massive transfers of crops, animals, diseases, and people. Indigenous populations collapse by ~90%; the global ecology and economy reorganize permanently.' },
+  { year: 1610,    layer: 'climate',      title: 'Little Ice Age peak',                  short: 'Little Ice Age',date: 'c. 1300–1850 CE',
+    description: 'A multi-century cooling stresses agricultural systems across the Northern Hemisphere, contributing to crises from the Thirty Years\u2019 War to the Ming-Qing transition.' },
+  { year: 1687,    layer: 'information',  title: 'Newtonian Synthesis',                  short: 'Newton',        date: '1687 CE',
+    description: 'The Principia formalizes a mechanical worldview. The Scientific Revolution gives the West an information layer capable of cumulative, correctable knowledge.' },
+  { year: 1769,    layer: 'technology',   title: 'Watt\u2019s Steam Engine',             short: 'Steam',         date: '1769 CE',
+    description: 'Watt\u2019s improved steam engine catalyzes the Industrial Revolution. Energy stops being constrained by what land can grow.' },
+  { year: 1859,    layer: 'biology',      title: 'Darwin\u2019s Origin of Species',      short: 'Darwin',        date: '1859 CE',
+    description: 'Natural selection becomes the unifying principle of biology, reshaping how humans understand themselves as a species among species.' },
+  { year: 1914,    layer: 'shock',        title: 'World War I',                          short: 'WWI',           date: '1914–1918 CE',
+    description: 'Industrial-scale war ends the long 19th century and reshapes the global order. The first demonstration of how 19th-century imperial systems behave when modern technology is poured into them.' },
+  { year: 1918,    layer: 'shock',        title: '1918 Influenza Pandemic',              short: 'Spanish Flu',   date: '1918–1920 CE',
+    description: 'A global influenza pandemic kills tens of millions during and after WWI. A coupled failure: war mobilization accelerates spread; pandemic accelerates political collapse.' },
+  { year: 1945,    layer: 'technology',   title: 'Nuclear Age Begins',                   short: 'Nuclear',       date: '1945 CE',
+    description: 'The first atomic weapons are used. Humanity acquires a technology capable of ending civilization within an afternoon.' },
+  { year: 1969,    layer: 'information',  title: 'ARPANET',                              short: 'ARPANET',       date: '1969 CE',
+    description: 'The first nodes of what becomes the internet connect. Information stops being constrained by physical distribution.' },
+
+  // ===== Modern Fieldnotes-linked events (the "second node loading") =====
+  { year: 2020,    layer: 'shock',        title: 'COVID-19 Pandemic',                    short: 'COVID',         date: '2020–2023 CE',
+    description: 'A global respiratory pandemic triggers the largest peacetime mobilization in history. Reveals the speed at which globally integrated supply chains can break and the latency between scientific knowledge and institutional response.' },
+  { year: 2022,    layer: 'technology',   title: 'Generative AI Goes Mainstream',        short: 'Generative AI', date: '2022–2026 CE',
+    description: 'Large language models reach mass deployment. Knowledge work begins to face the kind of automation pressure that physical labor has lived with for two centuries. The displacement signal is now visible in hiring data; the institutional response is not.',
+    link: { url: 'https://jefrix.github.io/Fieldnotes/5000-day-gap.html', label: '№10 — The 5,000-Day Gap' } },
+  { year: 2024,    layer: 'information',  title: 'The Liar\u2019s Dividend',             short: 'Deepfakes',     date: '2024 CE',
+    description: 'Cheap synthetic media reaches a quality threshold where elections, courts, and institutions can no longer assume that recorded reality is what it appears to be. The information layer\u2019s long-trusted substrate begins to dissolve.',
+    link: { url: 'https://jefrix.github.io/Fieldnotes/liars-dividend.html', label: '№09 — The Liar\u2019s Dividend' } },
+  { year: 2025,    layer: 'civilization', title: 'Memetic Statecraft',                   short: '280-char Cabinet', date: '2025 CE',
+    description: 'A new mode of governance — running on social-media tempo rather than institutional tempo — runs ahead of the institutions designed to constrain it.',
+    link: { url: 'https://jefrix.github.io/Fieldnotes/280-character-cabinet.html', label: '№06 — The 280-Character Cabinet' } },
+  { year: 2026,    layer: 'shock',        title: 'Hormuz Energy Shock',                  short: 'Hormuz',        date: '2026 CE',
+    description: 'Sustained closure-by-stress of the Strait of Hormuz puts ~20% of global oil and a fifth of LNG trade under regime-changing pressure. The first node loads.',
+    link: { url: 'https://jefrix.github.io/Fieldnotes/dual-blockade.html', label: '№11 — The Dual Blockade' } },
+  { year: 2026,    layer: 'shock',        title: 'AI Labor Displacement Curve',          short: 'AI Labor',      date: '2026 CE',
+    description: 'Hiring freezes, vanishing entry-level positions, and quiet workflow automation begin to register in the labor data. The second node loads — at the same moment as the first.',
+    link: { url: 'https://jefrix.github.io/Fieldnotes/5000-day-gap.html', label: '№10 — The 5,000-Day Gap' } },
+  { year: 2026,    layer: 'biology',      title: 'Immune System Gap',                    short: 'Immune Gap',    date: '2026 CE',
+    description: 'Pathogen surveillance and pandemic-response apparatus is dismantled at a moment when the biological threat landscape is accelerating. The latency between dismantling and rebuilding is where the danger lives.',
+    link: { url: 'https://jefrix.github.io/Fieldnotes/immune-response.html', label: '№08 — The Immune Response' } },
+];
+
+const shocks = events.filter(e => e.layer === 'shock');
+
+// ============================================================
+// LATENCY EDGES
+// Manually curated — each shock paired with the prior stressor
+// that, in your essays' framework, fed into it. The number is
+// the gap in years between when the stressor began and when the
+// shock crystallized.
+// ============================================================
+const latencyEdges = [
+  { from: -1250, to: -1200, label: 'Megadrought → Bronze Collapse · ~50 yr' },
+  { from: -1200, to: -1185, label: 'Collapse → Ugarit falls · ~15 yr' },
+  { from: 1347,  to: 1440,  label: 'Black Death → Printing · ~93 yr' },
+  { from: 2022,  to: 2026,  label: 'Generative AI → Labor shock · ~4 yr' },
+  { from: 2024,  to: 2026,  label: 'Liar\u2019s Dividend → ongoing' },
+  { from: 2020,  to: 2026,  label: 'COVID → Immune Gap · ~6 yr' },
+];
+
+// ============================================================
+// TIME SCALE — piecewise to give the recent millennia room
+// 0%    -> 200,000 BCE
+// 28%   -> 20,000 BCE   (deep prehistory compressed via log)
+// 55%   -> 1 CE         (antiquity = the most space)
+// 78%   -> 1500 CE
+// 100%  -> 2026 CE
+// ============================================================
+function yearToPercent(y) {
+  const yearsAgoFrom = (yr) => 2026 - yr;
+  if (y <= -20000) {
+    // Log-warp from 200,000 BCE -> 20,000 BCE
+    const a = 200000 - 2026;        // years ago at start (rough)
+    const b = 20000 - 2026 * -1;    // hmm — let me just use simple numbers
+    // simpler: t over [-200000, -20000] mapped via log
+    const yMax = 200000, yMin = 20000;
+    const lt = (Math.log(yMax) - Math.log(-y)) / (Math.log(yMax) - Math.log(yMin));
+    return lt * 28;
+  } else if (y <= 0) {
+    // -20000 .. 0
+    const lt = (y + 20000) / 20000;
+    return 28 + lt * 27;
+  } else if (y <= 1500) {
+    const lt = (y) / 1500;
+    return 55 + lt * 23;
+  } else {
+    const lt = (y - 1500) / (2026 - 1500);
+    return 78 + lt * 22;
+  }
+}
+
+// ============================================================
+// BUILD
+// ============================================================
+
+function buildEras() {
+  const timeline = document.getElementById('timeline');
+  const eras = [
+    { start: -200000, end: -10000, label: 'Stone Age' },
+    { start: -10000,  end: -3300,  label: 'Neolithic' },
+    { start: -3300,   end: -1200,  label: 'Bronze Age' },
+    { start: -1200,   end: 500,    label: 'Iron Age / Antiquity' },
+    { start: 500,     end: 1500,   label: 'Medieval' },
+    { start: 1500,    end: 1800,   label: 'Early Modern' },
+    { start: 1800,    end: 2026,   label: 'Modern' },
+  ];
+  eras.forEach(era => {
+    const left = yearToPercent(era.start);
+    const width = yearToPercent(era.end) - left;
+    const band = document.createElement('div');
+    band.className = 'era-band';
+    band.style.left = left + '%';
+    band.style.width = width + '%';
+    band.innerHTML = `<span class="era-band-label">${era.label}</span>`;
+    timeline.appendChild(band);
+  });
+}
+
+function buildAxis() {
+  const axis = document.getElementById('timeAxis');
+  const ticks = [
+    { year: -200000, label: '200k BCE' },
+    { year: -100000, label: '100k BCE' },
+    { year: -50000,  label: '50k BCE' },
+    { year: -20000,  label: '20k BCE' },
+    { year: -10000,  label: '10k BCE' },
+    { year: -5000,   label: '5000 BCE' },
+    { year: -3000,   label: '3000 BCE' },
+    { year: -1200,   label: '1200 BCE' },
+    { year: 0,       label: '0' },
+    { year: 500,     label: '500 CE' },
+    { year: 1000,    label: '1000 CE' },
+    { year: 1500,    label: '1500 CE' },
+    { year: 1800,    label: '1800' },
+    { year: 1900,    label: '1900' },
+    { year: 2000,    label: '2000' },
+    { year: 2026,    label: 'now' },
+  ];
+  ticks.forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'tick';
+    el.style.left = yearToPercent(t.year) + '%';
+    el.innerHTML = `<span>${t.label}</span>`;
+    axis.appendChild(el);
+  });
+}
+
+function buildShockLines(timelineHeight) {
+  const timeline = document.getElementById('timeline');
+  shocks.forEach(s => {
+    const el = document.createElement('div');
+    el.className = 'shock-line';
+    el.style.left = yearToPercent(s.year) + '%';
+    el.style.height = timelineHeight + 'px';
+    timeline.appendChild(el);
+  });
+}
+
+function createNode(event, color) {
+  const node = document.createElement('button');
+  node.className = 'event-node';
+  if (event.link) node.classList.add('has-link');
+  node.style.setProperty('--node-color', color);
+  node.style.left = yearToPercent(event.year) + '%';
+  node.dataset.layer = event.layer;
+  node.dataset.short = event.short;
+  node.dataset.year = event.year;
+  node.setAttribute('aria-label', `${event.date}: ${event.title}`);
+  node.addEventListener('click', () => selectEvent(event, node));
+  return node;
+}
+
+function buildShocksRow() {
+  const timeline = document.getElementById('timeline');
+  const row = document.createElement('div');
+  row.className = 'shocks-row';
+  row.dataset.layer = 'shock';
+
+  const lbl = document.createElement('div');
+  lbl.className = 'layer-label';
+  lbl.textContent = 'System Shocks';
+  row.appendChild(lbl);
+
+  shocks.forEach(s => {
+    const node = createNode(s, 'var(--shock)');
+    row.appendChild(node);
+  });
+
+  timeline.appendChild(row);
+}
+
+function buildLayers() {
+  const timeline = document.getElementById('timeline');
+  layers.forEach(layer => {
+    const el = document.createElement('div');
+    el.className = 'layer';
+    el.dataset.layer = layer.id;
+
+    const lbl = document.createElement('div');
+    lbl.className = 'layer-label';
+    lbl.style.color = layer.color;
+    lbl.textContent = layer.label;
+
+    const ln = document.createElement('div');
+    ln.className = 'layer-line';
+
+    el.appendChild(lbl);
+    el.appendChild(ln);
+
+    if (layer.id === 'climate') {
+      const band = document.createElement('div');
+      band.className = 'climate-band';
+      el.appendChild(band);
+    }
+
+    events
+      .filter(e => e.layer === layer.id)
+      .forEach(e => el.appendChild(createNode(e, layer.color)));
+
+    timeline.appendChild(el);
+  });
+}
+
+// Stagger labels to prevent overlap. For each layer, walk nodes
+// left-to-right and assign vertical stagger values when a node sits
+// too close (in screen space) to its predecessor.
+function staggerLabels() {
+  const minSpacingPct = 4;  // % of timeline width
+  document.querySelectorAll('.layer, .shocks-row').forEach(layer => {
+    const nodes = Array.from(layer.querySelectorAll('.event-node'))
+      .sort((a, b) => parseFloat(a.style.left) - parseFloat(b.style.left));
+    let lastPositions = [];
+    nodes.forEach(node => {
+      const x = parseFloat(node.style.left);
+      const usedStaggers = lastPositions
+        .filter(p => x - p.x < minSpacingPct)
+        .map(p => p.stagger);
+      let chosen = 0;
+      for (const candidate of [0, 1, 2, -1]) {
+        if (!usedStaggers.includes(candidate)) { chosen = candidate; break; }
       }
-    ];
+      if (chosen !== 0) node.dataset.stagger = chosen;
+      lastPositions.push({ x, stagger: chosen });
+      lastPositions = lastPositions.filter(p => x - p.x < minSpacingPct);
+    });
+  });
+}
+// For each time bucket, count distinct layers with events.
+// Buckets are non-uniform — they follow the same piecewise scale
+// so a "century" bucket means something different in deep time
+// vs the modern era. Coupled-failure moments = high stress.
+// ============================================================
+function buildStressRow() {
+  const timeline = document.getElementById('timeline');
+  const row = document.createElement('div');
+  row.className = 'stress-row';
+  row.id = 'stressRow';
 
-    const shocks = events.filter(event => event.layer === 'shock');
+  const lbl = document.createElement('div');
+  lbl.className = 'stress-label';
+  lbl.innerHTML = 'Stress Index <small>distinct layers active in window</small>';
+  row.appendChild(lbl);
 
-    function yearToPercent(year) {
-      const compressedStart = -200000;
-      const compressedBreak = -20000;
-      const compressedEnd = -4;
+  // Compute stress: bucket by yearToPercent (i.e. position on screen)
+  // so that buckets are uniform in space but variable in years.
+  const bucketCount = 80;
+  const buckets = Array.from({ length: bucketCount }, () => new Set());
 
-      if (year <= compressedBreak) {
-        const earlySpan = compressedBreak - compressedStart;
-        return ((year - compressedStart) / earlySpan) * 44;
-      }
+  events.forEach(e => {
+    const pct = yearToPercent(e.year);
+    const idx = Math.min(bucketCount - 1, Math.max(0, Math.floor(pct / 100 * bucketCount)));
+    // Count layer (treat shock as its own layer for this purpose)
+    buckets[idx].add(e.layer);
+  });
 
-      const lateSpan = compressedEnd - compressedBreak;
-      return 44 + ((year - compressedBreak) / lateSpan) * 56;
+  // Find peak buckets to label
+  const counts = buckets.map(s => s.size);
+  const maxCount = Math.max(...counts);
+
+  buckets.forEach((s, i) => {
+    if (s.size === 0) return;
+    const bar = document.createElement('div');
+    bar.className = 'stress-bar';
+    const heightPct = (s.size / Math.max(maxCount, 1)) * 100;
+    bar.style.height = (heightPct * 0.6) + 'px';   // 60px max bar height
+    bar.style.left = ((i + 0.5) / bucketCount * 100) + '%';
+    if (s.size >= 3) bar.classList.add('high');
+    if (s.size === maxCount && maxCount >= 3) {
+      bar.classList.add('peak');
+      // Label with the cluster name — use the most representative event in this bucket
+      const eventsInBucket = events.filter(e => {
+        const pct = yearToPercent(e.year);
+        const idx = Math.floor(pct / 100 * bucketCount);
+        return idx === i;
+      });
+      const shockInBucket = eventsInBucket.find(e => e.layer === 'shock');
+      bar.dataset.peakLabel = shockInBucket ? shockInBucket.short : '';
     }
+    bar.title = `${s.size} layers: ${[...s].join(', ')}`;
+    row.appendChild(bar);
+  });
 
-    function buildTimeline() {
-      const timeline = document.getElementById('timeline');
-      const timeAxis = document.getElementById('timeAxis');
+  timeline.appendChild(row);
+}
 
-      const ticks = [
-        { year: -200000, label: '200k BCE' },
-        { year: -100000, label: '100k BCE' },
-        { year: -50000, label: '50k BCE' },
-        { year: -20000, label: '20k BCE' },
-        { year: -10000, label: '10k BCE' },
-        { year: -5000, label: '5000 BCE' },
-        { year: -3000, label: '3000 BCE' },
-        { year: -2000, label: '2000 BCE' },
-        { year: -1200, label: '1200 BCE' },
-        { year: -800, label: '800 BCE' },
-        { year: -500, label: '500 BCE' },
-        { year: -4, label: '0' }
-      ];
+// ============================================================
+// LATENCY ARCS — drawn into the SVG layer
+// ============================================================
+function buildLatencyArcs() {
+  const svg = document.getElementById('latencySvg');
+  const timeline = document.getElementById('timeline');
+  const tlRect = timeline.getBoundingClientRect();
+  const left = 210;
+  const right = 60;
+  const usableWidth = tlRect.width - left - right;
 
-      ticks.forEach(tick => {
-        const tickEl = document.createElement('div');
-        tickEl.className = 'tick';
-        tickEl.style.left = `${yearToPercent(tick.year)}%`;
-        tickEl.innerHTML = `<span>${tick.label}</span>`;
-        timeAxis.appendChild(tickEl);
-      });
+  // Find a shock node so we can match its actual y-position on screen.
+  const shockNode = timeline.querySelector('.shocks-row .event-node');
+  let arcY = 102;   // sensible fallback
+  if (shockNode) {
+    const sRect = shockNode.getBoundingClientRect();
+    // shock node y in timeline-relative coords
+    arcY = sRect.top + sRect.height / 2 - tlRect.top;
+  }
 
-      shocks.forEach(shock => {
-        const shockEl = document.createElement('div');
-        shockEl.className = 'shock-line';
-        shockEl.dataset.label = shock.short;
-        shockEl.style.left = `${yearToPercent(shock.year)}%`;
-        timeline.appendChild(shockEl);
-      });
+  svg.setAttribute('viewBox', `0 0 ${tlRect.width} ${tlRect.height}`);
+  svg.style.width = tlRect.width + 'px';
+  svg.style.height = tlRect.height + 'px';
+  // Clear previous content
+  svg.innerHTML = '';
 
-      layers.forEach(layer => {
-        const layerEl = document.createElement('div');
-        layerEl.className = 'layer';
-        layerEl.dataset.layer = layer.id;
+  function xForYear(y) {
+    return left + (yearToPercent(y) / 100) * usableWidth;
+  }
 
-        const label = document.createElement('div');
-        label.className = 'layer-label';
-        label.style.color = layer.color;
-        label.textContent = layer.label;
+  latencyEdges.forEach((edge, i) => {
+    const x1 = xForYear(edge.from);
+    const x2 = xForYear(edge.to);
+    if (Math.abs(x1 - x2) < 0.5) return;
 
-        const line = document.createElement('div');
-        line.className = 'layer-line';
+    const span = Math.abs(x2 - x1);
+    let peakHeight = Math.max(45, Math.min(95, 45 + (80 - Math.min(span, 80)) * 0.7));
+    peakHeight += (i % 3) * 18;
 
-        layerEl.appendChild(label);
-        layerEl.appendChild(line);
+    const peakY = arcY - peakHeight;
+    const midX = (x1 + x2) / 2;
 
-        if (layer.id === 'climate') {
-          const band = document.createElement('div');
-          band.className = 'climate-band';
-          layerEl.appendChild(band);
-        }
+    // For very short spans, widen the curve via control point offset
+    const ctrlOffset = Math.max(0, 30 - span);
+    const ctrlX1 = x1 - ctrlOffset;
+    const ctrlX2 = x2 + ctrlOffset;
 
-        events
-          .filter(event => event.layer === layer.id)
-          .forEach(event => layerEl.appendChild(createNode(event, layer.color)));
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d',
+      `M ${x1} ${arcY} C ${ctrlX1} ${peakY} ${ctrlX2} ${peakY} ${x2} ${arcY}`);
+    path.setAttribute('class', 'latency-arc');
+    svg.appendChild(path);
 
-        timeline.appendChild(layerEl);
-      });
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('x', midX);
+    text.setAttribute('y', peakY - 6);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('class', 'latency-arc-label');
+    text.textContent = edge.label;
+    svg.appendChild(text);
 
-      const shockLayer = document.createElement('div');
-      shockLayer.className = 'layer';
-      shockLayer.dataset.layer = 'shock';
+    [x1, x2].forEach(x => {
+      const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      dot.setAttribute('cx', x);
+      dot.setAttribute('cy', arcY);
+      dot.setAttribute('r', 4);
+      dot.setAttribute('fill', 'rgba(247, 201, 72, 0.95)');
+      dot.setAttribute('stroke', 'rgba(247, 201, 72, 0.4)');
+      dot.setAttribute('stroke-width', 6);
+      svg.appendChild(dot);
+    });
+  });
+}
 
-      const label = document.createElement('div');
-      label.className = 'layer-label';
-      label.style.color = 'var(--shock)';
-      label.textContent = 'System Shocks';
+// ============================================================
+// EVENT SELECTION
+// ============================================================
+const layerLabelMap = Object.fromEntries(
+  layers.map(l => [l.id, l.label]).concat([['shock', 'System Shock']])
+);
+const layerColorMap = {
+  biology: 'var(--biology)',
+  climate: 'var(--climate)',
+  technology: 'var(--tech)',
+  civilization: 'var(--civilization)',
+  information: 'var(--information)',
+  shock: 'var(--shock)',
+};
 
-      const line = document.createElement('div');
-      line.className = 'layer-line';
+function selectEvent(event, node) {
+  document.querySelectorAll('.event-node').forEach(el => el.classList.remove('selected'));
+  node.classList.add('selected');
 
-      shockLayer.appendChild(label);
-      shockLayer.appendChild(line);
+  const card = document.getElementById('detailCard');
+  const tagColor = layerColorMap[event.layer];
+  const linkHTML = event.link
+    ? `<a class="event-fieldnote" href="${event.link.url}" target="_blank" rel="noopener">Read ${event.link.label}</a>`
+    : '';
+  card.innerHTML = `
+    <div class="event-date">${event.date}
+      <span class="event-layer-tag" style="color: ${tagColor};">${layerLabelMap[event.layer]}</span>
+    </div>
+    <h2 class="event-title">${event.title}</h2>
+    <p class="event-description">${event.description}</p>
+    ${linkHTML}
+  `;
+}
 
-      shocks.forEach(event => shockLayer.appendChild(createNode(event, 'var(--shock)')));
-      timeline.appendChild(shockLayer);
-    }
+// ============================================================
+// FILTERS
+// ============================================================
+function applyFilter(filter) {
+  document.querySelectorAll('.event-node').forEach(node => {
+    const visible = filter === 'all' || node.dataset.layer === filter;
+    node.classList.toggle('dimmed', !visible);
+  });
+  document.querySelectorAll('.layer').forEach(layer => {
+    const visible = filter === 'all' || layer.dataset.layer === filter;
+    layer.style.opacity = visible ? '1' : '0.32';
+  });
+  // Shocks row visibility separate from the regular layers
+  const shocksRow = document.querySelector('.shocks-row');
+  if (shocksRow) {
+    const visible = filter === 'all' || filter === 'shock';
+    shocksRow.style.opacity = visible ? '1' : '0.32';
+  }
+  document.querySelectorAll('.shock-line').forEach(line => {
+    line.style.opacity = (filter === 'all' || filter === 'shock') ? '1' : '0.16';
+  });
+}
 
-    function createNode(event, color) {
-      const node = document.createElement('button');
-      node.className = 'event-node';
-      node.style.setProperty('--node-color', color);
-      node.style.left = `${yearToPercent(event.year)}%`;
-      node.dataset.layer = event.layer;
-      node.dataset.short = event.short;
-      node.setAttribute('aria-label', `${event.date}: ${event.title}`);
-      node.addEventListener('click', () => selectEvent(event, node));
-      return node;
-    }
+function setupFilters() {
+  document.querySelectorAll('.filter-button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilter(btn.dataset.filter);
+    });
+  });
+}
 
-    function selectEvent(event, node) {
-      document.querySelectorAll('.event-node').forEach(el => el.classList.remove('selected'));
-      node.classList.add('selected');
+// ============================================================
+// LATENCY MODE
+// ============================================================
+function setupLatencyToggle() {
+  const btn = document.getElementById('latencyToggle');
+  const svg = document.getElementById('latencySvg');
+  btn.addEventListener('click', () => {
+    btn.classList.toggle('active');
+    svg.classList.toggle('visible');
+  });
+}
 
-      const card = document.getElementById('detailCard');
-      card.innerHTML = `
-        <div class="event-date">${event.date}</div>
-        <h2 class="event-title">${event.title}</h2>
-        <p class="event-description">${event.description}</p>
-      `;
-    }
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  buildEras();
+  buildAxis();
+  buildShocksRow();
+  buildLayers();
+  staggerLabels();
+  // Compute timeline height for shock lines now that layers exist
+  const tlHeight = document.getElementById('timeline').getBoundingClientRect().height - 70;
+  buildShockLines(tlHeight);
+  buildStressRow();
+  // Build arcs after stress row so the SVG covers the full thing
+  setTimeout(buildLatencyArcs, 50);
+  setupFilters();
+  setupLatencyToggle();
+}
 
-    function setupFilters() {
-      document.querySelectorAll('.filter-button').forEach(button => {
-        button.addEventListener('click', () => {
-          const filter = button.dataset.filter;
-          document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
-          button.classList.add('active');
-          applyFilter(filter);
-        });
-      });
-    }
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
 
-    function applyFilter(filter) {
-      const nodes = document.querySelectorAll('.event-node');
-      const layersEls = document.querySelectorAll('.layer');
-      const shockLines = document.querySelectorAll('.shock-line');
-
-      nodes.forEach(node => {
-        const visible = filter === 'all' || node.dataset.layer === filter;
-        node.classList.toggle('dimmed', !visible);
-      });
-
-      layersEls.forEach(layer => {
-        const visible = filter === 'all' || layer.dataset.layer === filter || filter === 'shock';
-        layer.style.opacity = visible ? '1' : '0.28';
-      });
-
-      shockLines.forEach(line => {
-        line.style.opacity = filter === 'all' || filter === 'shock' ? '1' : '0.18';
-      });
-    }
-
-    buildTimeline();
-    setupFilters();
-  </script>
+// Rebuild latency arcs on resize
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    document.getElementById('latencySvg').innerHTML = '';
+    buildLatencyArcs();
+  }, 200);
+});
+</script>
 </body>
 </html>
