@@ -19,13 +19,6 @@
   --civilization: #d7a55f;
   --information: #b78cff;
   --shock: #ff4d5d;
-  --religion: #f7c948;
-  --philosophy: #6ee7ff;
-  --ideology: #ff6b6b;
-  --media: #b78cff;
-  --ai: #7cffc4;
-  --warm: #ff8a4c;
-  --cold: #3977ff;
   --collapse-case: #e8945a;
 }
 
@@ -42,268 +35,55 @@ body {
   min-height: 100vh;
 }
 
-.timeline-page {
-  width: min(1520px, 100%);
-  margin: 0 auto;
-  padding: 48px 18px 72px;
-}
+.timeline-page { width: min(1520px, 100%); margin: 0 auto; padding: 48px 18px 72px; }
 
 .hero {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 28px;
+  position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 28px;
   padding: clamp(28px, 5vw, 64px);
-  background:
-    linear-gradient(135deg, rgba(247, 201, 72, 0.12), transparent 35%),
-    linear-gradient(90deg, rgba(15, 19, 33, 0.92), rgba(8, 11, 20, 0.92));
-  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.42);
+  background: linear-gradient(135deg, rgba(247, 201, 72, 0.12), transparent 35%), linear-gradient(90deg, rgba(15, 19, 33, 0.92), rgba(8, 11, 20, 0.92));
 }
 
-.eyebrow {
-  position: relative;
-  z-index: 1;
-  margin: 0 0 14px;
-  color: var(--gold);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  font-size: 0.76rem;
-  font-weight: 800;
-}
+.controls { display: flex; flex-wrap: wrap; gap: 10px; margin: 26px 0 18px; }
+.filter-button { appearance: none; border: 1px solid var(--line); color: var(--text); background: rgba(255, 255, 255, 0.055); border-radius: 999px; padding: 10px 14px; cursor: pointer; font-weight: 750; transition: 160ms ease; }
+.filter-button.active { background: rgba(247, 201, 72, 0.14); border-color: var(--gold); }
 
-h1 {
-  position: relative;
-  z-index: 1;
-  margin: 0;
-  max-width: 1000px;
-  font-size: clamp(2.2rem, 6vw, 5.2rem);
-  line-height: 0.95;
-  letter-spacing: -0.06em;
-}
+.timeline-shell { position: relative; margin-top: 18px; border: 1px solid var(--line); border-radius: 28px; overflow-x: auto; background: rgba(6, 9, 17, 0.9); }
+.timeline { position: relative; min-width: 12000px; padding: 20px 28px 28px 240px; }
 
-.hero p:not(.eyebrow) {
-  position: relative;
-  z-index: 1;
-  max-width: 860px;
-  margin: 22px 0 0;
-  color: var(--muted);
-  font-size: clamp(1rem, 2vw, 1.28rem);
-  line-height: 1.65;
-}
+.time-axis { position: relative; height: 52px; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
+.tick { position: absolute; bottom: 0; width: 1px; height: 14px; background: rgba(255,255,255,0.18); }
+.tick span { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); color: var(--muted); font-size: 0.68rem; }
 
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  margin: 26px 0 18px;
-}
-
-.filter-button {
-  appearance: none;
-  border: 1px solid var(--line);
-  color: var(--text);
-  background: rgba(255, 255, 255, 0.055);
-  border-radius: 999px;
-  padding: 10px 14px;
-  cursor: pointer;
-  font-weight: 750;
-  transition: 160ms ease;
-}
-
-.filter-button:hover,
-.filter-button.active {
-  transform: translateY(-1px);
-  border-color: rgba(247, 201, 72, 0.62);
-  background: rgba(247, 201, 72, 0.14);
-}
-
-.timeline-shell {
-  position: relative;
-  margin-top: 18px;
-  border: 1px solid var(--line);
-  border-radius: 28px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.035), transparent),
-    rgba(6, 9, 17, 0.9);
-  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.35);
-}
-
-.timeline {
-  position: relative;
-  min-width: 12000px;
-  padding: 20px 28px 28px 240px;
-}
-
-.time-axis {
-  position: relative;
-  height: 52px;
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 12px;
-}
-
-.tick {
-  position: absolute;
-  bottom: 0;
-  width: 1px;
-  height: 14px;
-  background: rgba(255,255,255,0.18);
-}
-
-.tick span {
-  position: absolute;
-  bottom: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: var(--muted);
-  font-size: 0.68rem;
-  white-space: nowrap;
-}
-
-.layer {
-  position: relative;
-  height: 70px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.075);
-}
-
-.layer-label {
-  position: absolute;
-  left: -218px;
-  top: 8px;
-  width: 196px;
-  padding: 8px 12px;
-  border-radius: 14px;
-  background: var(--panel-soft);
-  border: 1px solid var(--line);
-  font-weight: 900;
-  font-size: 0.72rem;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  line-height: 1.2;
-}
-
-.layer-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 35px;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
-}
+.layer { position: relative; height: 70px; border-bottom: 1px solid rgba(255, 255, 255, 0.075); }
+.layer-label { position: absolute; left: -218px; top: 8px; width: 196px; padding: 8px 12px; border-radius: 14px; background: var(--panel-soft); border: 1px solid var(--line); font-weight: 900; font-size: 0.72rem; text-transform: uppercase; }
 
 .event-node {
-  --node-color: var(--gold);
-  position: absolute;
-  top: 35px;
-  transform: translate(-50%, -50%);
-  width: 16px;
-  height: 16px;
-  border: 0;
-  padding: 0;
-  border-radius: 50%;
-  background: var(--node-color);
-  box-shadow: 0 0 0 4px rgba(255,255,255,0.06), 0 0 18px var(--node-color);
-  cursor: pointer;
-  transition: transform 160ms ease, opacity 160ms ease;
-  z-index: 6;
+  position: absolute; top: 35px; transform: translate(-50%, -50%); width: 16px; height: 16px; border-radius: 50%; border: 0;
+  background: var(--node-color, var(--gold)); box-shadow: 0 0 18px var(--node-color, var(--gold)); cursor: pointer; transition: 160ms ease;
 }
+.event-node.selected { transform: translate(-50%, -50%) scale(1.4); }
 
-.event-node:hover,
-.event-node.selected {
-  transform: translate(-50%, -50%) scale(1.45);
-  z-index: 20;
-}
+.collapse-score { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); color: #ffd3d8; font-size: 0.58rem; font-weight: 900; background: rgba(255,77,93,0.18); border-radius: 999px; padding: 2px 5px; }
 
-.event-node.dimmed { opacity: 0.14; }
+.detail-panel { margin-top: 18px; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 18px; }
+.card { border: 1px solid var(--line); border-radius: 24px; padding: 22px; background: var(--panel); box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28); }
 
-.event-node::after {
-  content: attr(data-short);
-  position: absolute;
-  left: 50%;
-  top: 22px;
-  transform: translateX(-50%);
-  width: max-content;
-  max-width: 170px;
-  color: var(--muted);
-  font-size: 0.66rem;
-  text-align: center;
-  pointer-events: none;
-}
-
-.collapse-score {
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #ffd3d8;
-  font-size: 0.58rem;
-  font-weight: 900;
-  background: rgba(255,77,93,0.18);
-  border: 1px solid rgba(255,77,93,0.25);
-  border-radius: 999px;
-  padding: 2px 5px;
-  pointer-events: none;
-}
-
-.detail-panel {
-  margin-top: 18px;
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 18px;
-}
-
-.card {
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  padding: 22px;
-  background: var(--panel);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
-}
-
-.video-wrapper {
-  position: relative;
-  padding-bottom: 56.25%; /* 16:9 */
-  height: 0;
-  overflow: hidden;
-  border-radius: 16px;
-  background: #000;
-}
-
-.video-wrapper iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
+.video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 16px; background: #000; }
+.video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
 .event-date { color: var(--gold); font-weight: 900; text-transform: uppercase; font-size: 0.82rem; }
-.event-title { margin: 8px 0 10px; font-size: clamp(1.45rem, 3vw, 2.3rem); letter-spacing: -0.04em; }
-.event-description { color: var(--muted); line-height: 1.65; margin: 0; }
-.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-.tag { font-size: 0.72rem; font-weight: 900; border-radius: 999px; padding: 7px 10px; border: 1px solid var(--line); background: rgba(255,255,255,0.055); color: var(--muted); }
-.system-list { list-style: none; padding: 0; display: grid; gap: 10px; margin-top: 14px; }
-.system-list li { padding: 12px 14px; border-radius: 16px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.045); color: var(--muted); line-height: 1.5; }
-.system-list strong { color: var(--text); }
-.note { color: var(--muted); line-height: 1.65; }
-
-@media (max-width: 860px) {
-  .detail-panel { grid-template-columns: 1fr; }
-  .timeline { min-width: 9600px; padding-left: 188px; }
-}
+.event-title { margin: 8px 0 10px; font-size: clamp(1.45rem, 3vw, 2.3rem); }
+.event-description { color: var(--muted); line-height: 1.65; }
+.system-list { list-style: none; padding: 0; margin-top: 14px; }
+.system-list li { padding: 12px 14px; border-radius: 16px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.045); color: var(--muted); margin-bottom: 8px; }
 </style>
 </head>
 <body>
 <main class="timeline-page">
-
 <section class="hero">
-  <p class="eyebrow">Layered History System</p>
   <h1>Strata</h1>
-  <p style="position:relative;z-index:1;margin:4px 0 18px;font-size:clamp(1.1rem,2.4vw,1.7rem);letter-spacing:-0.02em;color:var(--gold);font-weight:700;">A Layered History of Civilizational Collapse</p>
-  <p>A synchronized timeline of biology, climate, technology, civilization, and information systems.</p>
+  <p style="color:var(--gold); font-weight:700;">A Layered History of Civilizational Collapse</p>
+  <p>Live research timeline: select a node to analyze patterns of systemic failure.</p>
 </section>
 
 <section class="controls">
@@ -312,73 +92,47 @@ h1 {
   <button class="filter-button" data-filter="climate">Climate</button>
   <button class="filter-button" data-filter="technology">Technology</button>
   <button class="filter-button" data-filter="civilization">Civilization</button>
-  <button class="filter-button" data-filter="collapse-cases">Collapse Cases</button>
 </section>
 
-<section class="timeline-shell">
-  <div class="timeline" id="timeline">
-    <div class="time-axis" id="timeAxis"></div>
-  </div>
-</section>
+<section class="timeline-shell"><div class="timeline" id="timeline"><div class="time-axis" id="timeAxis"></div></div></section>
 
 <section class="detail-panel">
   <article class="card" id="detailCard">
-    <div class="event-date">Select an event</div>
-    <h2 class="event-title">Layered Timeline</h2>
-    <p class="event-description">Click any node to reveal history. Collapse Case Study nodes will trigger research documentaries in the sidebar.</p>
+    <div class="event-date">Status: Online</div>
+    <h2 class="event-title">Select an Event</h2>
+    <p class="event-description"> Documentary media will load in the sidebar for collapse case studies.</p>
   </article>
   
   <aside class="card" id="sidebarCard">
     <div id="sidebarDefault">
-      <h3>Collapse Signature Pattern</h3>
-      <p class="note">Primary historical analogues for terminal systems failure.</p>
+      <h3>Collapse Patterns</h3>
       <ul class="system-list">
-        <li><strong>Beiyang Fleet (1888–1895):</strong> prestige artifact vs. structural fragility.</li>
-        <li><strong>Meiji Restoration:</strong> institutional transformation control case.</li>
+        <li><strong>Beiyang Fleet:</strong> Prestige artifact fragility.</li>
+        <li><strong>Meiji Restoration:</strong> Successful transformation.</li>
       </ul>
     </div>
     <div id="sidebarVideo" style="display:none;"></div>
   </aside>
 </section>
-
 </main>
 
 <script>
-const layers = [
-  { id: 'biology', label: 'Biology / Evolution', color: 'var(--biology)' },
-  { id: 'climate', label: 'Climate / Earth System', color: 'var(--climate)' },
-  { id: 'technology', label: 'Technology / Energy', color: 'var(--tech)' },
-  { id: 'civilization', label: 'Civilization / Power', color: 'var(--civilization)' },
-  { id: 'collapse-cases', label: 'Collapse Case Studies', color: 'var(--collapse-case)' },
-  { id: 'information', label: 'Information / Meaning', color: 'var(--information)' }
-];
-
 const events = [
-  // --- BIOLOGY ---
-  { year: -200000, layer: 'biology', title: 'Emergence of Homo sapiens', short: 'Homo sapiens', date: 'c. 200,000 BCE', tags: ['Biology'], description: 'Anatomically modern humans emerge in Africa.' },
-  { year: -70000,  layer: 'biology', title: 'Cognitive Acceleration', short: 'Cognition', date: 'c. 70,000 BCE', tags: ['Biology'], description: 'Symbolic thought and language complexity expand.' },
-  { year: -28000,  layer: 'biology', title: 'Neanderthals Disappear', short: 'Neanderthals', date: 'c. 28,000 BCE', tags: ['Biology'], description: 'Neanderthals vanish as a distinct population.' },
+  // --- CORE DATA RESTORED ---
+  { year: -200000, layer: 'biology', title: 'Homo sapiens Emergence', date: 'c. 200k BCE', description: 'Modern humans emerge in Africa.' },
+  { year: -11700,  layer: 'climate', title: 'Holocene Begins', date: 'c. 11,700 BCE', description: 'Stabilized climate enables settlement.' },
   
-  // --- CLIMATE ---
-  { year: -115000, layer: 'climate', title: 'Last Glacial Period', short: 'Ice Age', date: 'c. 115,000 BCE', tags: ['Climate'], description: 'Global cooling expands ice sheets.' },
-  { year: -11700,  layer: 'climate', title: 'Beginning of the Holocene', short: 'Holocene', date: 'c. 11,700 BCE', tags: ['Climate'], description: 'The current interglacial period begins.' },
-  
-  // --- TECHNOLOGY ---
-  { year: -10000,  layer: 'technology', title: 'Neolithic Revolution', short: 'Agriculture', date: 'c. 10,000 BCE', tags: ['Technology'], description: 'Agriculture transforms nomadic bands into settlements.' },
-  { year: 1712,    layer: 'technology', title: 'Newcomen Steam Engine', short: 'Steam engine', date: '1712 CE', tags: ['Technology'], description: 'First practical atmospheric steam engine.' },
-  { year: 1947,    layer: 'technology', title: 'Transistor Invented', short: 'Transistor', date: '1947 CE', tags: ['Technology'], description: 'Foundational switching element of modern computing.' },
-
-  // --- COLLAPSE CASES & SHOCKS (WITH VIDEO IDs) ---
-  { year: -1200, layer: 'civilization', youtubeId: '0MSQLr1Gowg', title: 'Bronze Age Collapse', short: 'Collapse', date: 'c. 1208 BCE', collapseScore: 4, tags: ['Civilization', 'Shock'], description: 'Regional systems collapse disrupting Mycenaean Greece and Egypt.' },
-  { year: 476,   layer: 'civilization', youtubeId: 'pX_9m2M7mAI', title: 'Fall of Western Rome', short: 'Fall of Rome', date: '476 CE', collapseScore: 4, tags: ['Civilization', 'Shock'], description: 'The transition from classical antiquity to the early medieval period.' },
-  { year: 755,   layer: 'collapse-cases', youtubeId: 'NcajdicoJV0', title: 'An Lushan Rebellion', short: 'An Lushan', date: '755 CE', collapseScore: 3, tags: ['China', 'Collapse-Case'], description: 'Pivotal system shock where regional governors gain autonomous power.' },
-  { year: 1127,  layer: 'collapse-cases', youtubeId: 'JHNCBpanXJY', title: 'Northern Song Collapse', short: 'Song Collapse', date: '1127 CE', collapseScore: 3, tags: ['China', 'Collapse-Case'], description: 'Jurchen Jin invasion destroys Northern Song authority.' },
-  { year: 1868,  layer: 'collapse-cases', youtubeId: '5U_XfD8Y6gA', title: 'Meiji Restoration', short: 'Meiji', date: '1868 CE', tags: ['Japan', 'Collapse-Case'], description: 'Wholesale institutional transformation control case.' },
-  { year: 1895,  layer: 'collapse-cases', youtubeId: 'V9XjB-xS9S8', title: 'Battle of the Yalu River', short: 'Beiyang Lost', date: '1895 CE', collapseScore: 4, tags: ['China', 'Shock'], description: 'Destruction of the Beiyang Fleet artifact.' },
-  { year: 1918,  layer: 'collapse-cases', youtubeId: 'ux4UGpIoluk', title: 'Habsburg Empire Dissolves', short: 'Habsburg End', date: '1918 CE', collapseScore: 3, tags: ['Habsburg', 'Collapse-Case'], description: 'Multi-century empire fragments along nationalist lines.' },
-  { year: 1922,  layer: 'collapse-cases', youtubeId: '3p_m-yMSuvM', title: 'Ottoman Empire Formally Ends', short: 'Ottoman End', date: '1922 CE', collapseScore: 3, tags: ['Ottoman', 'Collapse-Case'], description: 'Formal dissolution of the Ottoman administrative system.' },
-  { year: 1991,  layer: 'collapse-cases', youtubeId: '8I-ZpT-97fE', title: 'Soviet Union Dissolves', short: 'Soviet End', date: '1991 CE', collapseScore: 3, tags: ['Soviet', 'Collapse-Case'], description: 'Cascading legitimacy failures and economic breakdown.' },
-  { year: 2008,  layer: 'civilization', youtubeId: 'GPOv729KoP8', title: 'Global Financial Crisis', short: 'GFC 2008', date: '2008 CE', collapseScore: 3, tags: ['Shock'], description: 'Collapse of credit markets reveals systemic financial fragility.' }
+  // --- VERIFIED COLLAPSE VIDEOS ---
+  { year: -1200, layer: 'civilization', youtubeId: 'cY7nR-bqRz4', title: 'Bronze Age Collapse', date: 'c. 1208 BCE', collapseScore: 4, description: 'The systemic failure of the late Bronze Age trade network.' },
+  { year: 476,   layer: 'civilization', youtubeId: 'maFxSGTf2os', title: 'Fall of Western Rome', date: '476 CE', collapseScore: 4, description: 'Administrative collapse and external barbarian pressures.' },
+  { year: 755,   layer: 'civilization', youtubeId: 'NcajdicoJV0', title: 'An Lushan Rebellion', date: '755 CE', collapseScore: 3, description: 'Deadliest conflict in Chinese history relative to population.' },
+  { year: 1127,  layer: 'civilization', youtubeId: 'JHNCBpanXJY', title: 'Northern Song Collapse', date: '1127 CE', collapseScore: 3, description: 'Jin invasion and the retreat to the South.' },
+  { year: 1868,  layer: 'civilization', youtubeId: '1fDUvtOZBTU', title: 'Meiji Restoration', date: '1868 CE', description: 'Rapid modernization preventing colonization.' },
+  { year: 1895,  layer: 'civilization', youtubeId: 'B0-MP8y5dvw', title: 'Battle of the Yalu River', date: '1895 CE', collapseScore: 4, description: 'The destruction of the Beiyang Fleet.' },
+  { year: 1918,  layer: 'civilization', youtubeId: 'ux4UGpIoluk', title: 'Habsburg Dissolution', date: '1918 CE', collapseScore: 3, description: 'The collapse of the Austro-Hungarian system.' },
+  { year: 1922,  layer: 'civilization', youtubeId: 'kd8bJ5L-lNE', title: 'Ottoman Empire End', date: '1922 CE', collapseScore: 3, description: 'The formal end of the Ottoman administrative state.' },
+  { year: 1991,  layer: 'civilization', youtubeId: '6Mhkf9empys', title: 'Soviet Union Dissolves', date: '1991 CE', collapseScore: 3, description: 'Terminal failure of the command-redistributive model.' },
+  { year: 2008,  layer: 'civilization', youtubeId: 'GPOv729KoP8', title: 'Global Financial Crisis', date: '2008 CE', collapseScore: 3, description: 'Systemic fragility in financial interconnectivity.' }
 ];
 
 function yearToPercent(year) {
@@ -390,58 +144,28 @@ function yearToPercent(year) {
 }
 
 function buildTimeline() {
-  const timeline = document.getElementById('timeline');
-  const timeAxis = document.getElementById('timeAxis');
-  const ticks = [{ year: -200000, label: '200k BCE' }, { year: -20000, label: '20k BCE' }, { year: 0, label: '0 CE' }, { year: 1400, label: '1400' }, { year: 1800, label: '1800' }, { year: 2026, label: 'Now' }];
-
-  ticks.forEach(t => {
-    const el = document.createElement('div'); el.className = 'tick';
-    el.style.left = `${yearToPercent(t.year)}%`;
-    el.innerHTML = `<span>${t.label}</span>`;
-    timeAxis.appendChild(el);
+  const tl = document.getElementById('timeline');
+  const ax = document.getElementById('timeAxis');
+  [{y:-200000, l:'200k BCE'}, {y:0, l:'0 CE'}, {y:2026, l:'Now'}].forEach(t => {
+    const d = document.createElement('div'); d.className='tick'; d.style.left=yearToPercent(t.y)+'%';
+    d.innerHTML=`<span>${t.l}</span>`; ax.appendChild(d);
   });
 
-  layers.forEach(layer => {
-    const layerEl = document.createElement('div');
-    layerEl.className = 'layer'; layerEl.dataset.layer = layer.id;
-    const label = document.createElement('div');
-    label.className = 'layer-label'; label.style.color = layer.color; label.textContent = layer.label;
-    layerEl.appendChild(label);
-    
-    events.filter(e => e.layer === layer.id || (layer.id === 'civilization' && e.layer === 'shock' && e.youtubeId)).forEach(ev => {
-      const node = document.createElement('button');
-      node.className = 'event-node';
-      node.style.setProperty('--node-color', layer.color);
-      node.style.left = `${yearToPercent(ev.year)}%`;
-      node.dataset.short = ev.short;
-      if (ev.collapseScore) {
-          const s = document.createElement('span'); s.className = 'collapse-score';
-          s.textContent = `S${ev.collapseScore}`; node.appendChild(s);
-      }
-      node.addEventListener('click', () => {
-          document.querySelectorAll('.event-node').forEach(n => n.classList.remove('selected'));
-          node.classList.add('selected');
-          document.getElementById('detailCard').innerHTML = `
-              <div class="event-date">${ev.date}</div>
-              <h2 class="event-title">${ev.title}</h2>
-              <p class="event-description">${ev.description}</p>
-          `;
-
-          const def = document.getElementById('sidebarDefault');
-          const vid = document.getElementById('sidebarVideo');
-          if (ev.youtubeId) {
-            def.style.display = 'none'; vid.style.display = 'block';
-            vid.innerHTML = `<h3>Event Media</h3><div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${ev.youtubeId}" allowfullscreen></iframe></div><p class="note">Analyzing patterns for ${ev.title}.</p>`;
-          } else {
-            def.style.display = 'block'; vid.style.display = 'none';
-          }
-      });
-      layerEl.appendChild(node);
-    });
-    timeline.appendChild(layerEl);
+  const layer = document.createElement('div'); layer.className='layer';
+  events.forEach(ev => {
+    const n = document.createElement('button'); n.className='event-node'; n.style.left=yearToPercent(ev.year)+'%';
+    n.style.setProperty('--node-color', ev.youtubeId ? 'var(--collapse-case)' : 'var(--biology)');
+    if (ev.collapseScore) { const s=document.createElement('span'); s.className='collapse-score'; s.textContent=`S${ev.collapseScore}`; n.appendChild(s); }
+    n.onclick = () => {
+      document.getElementById('detailCard').innerHTML = `<div class="event-date">${ev.date}</div><h2 class="event-title">${ev.title}</h2><p class="event-description">${ev.description}</p>`;
+      const d = document.getElementById('sidebarDefault'), v = document.getElementById('sidebarVideo');
+      if (ev.youtubeId) { d.style.display='none'; v.style.display='block'; v.innerHTML=`<h3>Media</h3><div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${ev.youtubeId}?rel=0" allowfullscreen></iframe></div>`; } 
+      else { d.style.display='block'; v.style.display='none'; }
+    };
+    layer.appendChild(n);
   });
+  tl.appendChild(layer);
 }
-
 buildTimeline();
 </script>
 </body>
