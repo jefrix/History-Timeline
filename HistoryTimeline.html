@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Strata: A Layered History of Civilizational Collapse</title>
+<style>
+:root {
+  --bg: #07090f;
+  --panel: rgba(14, 18, 30, 0.86);
+  --panel-soft: rgba(20, 26, 42, 0.72);
+  --line: rgba(255, 255, 255, 0.14);
+  --text: #f5f1e8;
+  --muted: #a8adba;
+  --gold: #f7c948;
+  --biology: #58e08f;
+  --climate: #54b8ff;
+  --tech: #ffb347;
+  --civilization: #d7a55f;
+  --information: #b78cff;
+  --shock: #ff4d5d;
+  --religion: #f7c948;
+  --philosophy: #6ee7ff;
+  --ideology: #ff6b6b;
+  --media: #b78cff;
+  --ai: #7cffc4;
+  --warm: #ff8a4c;
+  --cold: #3977ff;
+  --collapse-case: #e8945a;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(247, 201, 72, 0.11), transparent 28%),
+    radial-gradient(circle at 80% 25%, rgba(183, 140, 255, 0.10), transparent 28%),
+    linear-gradient(180deg, #05060a 0%, #090d16 45%, #05060a 100%);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.timeline-page {
+  width: min(1520px, 100%);
+  margin: 0 auto;
+  padding: 48px 18px 72px;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  padding: clamp(28px, 5vw, 64px);
+  background:
+    linear-gradient(135deg, rgba(247, 201, 72, 0.12), transparent 35%),
+    linear-gradient(90deg, rgba(15, 19, 33, 0.92), rgba(8, 11, 20, 0.92));
+  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.42);
+}
+
+.hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(90deg, black, transparent 82%);
+  pointer-events: none;
+}
+
+.eyebrow {
+  position: relative; z-index: 1;
+  margin: 0 0 14px;
+  color: var(--gold);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+h1 {
+  position: relative; z-index: 1;
+  margin: 0;
+  max-width: 1000px;
+  font-size: clamp(2.2rem, 6vw, 5.2rem);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+}
+
+.hero p:not(.eyebrow) {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 22px 0 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 2vw, 1.28rem);
+  line-height: 1.65;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin: 26px 0 18px;
+}
+
+.filter-button {
+  appearance: none;
+  border: 1px solid var(--line);
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.055);
+  border-radius: 999px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  font-family: inherit;
+  transition: 160ms ease;
+}
+
+.filter-button:hover,
+.filter-button.active {
+  transform: translateY(-1px);
+  border-color: rgba(247, 201, 72, 0.62);
+  background: rgba(247, 201, 72, 0.14);
+}
+
+.timeline-shell {
+  position: relative;
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.035), transparent),
+    rgba(6, 9, 17, 0.9);
+  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.35);
+}
+
+.timeline {
+  position: relative;
+  min-width: 12000px;
+  padding: 20px 28px 28px 240px;
+}
+
+.time-axis {
+  position: relative;
+  height: 52px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 12px;
+}
+
+.time-axis-bottom {
+  position: relative;
+  height: 36px;
+  border-top: 1px solid var(--line);
+  margin-top: 4px;
+}
+
+.tick {
+  position: absolute;
+  bottom: 0;
+  width: 1px;
+  height: 14px;
+  background: rgba(255,255,255,0.18);
+}
+
+.tick span {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--muted);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+.tick-bottom {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 14px;
+  background: rgba(255,255,255,0.18);
+}
+
+.tick-bottom span {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--muted);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+.layer {
+  position: relative;
+  height: 70px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.075);
+}
+
+.layer:last-child { border-bottom: 0; }
+
+.layer-label {
+  position: absolute;
+  left: -218px;
+  top: 8px;
+  width: 196px;
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  font-weight: 900;
+  font-size: 0.72rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.layer-line {
+  position: absolute;
+  left: 0; right: 0;
+  top: 35px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
+}
+
+.climate-band {
+  position: absolute;
+  left: 0; right: 0;
+  top: 4px;
+  height: 62px;
+  border-radius: 14px;
+  opacity: 0.36;
+  background: linear-gradient(90deg,
+    var(--cold) 0%, #3168d9 18%, #4d9aff 34%,
+    #ffc45a 55%, var(--warm) 72%, #d24b39 100%);
+}
+
+.shock-line {
+  position: absolute;
+  top: 52px;
+  bottom: 36px;
+  width: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, transparent, rgba(255, 77, 93, 0.82), transparent);
+  box-shadow: 0 0 18px rgba(255, 77, 93, 0.7);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.shock-line::before {
+  content: attr(data-label);
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ffd3d8;
+  background: rgba(255, 77, 93, 0.12);
+  border: 1px solid rgba(255, 77, 93, 0.36);
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 0.62rem;
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.event-node {
+  --node-color: var(--gold);
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border: 0;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--node-color);
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.06), 0 0 18px var(--node-color);
+  cursor: pointer;
+  transition: transform 160ms ease, opacity 160ms ease;
+  z-index: 6;
+}
+
+.event-node:hover,
+.event-node.selected {
+  transform: translate(-50%, -50%) scale(1.45);
+  z-index: 20;
+}
+
+.event-node.dimmed { opacity: 0.14; }
+
+/* Diamond shape for information / meaning layer nodes */
+.meaning-node {
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  border-radius: 0;
+}
+
+/* Gold ring on nodes that have a YouTube video */
+.has-video::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(247, 201, 72, 0.6);
+  pointer-events: none;
+}
+.meaning-node.has-video::before { border-radius: 50%; }
+
+.event-node::after {
+  content: attr(data-short);
+  position: absolute;
+  left: 50%;
+  top: 22px;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 170px;
+  color: var(--muted);
+  font-size: 0.66rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+.collapse-score {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ffd3d8;
+  font-size: 0.58rem;
+  font-weight: 900;
+  background: rgba(255,77,93,0.18);
+  border: 1px solid rgba(255,77,93,0.25);
+  border-radius: 999px;
+  padding: 2px 5px;
+  pointer-events: none;
+}
+
+.detail-panel {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 18px;
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 22px;
+  background: var(--panel);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+}
+
+.card h2, .card h3 { margin: 0 0 10px; }
+
+/* 16:9 responsive video embed */
+.video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #000;
+  margin-bottom: 14px;
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: 0;
+}
+
+.video-title {
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.45;
+  margin-bottom: 4px;
+}
+
+.video-hint {
+  font-size: 0.72rem;
+  color: var(--muted);
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.event-date { color: var(--gold); font-weight: 900; text-transform: uppercase; font-size: 0.82rem; }
+
+.whe-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 16px;
+  padding: 9px 14px;
+  border-radius: 12px;
+  background: rgba(183, 140, 255, 0.1);
+  border: 1px solid rgba(183, 140, 255, 0.35);
+  color: #c9aaff;
+  text-decoration: none;
+  font-size: 0.83rem;
+  font-weight: 600;
+  transition: 160ms ease;
+  line-height: 1;
+}
+.whe-link:hover {
+  background: rgba(183, 140, 255, 0.2);
+  border-color: rgba(183, 140, 255, 0.65);
+  transform: translateY(-1px);
+}
+.whe-link svg { flex-shrink: 0; opacity: 0.8; }
+.event-title { margin: 8px 0 10px; font-size: clamp(1.45rem, 3vw, 2.3rem); letter-spacing: -0.04em; }
+.event-description { color: var(--muted); line-height: 1.65; margin: 0; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.tag { font-size: 0.72rem; font-weight: 900; border-radius: 999px; padding: 7px 10px; border: 1px solid var(--line); background: rgba(255,255,255,0.055); color: var(--muted); }
+.system-list { list-style: none; padding: 0; display: grid; gap: 10px; margin-top: 14px; }
+.system-list li { padding: 12px 14px; border-radius: 16px; border: 1px solid var(--line); background: rgba(255,255,255,0.045); color: var(--muted); line-height: 1.5; }
+.system-list strong { color: var(--text); }
+.note { color: var(--muted); line-height: 1.65; }
+
+/* Video indicator badge on node labels */
+.event-node.has-video::after {
+  color: var(--gold);
+  opacity: 0.9;
+}
+
+@media (max-width: 860px) {
+  .detail-panel { grid-template-columns: 1fr; }
+  .timeline { min-width: 9600px; padding-left: 188px; }
+  .layer-label { left: -166px; width: 148px; font-size: 0.62rem; }
+}
+</style>
+</head>
+<body>
+<main class="timeline-page">
+
+<section class="hero">
+  <p class="eyebrow">Layered History System</p>
+  <h1>Strata</h1>
+  <p style="position:relative;z-index:1;margin:4px 0 18px;font-size:clamp(1.1rem,2.4vw,1.7rem);letter-spacing:-0.02em;color:var(--gold);font-weight:700;">A Layered History of Civilizational Collapse</p>
+  <p>A synchronized timeline of biology, climate, technology, civilization, and information / meaning systems — with curated research documentaries on key nodes. Nodes ringed in gold have embedded video. Every event links to a peer-reviewed article on <a href="https://www.worldhistory.org" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;font-weight:600;">World History Encyclopedia ↗</a></p>
+</section>
+
+<section class="controls" aria-label="Timeline filters">
+  <button class="filter-button active" data-filter="all">All Layers</button>
+  <button class="filter-button" data-filter="biology">Biology</button>
+  <button class="filter-button" data-filter="climate">Climate</button>
+  <button class="filter-button" data-filter="technology">Technology</button>
+  <button class="filter-button" data-filter="civilization">Civilization</button>
+  <button class="filter-button" data-filter="collapse-cases">Collapse Cases</button>
+  <button class="filter-button" data-filter="information">Meaning</button>
+  <button class="filter-button" data-filter="religion">Religion</button>
+  <button class="filter-button" data-filter="philosophy">Philosophy</button>
+  <button class="filter-button" data-filter="ideology">Ideology</button>
+  <button class="filter-button" data-filter="media">Media</button>
+  <button class="filter-button" data-filter="ai">AI</button>
+  <button class="filter-button" data-filter="shock">Shocks</button>
+</section>
+
+<section class="timeline-shell" aria-label="Layered timeline visualization">
+  <div class="timeline" id="timeline">
+    <div class="time-axis" id="timeAxis"></div>
+  </div>
+</section>
+
+<section class="detail-panel">
+  <article class="card" id="detailCard">
+    <div class="event-date">Select an event</div>
+    <h2 class="event-title">Layered Timeline</h2>
+    <p class="event-description">Click any node to reveal history. Nodes ringed in gold will load a research documentary in the sidebar.</p>
+  </article>
+
+  <aside class="card" id="sidebarCard">
+    <div id="sidebarDefault">
+      <h3>Collapse Signature Pattern</h3>
+      <p class="note">Tracking historical analogues that reached peak complexity before terminal fracture. Select a ringed node to view curated research documentaries.</p>
+      <ul class="system-list">
+        <li><strong>Beiyang Fleet (1888–1895):</strong> Prestige artifact vs. structural fragility.</li>
+        <li><strong>Meiji Restoration:</strong> Successful institutional transformation control case.</li>
+        <li><strong>GFC (2008):</strong> Systemic fragility in global credit networks.</li>
+      </ul>
+      <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line);">
+        <p style="font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;font-weight:700;margin:0 0 10px;">Deep Reading</p>
+        <a href="https://www.worldhistory.org" target="_blank" rel="noopener"
+           style="display:flex;align-items:center;gap:8px;color:#c9aaff;text-decoration:none;font-size:0.85rem;font-weight:600;padding:8px 0;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          World History Encyclopedia ↗
+        </a>
+        <p style="font-size:0.76rem;color:var(--muted);margin:4px 0 0;line-height:1.5;">Peer-reviewed articles on every event in this timeline. Click any node to surface a direct link.</p>
+      </div>
+    </div>
+    <div id="sidebarVideo" style="display:none;"></div>
+  </aside>
+</section>
+
+</main>
+
+<script>
+const layers = [
+  { id: 'biology',        label: 'Biology / Evolution',          color: 'var(--biology)' },
+  { id: 'climate',        label: 'Climate / Earth System',        color: 'var(--climate)' },
+  { id: 'technology',     label: 'Technology / Energy',           color: 'var(--tech)' },
+  { id: 'civilization',   label: 'Civilization / Power',          color: 'var(--civilization)' },
+  { id: 'collapse-cases', label: 'Collapse Case Studies',         color: 'var(--collapse-case)' },
+  { id: 'information',    label: 'Information / Meaning Systems', color: 'var(--information)' }
+];
+
+const subtypeColors = {
+  religion:   'var(--religion)',
+  philosophy: 'var(--philosophy)',
+  ideology:   'var(--ideology)',
+  media:      'var(--media)',
+  ai:         'var(--ai)'
+};
+
+// youtubeId sources:
+//   Original YTlinks.html  — collapse cases & shocks with videos
+//   Gemini additions       — keyed to event titles below
+const events = [
+  // ─── BIOLOGY ─────────────────────────────────────────────────────────────
+  { year: -200000, layer: 'biology', title: 'Emergence of Homo sapiens', short: 'Homo sapiens', date: 'c. 200,000 BCE', tags: ['Biology'], description: 'Anatomically modern humans emerge in Africa, eventually becoming the only surviving branch of the human family tree.',
+    whe: 'https://www.worldhistory.org/Homo_Sapiens/' },
+  { year: -70000,  layer: 'biology', title: 'Cognitive and Cultural Acceleration', short: 'Cognition', date: 'c. 70,000 BCE', tags: ['Biology', 'Information'], description: 'Symbolic thought, long-range planning, language complexity, and mythic imagination expand the human capacity for cooperation.',
+    whe: 'https://www.worldhistory.org/Neanderthal/' },
+  { year: -65000,  layer: 'civilization', title: 'Aboriginal Australian Culture Begins', short: 'Australia', date: 'c. 65,000–50,000 BCE', tags: ['Civilization', 'Meaning'], description: 'Humans reach Australia and establish one of the deepest continuous cultural traditions on Earth.',
+    whe: 'https://www.worldhistory.org/Aboriginal_Australians/' },
+  { year: -40000,  layer: 'biology', title: 'Modern Humans Reach Europe', short: 'Europe', date: 'c. 40,000 BCE', tags: ['Biology'], description: 'Homo sapiens expand into Europe and encounter remaining Neanderthal populations.',
+    whe: 'https://www.worldhistory.org/Cro-Magnon/' },
+  { year: -28000,  layer: 'biology', title: 'Neanderthals Disappear', short: 'Neanderthals', date: 'c. 28,000 BCE', tags: ['Biology'], description: 'Neanderthals vanish as a distinct population, though genetic traces survive in many modern humans.',
+    whe: 'https://www.worldhistory.org/Neanderthal/' },
+  { year: -15000,  layer: 'biology', title: 'Humans Reach the Americas', short: 'Americas', date: 'c. 15,000 BCE', tags: ['Biology', 'Civilization'], description: 'Modern humans spread into the Americas, adapting rapidly to new ecosystems and megafauna-rich landscapes.',
+    whe: 'https://www.worldhistory.org/article/1008/peopling-of-the-americas/' },
+  { year: -7000,   layer: 'biology', title: 'Lactose Persistence Mutation', short: 'Lactose tolerance', date: 'c. 7,000 BCE', tags: ['Biology'], description: 'A genetic mutation enabling adults to digest milk spreads through European and African pastoral populations — a striking example of recent human evolution co-driven by culture.' },
+
+  // ─── CLIMATE ─────────────────────────────────────────────────────────────
+  { year: -115000, layer: 'climate', title: 'Last Glacial Period', short: 'Ice Age', date: 'c. 115,000–11,700 BCE', tags: ['Climate'], description: 'Global cooling expands ice sheets, lowers sea levels, and reshapes migration routes, coastlines, and ecological pressure.',
+    whe: 'https://www.worldhistory.org/Last_Glacial_Period/' },
+  { year: -24000,  layer: 'climate', title: 'Last Glacial Maximum', short: 'LGM', date: 'c. 24,000–17,000 BCE', tags: ['Climate'], description: 'Ice sheets reach their greatest extent, locking up water, lowering sea levels, and altering human migration corridors.',
+    whe: 'https://www.worldhistory.org/Last_Glacial_Maximum/' },
+  { year: -12900,  layer: 'climate', title: 'Younger Dryas', short: 'Younger Dryas', date: 'c. 12,900–11,700 BCE', tags: ['Climate'], description: 'A sudden return to colder conditions interrupts post-glacial warming just before the Holocene.',
+    whe: 'https://www.worldhistory.org/Younger_Dryas/' },
+  { year: -11700,  layer: 'climate', youtubeId: 'DGWXzjKuL_o', title: 'Beginning of the Holocene', short: 'Holocene', date: 'c. 11,700 BCE', tags: ['Climate', 'Civilization'], description: 'The current interglacial period begins, bringing warmer temperatures, retreating ice sheets, rising seas, and new ecological opportunities.',
+    whe: 'https://www.worldhistory.org/Holocene_Epoch/' },
+  { year: 800,     layer: 'climate', title: 'Medieval Warm Period', short: 'Warm Period', date: 'c. 800–1200 CE', tags: ['Climate', 'Civilization'], description: 'Relatively stable warm conditions support agricultural expansion and population growth in parts of Europe and Asia.',
+    whe: 'https://www.worldhistory.org/Medieval_Warm_Period/' },
+  { year: 1600,    layer: 'climate', title: 'Little Ice Age Stress', short: 'Little Ice Age', date: 'c. 1500–1700 CE', tags: ['Climate', 'Civilization'], description: 'Cooler temperatures and agricultural instability contribute to social unrest, famine, migration, and political pressure in many regions.',
+    whe: 'https://www.worldhistory.org/Little_Ice_Age/' },
+  { year: 1997,    layer: 'climate', title: 'El Niño 1997–98 — Peak Climate Variability', short: 'El Niño 97', date: '1997–1998 CE', tags: ['Climate', 'Civilization'], description: 'The strongest El Niño event recorded to that point disrupts weather patterns globally, causing droughts, floods, and wildfires across Southeast Asia, Africa, and the Americas.',
+    whe: 'https://www.worldhistory.org/El_Nino/' },
+
+  // ─── TECHNOLOGY ──────────────────────────────────────────────────────────
+  { year: -90000,  layer: 'technology', title: 'Specialized Fishing Tools', short: 'Fishing tools', date: 'c. 90,000 BCE', tags: ['Technology', 'Biology'], description: 'Modern humans develop specialized tools for fishing, expanding diet, mobility, and coastal survival strategies.' },
+  { year: -10000,  layer: 'technology', youtubeId: 'gyQqodlfLiA', title: 'Neolithic Revolution', short: 'Agriculture', date: 'c. 10,000 BCE', tags: ['Technology', 'Civilization', 'Biology'], description: 'Agriculture transforms small nomadic bands into settlements, food surpluses, population growth, and social hierarchy.',
+    whe: 'https://www.worldhistory.org/Neolithic_Revolution/' },
+  { year: -3500,   layer: 'technology', title: 'Wheel Invented', short: 'Wheel', date: 'c. 3500–3000 BCE', tags: ['Technology'], description: 'The wheel transforms transport, craft production, trade, warfare, and mechanical thinking.',
+    whe: 'https://www.worldhistory.org/Wheel/' },
+  { year: -1400,   layer: 'technology', title: 'Early Iron Tools and Weapons', short: 'Iron', date: 'c. 1400 BCE', tags: ['Technology'], description: 'Iron technology begins to develop in the Near East before later becoming widespread after the Bronze Age collapse.',
+    whe: 'https://www.worldhistory.org/Iron_Age/' },
+  { year: 960,     layer: 'technology', title: 'Song Dynasty Innovation Surge', short: 'Song tech', date: '960–1279 CE', tags: ['Civilization', 'Technology'], description: 'Song China drives major economic, technological, and urban development, including paper currency, printing, and proto-industrialization.' },
+  { year: 1700,    layer: 'technology', youtubeId: 'fbt2zdiinHg', title: 'Industrial Revolution', short: 'Industry', date: 'c. 1700–1900 CE', tags: ['Technology', 'Civilization', 'Climate'], description: 'Mechanized production, fossil fuel energy, factories, railroads, and urbanization transform economies and begin large-scale anthropogenic climate impact.',
+    whe: 'https://www.worldhistory.org/Industrial_Revolution/' },
+  { year: 1712,    layer: 'technology', title: 'Newcomen Atmospheric Engine', short: 'Steam engine', date: '1712 CE', tags: ['Technology'], description: "Thomas Newcomen's atmospheric engine is the first practical steam engine, used to pump water from mines. The direct mechanical precursor to Watt's improved engine and the fossil-fuel energy transition that defines the Industrial Revolution." },
+  { year: 1800,    layer: 'technology', title: 'Voltaic Pile — First Electric Battery', short: 'Voltaic pile', date: '1800 CE', tags: ['Technology'], description: "Alessandro Volta's voltaic pile produces the first steady electric current, opening the door to electrochemistry, electromagnetism, and eventually the electrical grid." },
+  { year: 1885,    layer: 'technology', title: 'Internal Combustion Engine', short: 'ICE', date: 'c. 1885 CE', tags: ['Technology', 'Climate'], description: 'Benz and Daimler develop practical gasoline-powered engines in the 1880s, launching the automobile age and reshaping geopolitics and atmospheric carbon loading.',
+    whe: 'https://www.worldhistory.org/Newcomen_Steam_Engine/' },
+  { year: 1947,    layer: 'technology', youtubeId: 'CdjsdGmAQdk', title: 'Transistor Invented', short: 'Transistor', date: '1947 CE', tags: ['Technology'], description: 'Bell Labs engineers invent the transistor, the foundational switching element of all modern computing and communications. The transistor makes the digital revolution, the internet, and AI systems architecturally possible.',
+    whe: 'https://www.worldhistory.org/Transistor/' },
+  { year: 1970,    layer: 'technology', title: 'Digital Revolution Begins', short: 'Digital', date: 'c. 1970–2000 CE', tags: ['Technology', 'Information'], description: 'Computers, networks, software, and early internet systems begin shifting civilization into a digital operating environment.',
+    whe: 'https://www.worldhistory.org/Digital_Revolution/' },
+
+  // ─── CIVILIZATION ────────────────────────────────────────────────────────
+  { year: -9600,   layer: 'civilization', youtubeId: 'xEikuydGsQU', title: 'Göbekli Tepe', short: 'Göbekli Tepe', date: 'c. 9600 BCE', tags: ['Civilization', 'Religion'], description: 'Monumental ritual architecture appears before full agricultural urban civilization, suggesting belief and social organization helped drive settlement.',
+    whe: 'https://www.worldhistory.org/Gobekli_Tepe/' },
+  { year: -8000,   layer: 'civilization', title: 'Çatalhöyük', short: 'Çatalhöyük', date: 'c. 8000 BCE', tags: ['Civilization'], description: "One of the world's earliest known dense urban settlements appears in Anatolia." },
+  { year: -3500,   layer: 'civilization', title: 'Uruk and Sumerian City-States', short: 'Uruk', date: 'c. 3500 BCE', tags: ['Civilization', 'Technology'], description: 'Urbanism, temple economies, bureaucracy, and city-state power emerge in southern Mesopotamia.',
+    whe: 'https://www.worldhistory.org/Catalhoyuk/' },
+  { year: -2600,   layer: 'civilization', title: 'Indus Valley Civilization', short: 'Indus', date: 'c. 2600 BCE', tags: ['Civilization'], description: 'Urban civilization emerges in present-day Pakistan and India, with planned cities, trade, craft specialization, and undeciphered script.',
+    whe: 'https://www.worldhistory.org/Indus_Valley_Civilization/' },
+  { year: -2300,   layer: 'civilization', title: 'Akkadian Empire', short: 'Akkad', date: 'c. 2300 BCE', tags: ['Civilization'], description: 'Akkad becomes one of the earliest known empires, consolidating power across Mesopotamia.',
+    whe: 'https://www.worldhistory.org/Akkadian_Empire/' },
+  { year: -1500,   layer: 'civilization', title: 'Phoenician Maritime Civilization', short: 'Phoenicians', date: 'c. 1500–300 BCE', tags: ['Civilization', 'Information'], description: 'Levantine maritime traders build networks across the Mediterranean and help spread alphabetic writing.',
+    whe: 'https://www.worldhistory.org/Phoenicia/' },
+  { year: -1250,   layer: 'civilization', title: 'Traditional Start of the Trojan War', short: 'Trojan War', date: 'c. 1250 BCE', tags: ['Civilization', 'Meaning'], description: 'Traditional dating places the Trojan War in the Late Bronze Age, near the period of broader eastern Mediterranean instability.',
+    whe: 'https://www.worldhistory.org/Trojan_War/' },
+  { year: -509,    layer: 'civilization', title: 'Roman Republic Established', short: 'Rome', date: '509 BCE', tags: ['Civilization', 'Ideology'], description: "Rome establishes a republican system that later becomes the foundation for one of history's most influential empires." },
+  { year: -322,    layer: 'civilization', title: 'Maurya Empire', short: 'Maurya', date: '322–185 BCE', tags: ['Civilization', 'Religion'], description: 'The Maurya Empire unifies much of India and spreads Buddhism under Ashoka.',
+    whe: 'https://www.worldhistory.org/Roman_Republic/' },
+  { year: 27,      layer: 'civilization', youtubeId: 'zKZjlIhitRI', title: 'Roman Empire', short: 'Roman Empire', date: '27 BCE–476 CE', tags: ['Civilization', 'Technology', 'Information'], description: 'Rome dominates the Mediterranean, establishing infrastructure, law, governance, and trade networks that unify vast regions.',
+    whe: 'https://www.worldhistory.org/Roman_Empire/' },
+  { year: 900,     layer: 'civilization', youtubeId: 'YgRPqFSxPd8', title: 'Feudal Systems Dominate Europe', short: 'Feudalism', date: 'c. 800–1300 CE', tags: ['Civilization'], description: 'European society becomes organized around land ownership, military obligation, aristocratic power, and decentralized governance.',
+    whe: 'https://www.worldhistory.org/Feudalism/' },
+  { year: 1050,    layer: 'civilization', title: 'Khmer Empire — Angkor at Peak', short: 'Khmer', date: 'c. 800–1431 CE', tags: ['Civilization'], description: 'The Khmer Empire constructs Angkor Wat and the largest pre-industrial urban complex in the world, sustained by a sophisticated hydraulic network.',
+    whe: 'https://www.worldhistory.org/Khmer_Empire/' },
+  { year: 1235,    layer: 'civilization', title: 'Mali Empire — West African Apogee', short: 'Mali Empire', date: 'c. 1235–1450 CE', tags: ['Civilization'], description: "The Mali Empire unifies much of West Africa under Mansa Musa, controlling trans-Saharan gold and salt trade — one of the medieval world's most advanced civilizations." },
+  { year: 1400,    layer: 'civilization', title: 'Age of Exploration', short: 'Exploration', date: 'c. 1400–1700 CE', tags: ['Civilization', 'Technology'], description: 'European maritime expansion connects the Americas, Europe, Africa, and Asia into a single global trade system.',
+    whe: 'https://www.worldhistory.org/Mali_Empire/' },
+  { year: 1428,    layer: 'civilization', title: 'Aztec Empire — Triple Alliance', short: 'Aztec Empire', date: 'c. 1428–1521 CE', tags: ['Civilization'], description: 'The Triple Alliance founds the Aztec Empire with Tenochtitlán as its capital — a city larger than any in contemporary Europe, built on an island in Lake Texcoco.',
+    whe: 'https://www.worldhistory.org/Aztec_Empire/' },
+  { year: 1848,    layer: 'civilization', title: 'Revolutions of 1848 — European Liberal Wave', short: '1848 Revolutions', date: '1848 CE', tags: ['Civilization', 'Ideology'], description: 'A revolutionary wave sweeps France, Germany, Austria, Hungary, and Italy, driven by nationalism, liberalism, and economic stress.',
+    whe: 'https://www.worldhistory.org/Revolutions_of_1848/' },
+  { year: 1871,    layer: 'civilization', title: 'Unification of Germany', short: 'German Unity', date: '1871 CE', tags: ['Civilization', 'Ideology'], description: "Bismarck's Prussia defeats France and unifies the German states into the German Empire, dramatically reshaping the European balance of power." },
+  { year: 1884,    layer: 'civilization', title: 'Berlin Conference — Scramble for Africa', short: 'Berlin Conf.', date: '1884–1885 CE', tags: ['Civilization', 'Ideology'], description: 'European powers divide Africa among themselves at the Berlin Conference, formalizing colonial partition and establishing administrative borders that persist today.',
+    whe: 'https://www.worldhistory.org/Unification_of_Germany/' },
+  { year: 1945,    layer: 'civilization', title: 'Postwar Global Order', short: 'UN / IMF', date: '1945 CE', tags: ['Civilization', 'Information'], description: 'International institutions such as the United Nations, IMF, and World Bank emerge to stabilize the postwar system.',
+    whe: 'https://www.worldhistory.org/United_Nations/' },
+  { year: 2000,    layer: 'civilization', title: 'Peak Globalization', short: 'Globalization', date: 'c. 2000 CE–Present', tags: ['Civilization', 'Technology', 'Information'], description: 'Global trade, digital connectivity, financial integration, and supply chains create the most interconnected human system yet.',
+    whe: 'https://www.worldhistory.org/Globalization/' },
+
+  // ─── COLLAPSE CASE STUDIES (with YouTube IDs from YTlinks) ───────────────
+  { year: 618,  layer: 'collapse-cases', title: 'Tang Dynasty — Palace-Administrative State', short: 'Tang Founded', date: '618 CE', tags: ['Civilization', 'Collapse-Case', 'China'], description: 'The Tang Dynasty establishes a centralized bureaucratic state built on examination systems, equal-field land distribution, and tributary grain networks.',
+    whe: 'https://www.worldhistory.org/Tang_Dynasty/' },
+  { year: 755,  layer: 'collapse-cases', youtubeId: 'NcajdicoJV0', title: 'An Lushan Rebellion — Distributed Authority Fracture', short: 'An Lushan', date: '755 CE', collapseScore: 3, tags: ['Civilization', 'Shock', 'Collapse-Case', 'China'], description: 'Regional military governors gain autonomous power the center cannot reclaim. The empire survives but its integrative capacity is permanently degraded — a canonical failed-rising signature.',
+    whe: 'https://www.worldhistory.org/An_Lushan_Rebellion/' },
+  { year: 875,  layer: 'collapse-cases', title: 'Huang Chao Rebellion — Late Tang Terminal Phase', short: 'Huang Chao', date: '875–884 CE', collapseScore: 4, tags: ['Civilization', 'Shock', 'Collapse-Case', 'China'], description: 'Fiscal collapse, warlordism, and legitimacy failure converge. Used as the structural model for rapid capital-web legitimacy collapse.',
+    whe: 'https://www.worldhistory.org/Huang_Chao_Rebellion/' },
+  { year: 907,  layer: 'collapse-cases', title: 'Fall of Tang Dynasty — Five Dynasties Period', short: 'Tang Falls', date: '907 CE', collapseScore: 4, tags: ['Civilization', 'Collapse-Case', 'China'], description: 'The Tang Dynasty collapses after nearly three centuries, giving way to the Five Dynasties and Ten Kingdoms fragmentation period.',
+    whe: 'https://www.worldhistory.org/Five_Dynasties_and_Ten_Kingdoms/' },
+  { year: 1127, layer: 'collapse-cases', youtubeId: 'JHNCBpanXJY', title: 'Northern Song Collapse — Jurchen Jin Invasion', short: 'Song Collapse', date: '1127 CE', collapseScore: 3, tags: ['Civilization', 'Shock', 'Collapse-Case', 'China'], description: 'The Jurchen Jin dynasty destroys Northern Song — but the Southern Song survives another 150 years. A quasi-experimental resilience case in the methodology.',
+    whe: 'https://www.worldhistory.org/Song_Dynasty/' },
+  { year: 1532, layer: 'collapse-cases', title: 'Fall of the Inca Empire — Conquest and Collapse', short: 'Inca Falls', date: '1532–1572 CE', collapseScore: 4, tags: ['Civilization', 'Shock', 'Collapse-Case', 'Americas'], description: 'Spanish conquistadors under Pizarro exploit Inca civil war and introduce epidemic disease, collapsing the largest empire in the pre-Columbian Americas within decades.',
+    whe: 'https://www.worldhistory.org/Inca_Empire/' },
+  { year: 1603, layer: 'collapse-cases', title: 'Tokugawa Shogunate — Controlled Isolation System', short: 'Tokugawa', date: '1603–1868 CE', tags: ['Civilization', 'Collapse-Case', 'Japan'], description: 'Tokugawa Japan achieves internal stability through controlled isolation (sakoku), deliberately suppressing foreign technology diffusion.',
+    whe: 'https://www.worldhistory.org/Tokugawa_Shogunate/' },
+  { year: 1850, layer: 'collapse-cases', title: 'Taiping Rebellion — Qing Structural Stress', short: 'Taiping', date: '1850–1864 CE', collapseScore: 3, tags: ['Civilization', 'Shock', 'Collapse-Case', 'China'], description: 'The Taiping Rebellion kills an estimated 20–30 million and nearly destroys Qing authority, creating dependency on semi-autonomous military power.',
+    whe: 'https://www.worldhistory.org/Taiping_Rebellion/' },
+  { year: 1853, layer: 'collapse-cases', title: "Black Ships — Tokugawa Legitimacy Crisis", short: 'Black Ships', date: '1853 CE', collapseScore: 2, tags: ['Civilization', 'Technology', 'Shock', 'Collapse-Case', 'Japan'], description: "Commodore Perry's steam-powered warships demonstrate that Tokugawa isolation has produced a fatal technology gap, triggering a legitimacy crisis." },
+  { year: 1861, layer: 'collapse-cases', title: 'Self-Strengthening Movement — Surface Modernization', short: 'Self-Strengthen', date: '1861–1895 CE', tags: ['Civilization', 'Technology', 'Collapse-Case', 'China'], description: 'The Qing Self-Strengthening Movement attempts to acquire Western military technology while preserving Confucian social order — producing the Beiyang Fleet as its prestige artifact.',
+    whe: 'https://www.worldhistory.org/Self-Strengthening_Movement/' },
+  { year: 1868, layer: 'collapse-cases', youtubeId: '5U_XfD8Y6gA', title: 'Meiji Restoration — Successful Transformation Control Case', short: 'Meiji', date: '1868 CE', tags: ['Civilization', 'Technology', 'Collapse-Case', 'Japan'], description: "Japan's Meiji Restoration achieves wholesale institutional transformation. Used as the quasi-experimental control case in the synthesis — same external shock as Qing China, different outcome." },
+  { year: 1888, layer: 'collapse-cases', title: 'Beiyang Fleet Commissioned — Prestige Infrastructure Node', short: 'Beiyang Fleet', date: '1888 CE', tags: ['Technology', 'Civilization', 'Collapse-Case', 'China'], description: 'The Beiyang Fleet is commissioned as the flagship artifact of Qing modernization — a prestigious technological artifact at the symbolic center of a capital-web whose underlying infrastructure is structurally fragile.',
+    whe: 'https://www.worldhistory.org/Meiji_Restoration/' },
+  { year: 1895, layer: 'collapse-cases', youtubeId: 'V9XjB-xS9S8', title: 'Battle of the Yalu River — Beiyang Fleet Destroyed', short: 'Beiyang Lost', date: '1894–1895 CE', collapseScore: 4, tags: ['Civilization', 'Technology', 'Shock', 'Collapse-Case', 'China'], description: "Japan destroys the Beiyang Fleet at the Battle of the Yalu River, exposing the Self-Strengthening Movement as surface modernization. The empirical anchor of the research." },
+  { year: 1908, layer: 'collapse-cases', title: "Young Turk Revolution — Failed Modernization Rising", short: 'Young Turks', date: '1908 CE', collapseScore: 2, tags: ['Civilization', 'Ideology', 'Collapse-Case', 'Ottoman'], description: 'The Committee of Union and Progress seizes power, attempting constitutional modernization of a declining empire. A failed-rising case.',
+    whe: 'https://www.worldhistory.org/Battle_of_the_Yalu_River/' },
+  { year: 1912, layer: 'collapse-cases', title: 'Fall of Qing Dynasty', short: 'Qing Falls', date: '1912 CE', collapseScore: 3, tags: ['Civilization', 'Collapse-Case', 'China'], description: 'The Qing Dynasty collapses after 268 years, ending imperial China.',
+    whe: 'https://www.worldhistory.org/Qing_Dynasty/' },
+  { year: 1918, layer: 'collapse-cases', youtubeId: 'ux4UGpIoluk', title: 'Habsburg Empire Dissolves', short: 'Habsburg End', date: '1918 CE', collapseScore: 3, tags: ['Civilization', 'Collapse-Case', 'Habsburg'], description: 'The Austro-Hungarian Empire dissolves after WWI, fragmenting into successor states along nationalist lines.',
+    whe: 'https://www.worldhistory.org/Habsburg_Dynasty/' },
+  { year: 1922, layer: 'collapse-cases', youtubeId: '3p_m-yMSuvM', title: 'Ottoman Empire Formally Ends', short: 'Ottoman End', date: '1922 CE', collapseScore: 3, tags: ['Civilization', 'Collapse-Case', 'Ottoman'], description: 'The Ottoman Empire formally dissolves. One of the primary long-cycle collapse cases in Stream Three, alongside Qing and Habsburg.',
+    whe: 'https://www.worldhistory.org/Ottoman_Empire/' },
+  { year: 1952, layer: 'collapse-cases', title: 'Egypt — Nasser Revolution / Resilience Case Study', short: 'Egypt Resilience', date: '1952 CE', tags: ['Civilization', 'Collapse-Case', 'Egypt'], description: 'Egypt is used in Stream Three as a resilience case: having absorbed colonial disruption, military defeats, and economic crises without full civilizational collapse.',
+    whe: 'https://www.worldhistory.org/Gamal_Abdel_Nasser/' },
+  { year: 1979, layer: 'collapse-cases', title: 'Iranian Revolution — Ideological Regime Collapse', short: 'Iran Revolution', date: '1979 CE', collapseScore: 3, tags: ['Civilization', 'Ideology', 'Collapse-Case', 'Iran'], description: "The Iranian Revolution overthrows the Pahlavi monarchy. A rare modern case of full regime-type transformation driven by ideological fracture rather than external military defeat." },
+  { year: 1991, layer: 'collapse-cases', youtubeId: '8I-ZpT-97fE', title: 'Soviet Union Dissolves — Command System Collapse', short: 'Soviet End', date: '1991 CE', collapseScore: 3, tags: ['Civilization', 'Ideology', 'Collapse-Case', 'Soviet'], description: 'The Soviet Union dissolves after cascading legitimacy failures, economic breakdown, and ideological exhaustion.',
+    whe: 'https://www.worldhistory.org/Soviet_Union/' },
+
+  // ─── INFORMATION / MEANING SYSTEMS ───────────────────────────────────────
+  { year: -77000,  layer: 'information', subtype: 'religion',   title: 'Early Symbolic Recording', short: 'Symbols', date: 'c. 77,000 BCE', tags: ['Information', 'Meaning', 'Proto-ritual'], description: 'Early symbolic marking suggests humans were storing meaning outside the body — a foundation for later ritual, myth, writing, and culture.',
+    whe: 'https://www.worldhistory.org/article/562/prehistoric-cave-paintings/' },
+  { year: -3200,   layer: 'information', subtype: 'religion',   title: 'Writing Systems and Temple Administration', short: 'Writing', date: 'c. 3200 BCE', tags: ['Information', 'Religion', 'Civilization'], description: 'Writing systems emerge in Egypt and Mesopotamia, allowing states and temples to store memory, taxes, law, myth, and power across generations.',
+    whe: 'https://www.worldhistory.org/Cuneiform/' },
+  { year: -1000,   layer: 'information', subtype: 'media',      title: 'Phoenician Alphabet Spreads', short: 'Alphabet', date: 'c. 1000 BCE', tags: ['Information', 'Media'], description: 'Alphabetic writing helps simplify literacy and influence Greek, Latin, Hebrew, Aramaic, and later writing traditions.',
+    whe: 'https://www.worldhistory.org/Phoenician_Alphabet/' },
+  { year: -800,    layer: 'information', subtype: 'philosophy',  title: 'Axial Age Begins', short: 'Axial Age', date: 'c. 800–200 BCE', tags: ['Information', 'Philosophy', 'Religion', 'Civilization'], description: 'Greek philosophy, Hebrew prophecy, Buddhism, Jainism, Confucianism, and Daoism reshape ethics, metaphysics, law, and human identity.',
+    whe: 'https://www.worldhistory.org/Axial_Age/' },
+  { year: -600,    layer: 'information', subtype: 'religion',   title: 'Buddhism Emerges', short: 'Buddha', date: 'c. 600 BCE', tags: ['Religion', 'Philosophy'], description: 'The teachings of Siddhartha Gautama establish Buddhism, focusing on suffering, impermanence, liberation, and disciplined consciousness.',
+    whe: 'https://www.worldhistory.org/Buddhism/' },
+  { year: -550,    layer: 'information', subtype: 'philosophy',  title: 'Confucian Ethics', short: 'Confucius', date: 'c. 551–479 BCE', tags: ['Philosophy', 'Civilization'], description: "Confucian thought links ethics, family order, education, and statecraft into one of history's most durable governance philosophies." },
+  { year: -500,    layer: 'information', subtype: 'religion',   title: 'Hebrew Prophetic Monotheism', short: 'Prophets', date: 'c. 600–400 BCE', tags: ['Religion', 'Ethics'], description: 'Hebrew prophetic traditions develop ethical monotheism, covenantal identity, social-justice themes, and historical consciousness.',
+    whe: 'https://www.worldhistory.org/Confucianism/' },
+  { year: -400,    layer: 'information', subtype: 'philosophy',  title: 'Classical Greek Philosophy', short: 'Greek thought', date: 'c. 400 BCE', tags: ['Philosophy'], description: 'Socrates, Plato, and Aristotle formalize logic, metaphysics, political philosophy, ethics, and systematic inquiry.',
+    whe: 'https://www.worldhistory.org/Greek_Philosophy/' },
+  { year: -45,     layer: 'information', subtype: 'media',      title: 'Julian Calendar', short: 'Calendar', date: '45 BCE', tags: ['Information', 'Civilization'], description: 'Julius Caesar introduces the Julian calendar, standardizing Roman timekeeping and influencing later Western calendars.',
+    whe: 'https://www.worldhistory.org/Julian_Calendar/' },
+  { year: -4,      layer: 'information', subtype: 'religion',   title: 'Birth of Jesus of Nazareth', short: 'Jesus', date: 'c. 4 BCE', tags: ['Religion'], description: "The traditional historical dating of Jesus's birth becomes a central anchor for later Christian civilization and Western chronology." },
+  { year: 100,     layer: 'information', subtype: 'religion',   title: 'Rise of Christianity', short: 'Christianity', date: '1st century CE', tags: ['Religion', 'Civilization'], description: 'Christianity rises from the teachings of Jesus and spreads through the Roman world as a new universal religious identity.',
+    whe: 'https://www.worldhistory.org/Jesus_Christ/' },
+  { year: 313,     layer: 'information', subtype: 'religion',   title: 'Edict of Milan', short: 'Milan', date: '313 CE', tags: ['Religion', 'Civilization'], description: 'Christianity is legalized in the Roman Empire, changing the relationship between belief, state power, and social legitimacy.',
+    whe: 'https://www.worldhistory.org/Edict_of_Milan/' },
+  { year: 325,     layer: 'information', subtype: 'religion',   title: 'Council of Nicaea', short: 'Nicaea', date: '325 CE', tags: ['Religion', 'Civilization'], description: 'Christian doctrine is standardized, showing how empires stabilize belief by defining orthodoxy.',
+    whe: 'https://www.worldhistory.org/Council_of_Nicaea/' },
+  { year: 380,     layer: 'information', subtype: 'religion',   title: 'Christianity Becomes Roman State Religion', short: 'State church', date: '380 CE', tags: ['Religion', 'Civilization'], description: 'Christianity becomes the official religion of Rome, fusing imperial structure with universal religious identity.',
+    whe: 'https://www.worldhistory.org/Nicene_Christianity/' },
+  { year: 610,     layer: 'information', subtype: 'religion',   youtubeId: 'QqRaRCpzVKM', title: 'Rise of Islam', short: 'Islam', date: '7th century CE', tags: ['Religion', 'Civilization'], description: 'Islam rises under Muhammad, creating a unified religious, legal, and political system that rapidly reshapes the Middle East and beyond.',
+    whe: 'https://www.worldhistory.org/Islam/' },
+  { year: 750,     layer: 'information', subtype: 'philosophy',  title: 'Islamic Golden Age', short: 'Golden Age', date: 'c. 750–1200 CE', tags: ['Religion', 'Philosophy', 'Technology'], description: 'Islamic civilization preserves, translates, and expands scientific, mathematical, medical, and philosophical knowledge.',
+    whe: 'https://www.worldhistory.org/Islamic_Golden_Age/' },
+  { year: 1000,    layer: 'information', subtype: 'religion',   title: 'Christianity Dominates Europe', short: 'Christendom', date: 'c. 300–1500 CE', tags: ['Religion', 'Civilization'], description: 'Christianity shapes European law, politics, art, timekeeping, education, kingship, and the meaning of social order.',
+    whe: 'https://www.worldhistory.org/Medieval_Church/' },
+  { year: 1095,    layer: 'information', subtype: 'religion',   title: 'Crusades', short: 'Crusades', date: '1095–1291 CE', tags: ['Religion', 'Civilization', 'Ideology'], description: 'The Crusades merge religion and geopolitics, showing how sacred narratives can mobilize war, migration, and empire.',
+    whe: 'https://www.worldhistory.org/Crusades/' },
+  { year: 1100,    layer: 'information', subtype: 'philosophy',  title: 'Scholasticism and Universities', short: 'Scholasticism', date: 'c. 1100–1300 CE', tags: ['Philosophy', 'Religion', 'Civilization'], description: 'Medieval universities and scholastic thinkers integrate Christian theology, Aristotle, logic, law, and systematic education.',
+    whe: 'https://www.worldhistory.org/Scholasticism/' },
+  { year: 1440,    layer: 'information', subtype: 'media',      youtubeId: 'IslJntloAHo', title: 'Printing Press', short: 'Printing', date: 'c. 1440 CE', tags: ['Information', 'Media', 'Technology'], description: "Gutenberg's printing press accelerates the spread of books, literacy, religious texts, scientific ideas, and ideological fracture." },
+  { year: 1517,    layer: 'information', subtype: 'religion',   youtubeId: 'eyZSBxjl2xw', title: 'Protestant Reformation', short: 'Reformation', date: '1517 CE', tags: ['Religion', 'Media', 'Civilization'], description: 'The Reformation fractures Christian unity in Europe, showing how printing-powered information expansion can destabilize centralized belief authority.',
+    whe: 'https://www.worldhistory.org/Gutenberg_s_Printing_Press/' },
+  { year: 1600,    layer: 'information', subtype: 'philosophy',  youtubeId: 'JeloqvgCiX8', title: 'Scientific Revolution', short: 'Science', date: 'c. 1600–1800 CE', tags: ['Philosophy', 'Information', 'Technology'], description: 'Natural philosophy becomes modern science, transforming astronomy, physics, experiment, evidence, and the authority of reason.',
+    whe: 'https://www.worldhistory.org/Scientific_Revolution/' },
+  { year: 1637,    layer: 'information', subtype: 'philosophy',  title: 'Descartes and Modern Subjectivity', short: 'Descartes', date: '1637 CE', tags: ['Philosophy'], description: 'Descartes publishes "I think, therefore I am," centering modern philosophy on consciousness, doubt, method, and the knowing subject.',
+    whe: 'https://www.worldhistory.org/Rene_Descartes/' },
+  { year: 1720,    layer: 'information', subtype: 'philosophy',  title: 'Enlightenment', short: 'Enlightenment', date: 'c. 1600–1800 CE', tags: ['Philosophy', 'Ideology', 'Technology'], description: 'Enlightenment thought emphasizes reason, science, individual rights, skepticism of inherited authority, and political reform.',
+    whe: 'https://www.worldhistory.org/Enlightenment/' },
+  { year: 1776,    layer: 'information', subtype: 'ideology',   title: 'Declaration of Independence', short: '1776', date: '1776 CE', tags: ['Ideology', 'Civilization'], description: 'The American Revolution reframes political authority around rights, consent, republicanism, and self-government.',
+    whe: 'https://www.worldhistory.org/Declaration_of_Independence/' },
+  { year: 1789,    layer: 'information', subtype: 'ideology',   youtubeId: 'D4jayPby70I', title: 'French Revolution', short: '1789', date: '1789 CE', tags: ['Ideology', 'Civilization'], description: 'The French Revolution challenges monarchy, divine right, aristocracy, and inherited power while spreading modern political ideology.',
+    whe: 'https://www.worldhistory.org/French_Revolution/' },
+  { year: 1800,    layer: 'information', subtype: 'ideology',   title: 'Nationalism Rises', short: 'Nationalism', date: '1800s CE', tags: ['Ideology', 'Civilization'], description: 'Nationalism becomes a powerful identity framework, binding people through language, territory, history, symbols, and imagined community.',
+    whe: 'https://www.worldhistory.org/Nationalism/' },
+  { year: 1848,    layer: 'information', subtype: 'ideology',   title: 'Communist Manifesto', short: 'Marxism', date: '1848 CE', tags: ['Ideology', 'Civilization'], description: 'Marx and Engels introduce a revolutionary ideology centered on class struggle, capitalism, labor, and historical transformation.',
+    whe: 'https://www.worldhistory.org/Communist_Manifesto/' },
+  { year: 1880,    layer: 'information', subtype: 'ideology',   title: 'Capitalism Solidifies as Modern Ideology', short: 'Capitalism', date: 'late 1800s CE', tags: ['Ideology', 'Civilization'], description: 'Industrial capitalism becomes not only an economic system but a cultural belief structure around markets, growth, labor, ownership, and progress.',
+    whe: 'https://www.worldhistory.org/Capitalism/' },
+  { year: 1920,    layer: 'information', subtype: 'media',      title: 'Radio and Television Mass Media Era', short: 'Broadcast', date: 'c. 1920–2000 CE', tags: ['Media', 'Civilization'], description: 'Broadcast media centralizes information and narrative control, giving states, corporations, and movements unprecedented ability to shape public reality.',
+    whe: 'https://www.worldhistory.org/Mass_Media/' },
+  { year: 1947,    layer: 'information', subtype: 'ideology',   title: 'Cold War Ideological Division', short: 'Cold War', date: '1947 CE', tags: ['Ideology', 'Civilization', 'Technology'], description: 'The world divides into competing ideological blocs: liberal capitalism, communism, nuclear deterrence, proxy conflict, and propaganda systems.',
+    whe: 'https://www.worldhistory.org/Cold_War/' },
+  { year: 1989,    layer: 'information', subtype: 'ideology',   title: 'Fall of the Soviet Bloc', short: '1989', date: '1989 CE', tags: ['Ideology', 'Civilization'], description: 'The collapse of Soviet power shifts the global ideological balance and briefly strengthens the sense of liberal-democratic triumph.',
+    whe: 'https://www.worldhistory.org/Soviet_Union/' },
+  { year: 2000,    layer: 'information', subtype: 'media',      title: 'Internet Decentralizes Information', short: 'Internet', date: 'c. 2000 CE', tags: ['Media', 'Technology', 'Information'], description: 'The internet breaks the monopoly of centralized publishers and broadcasters, enabling distributed knowledge, communities, and conflict.',
+    whe: 'https://www.worldhistory.org/Internet/' },
+  { year: 2010,    layer: 'information', subtype: 'media',      title: 'Social Media Fragments Shared Reality', short: 'Social media', date: 'c. 2010 CE–Present', tags: ['Media', 'Ideology', 'Civilization'], description: 'Algorithmic feeds, virality, memes, and online tribes fragment shared reality into competing narratives.',
+    whe: 'https://www.worldhistory.org/Social_Media/' },
+  { year: 2016,    layer: 'information', subtype: 'ideology',   title: 'Populist Wave — Brexit, Trump, Global Nationalism', short: 'Populist wave', date: '2016 CE', tags: ['Ideology', 'Media', 'Civilization'], description: 'A global populist surge signals the exhaustion of the post-1989 liberal consensus. The algorithmic amplification of identity-based politics by social media platforms is the information-layer driver.',
+    whe: 'https://www.worldhistory.org/Populism/' },
+  { year: 2020,    layer: 'information', subtype: 'ai',         title: 'AI Begins Shaping Information Itself', short: 'AI', date: 'c. 2020 CE–Present', tags: ['AI', 'Technology', 'Information', 'Civilization'], description: 'Rapid AI development transforms labor, media, education, creativity, knowledge production, and the boundary between human and machine-generated reality.',
+    whe: 'https://www.worldhistory.org/Artificial_Intelligence/' },
+
+  // ─── SYSTEM SHOCKS ───────────────────────────────────────────────────────
+  { year: -74000,  layer: 'shock', youtubeId: 'ypYoXMZeFqY', title: 'Toba Supereruption / Population Bottleneck', short: 'Toba shock', date: 'c. 74,000 BCE', collapseScore: 2, tags: ['Climate', 'Biology', 'Shock'], description: 'A possible near-extinction bottleneck linked to the Toba supereruption. The severity remains debated, but it is a powerful system-shock marker.',
+    whe: 'https://www.worldhistory.org/Toba_Catastrophe/' },
+  { year: -8200,   layer: 'shock', title: '8.2 Kiloyear Climate Event', short: '8.2k event', date: 'c. 8200 BCE', collapseScore: 2, tags: ['Climate', 'Civilization', 'Shock'], description: 'A sudden cooling and drying event disrupts early Holocene communities and tests emerging farming systems.',
+    whe: 'https://www.worldhistory.org/8.2_ka_Event/' },
+  { year: -5200,   layer: 'shock', title: '5.2 Kiloyear Event', short: '5.2k event', date: 'c. 5200 BCE', collapseScore: 2, tags: ['Climate', 'Civilization', 'Shock'], description: 'A widespread cold and arid event contributes to cultural shifts and migration.',
+    whe: 'https://www.worldhistory.org/5.2_ka_Event/' },
+  { year: -2200,   layer: 'shock', title: '4.2 Kiloyear Event', short: '4.2k event', date: 'c. 2200 BCE', collapseScore: 3, tags: ['Climate', 'Civilization', 'Shock'], description: 'A severe aridification event stresses Egypt, Mesopotamia, the Indus region, and surrounding systems, contributing to political disruption.',
+    whe: 'https://www.worldhistory.org/4.2_kiloyear_event/' },
+  { year: -1600,   layer: 'shock', title: 'Santorini / Thera Eruption', short: 'Thera', date: 'c. 1600 BCE', collapseScore: 2, tags: ['Climate', 'Civilization', 'Shock'], description: 'A major Aegean eruption disrupts the eastern Mediterranean world and is often connected to later memories of catastrophe.',
+    whe: 'https://www.worldhistory.org/Minoan_Eruption/' },
+  { year: -1200,   layer: 'shock', youtubeId: '0MSQLr1Gowg', title: 'Bronze Age Collapse / Sea Peoples', short: 'Collapse', date: 'c. 1208–1176 BCE', collapseScore: 4, tags: ['Climate', 'Civilization', 'Technology', 'Information', 'Shock'], description: 'A regional systems collapse disrupts Mycenaean Greece, Anatolia, the Levant, and Egypt through war, migration, trade disruption, drought, and political fragmentation.',
+    whe: 'https://www.worldhistory.org/Bronze_Age_Collapse/' },
+  { year: 165,     layer: 'shock', title: 'Antonine Plague', short: 'Antonine', date: '165–180 CE', collapseScore: 2, tags: ['Biology', 'Civilization', 'Shock'], description: 'A major epidemic weakens the Roman Empire through population loss, economic strain, and military disruption.',
+    whe: 'https://www.worldhistory.org/Antonine_Plague/' },
+  { year: 250,     layer: 'shock', title: 'Plague of Cyprian', short: 'Cyprian', date: 'c. 250–270 CE', collapseScore: 2, tags: ['Biology', 'Civilization', 'Shock'], description: 'A severe epidemic contributes to instability during the Roman third-century crisis.',
+    whe: 'https://www.worldhistory.org/Plague_of_Cyprian/' },
+  { year: 476,     layer: 'shock', youtubeId: 'pX_9m2M7mAI', title: 'Fall of Western Roman Empire', short: 'Fall of Rome', date: '476 CE', collapseScore: 4, tags: ['Civilization', 'Technology', 'Information', 'Shock'], description: 'The Western Roman Empire falls, marking the transition from classical antiquity to the early medieval period in Europe.',
+    whe: 'https://www.worldhistory.org/Fall_of_the_Western_Roman_Empire/' },
+  { year: 536,     layer: 'shock', title: 'Late Antique Little Ice Age', short: '536 winter', date: 'c. 536–550 CE', collapseScore: 3, tags: ['Climate', 'Civilization', 'Shock'], description: 'Major volcanic eruptions trigger global cooling, crop failures, famine, and widespread societal stress.',
+    whe: 'https://www.worldhistory.org/Late_Antique_Little_Ice_Age/' },
+  { year: 541,     layer: 'shock', title: 'Plague of Justinian', short: 'Justinian', date: '541–750 CE', collapseScore: 3, tags: ['Biology', 'Civilization', 'Shock'], description: 'Pandemic disease devastates Byzantine and Mediterranean populations, weakening imperial recovery.',
+    whe: 'https://www.worldhistory.org/Plague_of_Justinian/' },
+  { year: 1257,    layer: 'shock', title: 'Samalas Eruption — Medieval Volcanic Winter', short: 'Samalas', date: '1257 CE', collapseScore: 2, tags: ['Climate', 'Civilization', 'Shock'], description: 'One of the largest volcanic eruptions of the Holocene, causing global cooling, crop failures, and famine across Europe and Asia.',
+    whe: 'https://www.worldhistory.org/Samalas_Eruption/' },
+  { year: 1347,    layer: 'shock', youtubeId: 'BUIstsY9g98', title: 'Black Death', short: 'Black Death', date: '1347–1351 CE', collapseScore: 3, tags: ['Biology', 'Civilization', 'Shock'], description: 'Pandemic disease kills a large share of Eurasian populations, destabilizing labor systems, economies, and religious confidence.',
+    whe: 'https://www.worldhistory.org/Black_Death/' },
+  { year: 1492,    layer: 'shock', title: 'Columbian Exchange', short: 'Columbian', date: '1492 CE', collapseScore: 3, tags: ['Biology', 'Civilization', 'Technology', 'Shock'], description: 'Plants, animals, diseases, people, and empires move between the Old and New Worlds, transforming global ecology and society.',
+    whe: 'https://www.worldhistory.org/Columbian_Exchange/' },
+  { year: 1618,    layer: 'shock', title: "Thirty Years' War", short: '30 Years War', date: '1618–1648 CE', collapseScore: 3, tags: ['Religion', 'Civilization', 'Information', 'Shock'], description: 'Religious fragmentation, dynastic politics, and geopolitical rivalry devastate Central Europe and reshape the European state system.',
+    whe: 'https://www.worldhistory.org/Thirty_Years_War/' },
+  { year: 1783,    layer: 'shock', title: 'Laki Eruption / Haze Famine', short: 'Laki 1783', date: '1783–1784 CE', collapseScore: 2, tags: ['Climate', 'Civilization', 'Shock'], description: 'The Laki fissure eruption in Iceland releases toxic sulfur dioxide across Europe, causing the "Haze Famine" and contributing conditions that preceded the French Revolution.',
+    whe: 'https://www.worldhistory.org/Laki_Eruption/' },
+  { year: 1914,    layer: 'shock', title: 'World War I', short: 'WWI', date: '1914–1918 CE', collapseScore: 4, tags: ['Civilization', 'Technology', 'Ideology', 'Shock'], description: 'The first large-scale industrial global conflict leads to mass casualties and the collapse of several empires.',
+    whe: 'https://www.worldhistory.org/World_War_I/' },
+  { year: 1918,    layer: 'shock', title: 'Spanish Flu', short: 'Spanish Flu', date: '1918–1920 CE', collapseScore: 3, tags: ['Biology', 'Civilization', 'Shock'], description: 'A global pandemic infects a large portion of humanity, killing tens of millions and compounding postwar instability.',
+    whe: 'https://www.worldhistory.org/Spanish_Flu/' },
+  { year: 1939,    layer: 'shock', title: 'World War II', short: 'WWII', date: '1939–1945 CE', collapseScore: 4, tags: ['Civilization', 'Technology', 'Ideology', 'Shock'], description: 'Total war reshapes global power, destroys fascist regimes, accelerates nuclear technology, and produces the postwar international system.',
+    whe: 'https://www.worldhistory.org/World_War_II/' },
+  { year: 1945,    layer: 'shock', title: 'Hiroshima and Nagasaki', short: 'Atomic bombs', date: 'August 1945 CE', collapseScore: 3, tags: ['Technology', 'Civilization', 'Shock'], description: 'The United States drops atomic bombs on Hiroshima and Nagasaki, ending WWII and inaugurating the nuclear age.',
+    whe: 'https://www.worldhistory.org/Atomic_Bombings_of_Hiroshima_and_Nagasaki/' },
+  { year: 2001,    layer: 'shock', title: 'September 11 Attacks', short: '9/11', date: '2001 CE', collapseScore: 3, tags: ['Civilization', 'Ideology', 'Shock'], description: 'The September 11 attacks trigger two decades of global counter-terrorism warfare, reshaping security states, civil liberties, and the geopolitical landscape.',
+    whe: 'https://www.worldhistory.org/September_11_Attacks/' },
+  { year: 2008,    layer: 'shock', youtubeId: 'GPOv729KoP8', title: 'Global Financial Crisis', short: 'GFC 2008', date: '2008–2009 CE', collapseScore: 3, tags: ['Civilization', 'Technology', 'Shock'], description: 'The collapse of Lehman Brothers triggers the worst financial crisis since the Great Depression, revealing the systemic fragility of the hyper-interconnected financial system.',
+    whe: 'https://www.worldhistory.org/Global_Financial_Crisis_of_2008/' },
+  { year: 2020,    layer: 'shock', title: 'COVID-19 Pandemic', short: 'COVID', date: '2020 CE', collapseScore: 4, tags: ['Biology', 'Civilization', 'Information', 'Shock'], description: 'The pandemic disrupts global systems and exposes vulnerabilities in supply chains, healthcare, governance, and institutional trust.',
+    whe: 'https://www.worldhistory.org/COVID-19_Pandemic/' },
+  { year: 2022,    layer: 'shock', title: "Russia–Ukraine War / Global Order Fracture", short: 'Ukraine War', date: '2022 CE–Present', collapseScore: 2, tags: ['Civilization', 'Technology', 'Ideology', 'Shock'], description: "Russia's full-scale invasion of Ukraine fractures the post-Cold War security order in Europe and accelerates the decoupling of Western and Russian/Chinese economic systems." },
+];
+
+const shocks = events.filter(e => e.layer === 'shock');
+
+// ─── SCALE FUNCTION (5 segments, same as HistoryTimeline) ────────────────────
+function yearToPercent(year) {
+  if (year <= -20000) return ((year - (-200000)) / (-20000 - (-200000))) * 8;
+  if (year <= -1000)  return 8  + ((year - (-20000)) / (-1000 - (-20000))) * 8;
+  if (year <= 1400)   return 16 + ((year - (-1000))  / (1400  - (-1000)))  * 19;
+  if (year <= 1800)   return 35 + ((year - 1400)     / (1800  - 1400))     * 20;
+  return                      55 + ((year - 1800)     / (2026  - 1800))     * 45;
+}
+
+// ─── STAGGER SYSTEM ───────────────────────────────────────────────────────────
+const CENTER     = 35;
+const LVL_HEIGHT = 16;
+const THRESHOLD  = 0.18;
+const LEVEL_TOPS = [CENTER, CENTER - LVL_HEIGHT, CENTER + LVL_HEIGHT];
+
+function eventKey(e) { return `${e.year}|${e.title}`; }
+
+function assignVerticalOffsets(layerEvents) {
+  const sorted = [...layerEvents].sort((a, b) => yearToPercent(a.year) - yearToPercent(b.year));
+  const map = new Map();
+  sorted.forEach(ev => {
+    const key = eventKey(ev);
+    const pos = yearToPercent(ev.year);
+    const nearby = sorted
+      .filter(e => map.has(eventKey(e)))
+      .filter(e => Math.abs(yearToPercent(e.year) - pos) < THRESHOLD);
+    if (nearby.length === 0) {
+      map.set(key, LEVEL_TOPS[0]);
+    } else {
+      const used = nearby.map(e => map.get(eventKey(e)));
+      const free = LEVEL_TOPS.find(t => !used.includes(t));
+      map.set(key, free !== undefined ? free : LEVEL_TOPS[nearby.length % LEVEL_TOPS.length]);
+    }
+  });
+  return map;
+}
+
+function getNodeColor(event, layerColor) {
+  if (event.subtype && subtypeColors[event.subtype]) return subtypeColors[event.subtype];
+  if (event.layer === 'shock') return 'var(--shock)';
+  return layerColor;
+}
+
+// ─── BUILD ────────────────────────────────────────────────────────────────────
+function buildTimeline() {
+  const timeline = document.getElementById('timeline');
+  const timeAxis = document.getElementById('timeAxis');
+
+  const ticks = [
+    { year: -200000, label: '200k BCE' }, { year: -100000, label: '100k BCE' },
+    { year: -50000,  label: '50k BCE'  }, { year: -20000,  label: '20k BCE'  },
+    { year: -10000,  label: '10k BCE'  }, { year: -5000,   label: '5000 BCE' },
+    { year: -3000,   label: '3000 BCE' }, { year: -1200,   label: '1200 BCE' },
+    { year: -500,    label: '500 BCE'  }, { year: 0,       label: '0 CE'     },
+    { year: 500,     label: '500'      }, { year: 1000,    label: '1000'     },
+    { year: 1300,    label: '1300'     }, { year: 1400,    label: '1400'     },
+    { year: 1500,    label: '1500'     }, { year: 1600,    label: '1600'     },
+    { year: 1700,    label: '1700'     }, { year: 1800,    label: '1800'     },
+    { year: 1850,    label: '1850'     }, { year: 1900,    label: '1900'     },
+    { year: 1920,    label: '1920'     }, { year: 1940,    label: '1940'     },
+    { year: 1960,    label: '1960'     }, { year: 1980,    label: '1980'     },
+    { year: 2000,    label: '2000'     }, { year: 2010,    label: '2010'     },
+    { year: 2020,    label: '2020'     }, { year: 2026,    label: 'Now'      }
+  ];
+
+  ticks.forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'tick';
+    el.style.left = `${yearToPercent(t.year)}%`;
+    el.innerHTML = `<span>${t.label}</span>`;
+    timeAxis.appendChild(el);
+  });
+
+  // Shock vertical lines
+  shocks.forEach(shock => {
+    const line = document.createElement('div');
+    line.className = 'shock-line';
+    line.dataset.label = shock.short;
+    line.style.left = `${yearToPercent(shock.year)}%`;
+    timeline.appendChild(line);
+  });
+
+  // Layer rows
+  layers.forEach(layer => {
+    const layerEl = document.createElement('div');
+    layerEl.className = 'layer';
+    layerEl.dataset.layer = layer.id;
+
+    const labelEl = document.createElement('div');
+    labelEl.className = 'layer-label';
+    labelEl.style.color = layer.color;
+    labelEl.textContent = layer.label;
+
+    const lineEl = document.createElement('div');
+    lineEl.className = 'layer-line';
+
+    layerEl.appendChild(labelEl);
+    layerEl.appendChild(lineEl);
+
+    if (layer.id === 'climate') {
+      const band = document.createElement('div');
+      band.className = 'climate-band';
+      layerEl.appendChild(band);
+    }
+
+    const layerEvents = events.filter(e => e.layer === layer.id);
+    const offsets = assignVerticalOffsets(layerEvents);
+    layerEvents.forEach(ev => {
+      const topPx = offsets.get(eventKey(ev)) || CENTER;
+      layerEl.appendChild(createNode(ev, getNodeColor(ev, layer.color), topPx));
+    });
+
+    timeline.appendChild(layerEl);
+  });
+
+  // Collapse overlay row (shock events shown as a layer)
+  const shockLayer = document.createElement('div');
+  shockLayer.className = 'layer';
+  shockLayer.dataset.layer = 'shock';
+  const shockLabelEl = document.createElement('div');
+  shockLabelEl.className = 'layer-label';
+  shockLabelEl.style.color = 'var(--shock)';
+  shockLabelEl.textContent = 'Collapse Pattern Overlay';
+  const shockLineEl = document.createElement('div');
+  shockLineEl.className = 'layer-line';
+  shockLayer.appendChild(shockLabelEl);
+  shockLayer.appendChild(shockLineEl);
+  const shockOffsets = assignVerticalOffsets(shocks);
+  shocks.forEach(ev => {
+    const topPx = shockOffsets.get(eventKey(ev)) || CENTER;
+    shockLayer.appendChild(createNode(ev, 'var(--shock)', topPx));
+  });
+  timeline.appendChild(shockLayer);
+
+  // Bottom time axis (mirrors top)
+  const bottomAxis = document.createElement('div');
+  bottomAxis.className = 'time-axis-bottom';
+  ticks.forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'tick-bottom';
+    el.style.left = `${yearToPercent(t.year)}%`;
+    el.innerHTML = `<span>${t.label}</span>`;
+    bottomAxis.appendChild(el);
+  });
+  timeline.appendChild(bottomAxis);
+}
+
+function createNode(event, color, topPx) {
+  const node = document.createElement('button');
+  node.className = 'event-node';
+  if (event.layer === 'information') node.classList.add('meaning-node');
+  if (event.youtubeId) node.classList.add('has-video');
+  node.style.setProperty('--node-color', color);
+  node.style.left = `${yearToPercent(event.year)}%`;
+  node.style.top  = `${topPx}px`;
+  node.dataset.layer   = event.layer;
+  node.dataset.subtype = event.subtype || '';
+  node.dataset.tags    = (event.tags || []).join(' ').toLowerCase();
+  node.dataset.short   = event.short;
+  node.setAttribute('aria-label', `${event.date}: ${event.title}`);
+  if (event.collapseScore) {
+    const score = document.createElement('span');
+    score.className = 'collapse-score';
+    score.textContent = `S${event.collapseScore}`;
+    node.appendChild(score);
+  }
+  node.addEventListener('click', () => selectEvent(event, node));
+  return node;
+}
+
+function selectEvent(event, node) {
+  document.querySelectorAll('.event-node').forEach(el => el.classList.remove('selected'));
+  node.classList.add('selected');
+
+  // Update the left detail card
+  const tags = (event.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+  const collapse = event.collapseScore
+    ? `<span class="tag" style="color:#ffd3d8;border-color:rgba(255,77,93,.38);background:rgba(255,77,93,.12);">Collapse Score ${event.collapseScore}/5</span>`
+    : '';
+  const wheBtn = event.whe
+    ? `<a class="whe-link" href="${event.whe}" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Read on World History Encyclopedia
+      </a>`
+    : '';
+
+  document.getElementById('detailCard').innerHTML = `
+    <div class="event-date">${event.date}</div>
+    <h2 class="event-title">${event.title}</h2>
+    <p class="event-description">${event.description}</p>
+    <div class="tags">${tags}${collapse}</div>
+    ${wheBtn}
+  `;
+
+  // Update the right sidebar: show video if available, else restore default
+  const def = document.getElementById('sidebarDefault');
+  const vid = document.getElementById('sidebarVideo');
+  if (event.youtubeId) {
+    def.style.display = 'none';
+    vid.style.display = 'block';
+    vid.innerHTML = `
+      <h3 style="margin:0 0 14px;">Event Media</h3>
+      <div class="video-wrapper">
+        <iframe
+          src="https://www.youtube.com/embed/${event.youtubeId}?rel=0&modestbranding=1"
+          allowfullscreen
+          loading="lazy"
+          title="${event.title}">
+        </iframe>
+      </div>
+      <p class="video-title">${event.title} &mdash; ${event.date}</p>
+      <p class="video-hint">Curated research documentary</p>
+    `;
+  } else {
+    def.style.display = 'block';
+    vid.style.display = 'none';
+  }
+}
+
+function setupFilters() {
+  document.querySelectorAll('.filter-button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilter(btn.dataset.filter);
+    });
+  });
+}
+
+function applyFilter(filter) {
+  const informationSubtypes = ['religion', 'philosophy', 'ideology', 'media', 'ai'];
+  document.querySelectorAll('.event-node').forEach(node => {
+    const visible =
+      filter === 'all'
+      || node.dataset.layer === filter
+      || node.dataset.subtype === filter
+      || node.dataset.tags.includes(filter);
+    node.classList.toggle('dimmed', !visible);
+  });
+  document.querySelectorAll('.layer').forEach(layer => {
+    const ld = layer.dataset.layer;
+    const visible =
+      filter === 'all'
+      || ld === filter
+      || filter === 'shock'
+      || (informationSubtypes.includes(filter) && ld === 'information')
+      || (filter === 'collapse-cases' && ld === 'collapse-cases');
+    layer.style.opacity = visible ? '1' : '0.25';
+  });
+  document.querySelectorAll('.shock-line').forEach(line => {
+    line.style.opacity = (filter === 'all' || filter === 'shock') ? '1' : '0.14';
+  });
+}
+
+buildTimeline();
+setupFilters();
+</script>
+</body>
+</html>
