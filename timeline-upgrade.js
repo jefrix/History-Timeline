@@ -557,7 +557,10 @@
       'Sumerians','Akkadians','Elamites','Babylonians','Assyrians','Hittites',
       'Canaanites','Phoenicians','Israel','Judah','Moabites','Edomites','Ammonites',
       'Persians','SeaPeoples','Egyptians','Nubian_Kingdoms','Minoans','Mycenaeans',
-      'Greeks','Carthaginians','Romans','indus_valley','shang_zhou'
+      'Greeks','Carthaginians','Romans','RomanEmpire','indus_valley','shang_zhou',
+      'Aksum','Mali','Songhai','Byzantines','HolyRomanEmpire','Vikings','Vedic','Maurya','Gupta','Mughals',
+      'QinHan','Tang','Song','YuanMingQing','Olmec','Maya','Teotihuacan','Aztec','Inca',
+      'AboriginalAustralia','Polynesia'
     ],
     'Religions': [
       'Judaism','JewishApocrypha','Mithraism','Gnosticism','Christianity',
