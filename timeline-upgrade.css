@@ -891,3 +891,68 @@ a.chart-launch:hover { filter: brightness(1.08); color: #0e1420; }
   section table th,
   section table td { padding: 0.6rem 0.7rem !important; font-size: 0.85rem !important; }
 }
+
+/* Hasidic / Haredi subgroup table.
+   Columns are group, name, date, description — not the usual date-first layout. */
+table.faith-groups td.group,
+table.faith-groups td.name,
+table.faith-groups td.when,
+table.faith-groups td.about,
+.tu-section table.faith-groups td,
+section table.faith-groups td {
+  font-family: var(--sans) !important;
+  white-space: normal !important;
+  font-size: 0.92rem !important;
+}
+table.faith-groups td.group.hasid,
+.tu-section table.faith-groups td.group.hasid,
+section table.faith-groups td.group.hasid {
+  color: #d4a64a !important;
+  font-family: var(--serif) !important;
+  font-weight: 600 !important;
+  font-size: 1.05rem !important;
+  letter-spacing: 0.01em;
+  border-left: 3px solid #d4a64a !important;
+}
+table.faith-groups td.group.haredi,
+.tu-section table.faith-groups td.group.haredi,
+section table.faith-groups td.group.haredi {
+  color: #6da3c4 !important;
+  font-family: var(--serif) !important;
+  font-weight: 600 !important;
+  font-size: 1.05rem !important;
+  border-left: 3px solid #6da3c4 !important;
+}
+table.faith-groups td.name.hasid,
+.tu-section table.faith-groups td.name.hasid,
+section table.faith-groups td.name.hasid {
+  color: #e7c98a !important;
+  font-weight: 600 !important;
+}
+table.faith-groups td.name.haredi,
+.tu-section table.faith-groups td.name.haredi,
+section table.faith-groups td.name.haredi {
+  color: #9ec3dc !important;
+  font-weight: 600 !important;
+}
+table.faith-groups td.when,
+.tu-section table.faith-groups td.when,
+section table.faith-groups td.when {
+  color: #9aa3b8 !important;
+  font-family: var(--mono) !important;
+  font-size: 0.8rem !important;
+  white-space: nowrap !important;
+}
+table.faith-groups td.about,
+.tu-section table.faith-groups td.about,
+section table.faith-groups td.about {
+  color: #b7c0cf !important;
+  line-height: 1.45;
+}
+table.faith-groups td.about .lead,
+.tu-section table.faith-groups td.about .lead,
+section table.faith-groups td.about .lead {
+  color: #e8e6df !important;
+  display: block;
+  margin-bottom: 0.35rem;
+}

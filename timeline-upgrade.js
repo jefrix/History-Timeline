@@ -564,7 +564,7 @@
       'AboriginalAustralia','Polynesia'
     ],
     'Religions': [
-      'Judaism','JewishApocrypha','Mithraism','Gnosticism','Christianity',
+      'Judaism','HasidicHaredi','JewishApocrypha','Mithraism','Gnosticism','Christianity',
       'Orthodoxy','Catholics','Protestants','Islam','Bahai','Esoteric','Philosophy'
     ],
     'Wars & Conflict': ['Wars','IronAgeWars'],
