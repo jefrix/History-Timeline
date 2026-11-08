@@ -219,6 +219,7 @@
         <a href="#tu-top" class="tu-brand">
           <span class="tu-brand-mark">⌘</span><span class="tu-brand-text-long">History Timeline</span>
         </a>
+        <a class="tu-chart-link" href="world-chart.html"><span class="tu-chart-long">World chart</span><span class="tu-chart-short">Chart</span></a>
         <div class="tu-search-wrap">
           <span class="tu-search-icon">⌕</span>
           <input type="search" id="tuSearch" class="tu-search"

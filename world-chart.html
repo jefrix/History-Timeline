@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>World History Chart — History Timeline</title>
+  <meta name="description" content="A pannable world-history chart. Drag to move through time and regions. Click a civilization to open it in the almanac.">
+  <link rel="icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+  <style>
+    :root {
+      --bg: #0e1420;
+      --panel: #161e2e;
+      --border: #2a3550;
+      --text: #e8e6df;
+      --muted: #9aa3b8;
+      --accent: #d4a64a;
+      --cool: #6da3c4;
+      --serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+      --sans: Inter, "Segoe UI", sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+    }
+    header, footer {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--bg);
+      border-color: var(--border);
+      border-style: solid;
+    }
+    header { border-width: 0 0 1px; }
+    footer { border-width: 1px 0 0; align-items: center; }
+    .eyebrow {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 0.75rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+    #range {
+      margin: 0.3rem 0 0;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+    }
+    .hint, .keys { margin: 0; max-width: 22rem; text-align: right; color: var(--muted); font-size: 0.9rem; }
+    a.back, button.ctrl, a.chart-home {
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: 8px;
+      font-family: var(--sans);
+    }
+    a.back {
+      align-self: center;
+      padding: 0.55rem 0.8rem;
+      white-space: nowrap;
+      font-size: 0.875rem;
+    }
+    a.back:hover, button.ctrl:hover { border-color: var(--accent); color: var(--accent); }
+    .stage { position: relative; flex: 1; min-height: 0; }
+    .goldbar { position: absolute; inset: 0 0 auto; height: 3px; background: var(--accent); z-index: 5; pointer-events: none; }
+    canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; display: block; }
+    #layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    .region-chip {
+      position: absolute;
+      left: 8px;
+      transform: translateY(-50%);
+      border: 1px solid var(--border);
+      background: rgba(22, 30, 46, 0.95);
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .year-label {
+      position: absolute;
+      top: 8px;
+      transform: translateX(-50%);
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .year-label.gold { color: var(--accent); }
+    .bar-label {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+    .bar-label:hover { text-decoration: underline; }
+    #tip {
+      position: absolute;
+      z-index: 20;
+      display: none;
+      max-width: 16rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+    #tip.open { display: block; }
+    #tip h2 { margin: 0; font-family: var(--serif); font-size: 1.15rem; font-weight: 600; line-height: 1.15; }
+    #tip p { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.875rem; }
+    #tip .region { color: var(--cool); }
+    #tip a { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em; }
+    .controls { margin-left: auto; display: flex; gap: 0.5rem; }
+    button.ctrl { height: 44px; min-width: 44px; padding: 0 0.9rem; font-size: 1.05rem; }
+    button.ctrl.fit { font-size: 0.875rem; }
+    @media (max-width: 720px) {
+      .hint, .keys { display: none; }
+      header, footer { padding: 0.6rem 0.75rem; }
+      h1 { font-size: 1.45rem; }
+    }
+  </style>
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js" } }
+  </script>
+</head>
+<body>
+  <header>
+    <div>
+      <p class="eyebrow">History Timeline</p>
+      <h1>World History</h1>
+      <p id="range">Drag to move · scroll to zoom</p>
+    </div>
+    <p class="hint">Drag to travel through time. Scroll or pinch to zoom. Click a civilization to open it in the almanac.</p>
+    <a class="back" href="index.html">Almanac</a>
+  </header>
+  <div class="stage">
+    <div class="goldbar"></div>
+    <canvas id="chart" aria-label="World history timeline. Drag to pan, scroll to zoom, click a bar to open that civilization."></canvas>
+    <div id="layer"></div>
+    <div id="tip"></div>
+  </div>
+  <footer>
+    <p class="keys">Arrows move · +/− zoom · Home fits · click opens a page</p>
+    <div class="controls">
+      <button type="button" class="ctrl" id="zoomOut" aria-label="Zoom out">−</button>
+      <button type="button" class="ctrl" id="zoomIn" aria-label="Zoom in">+</button>
+      <button type="button" class="ctrl fit" id="fit">Fit</button>
+    </div>
+  </footer>
+  <script type="module">
+    import * as THREE from "three";
+
+    const SITE = "index.html#";
+    const REGIONS = [
+      { name: "Southern Africa", color: 0x4a6741 },
+      { name: "Egypt & Nile", color: 0x8b7355 },
+      { name: "Europe", color: 0x3d5a80 },
+      { name: "Mesopotamia", color: 0xa67c42 },
+      { name: "South Asia", color: 0xb45309 },
+      { name: "East Asia", color: 0x9f2d2d },
+      { name: "Americas", color: 0x2f6b4f },
+      { name: "Oceania", color: 0x3d6f8f },
+    ];
+    const ERAS = [
+      ["Egyptian Old Kingdom", -2686, -2181, "Egypt & Nile", 0xc4a35a, "Egyptians"],
+      ["Egyptian Middle Kingdom", -2055, -1650, "Egypt & Nile", 0xb8860b, "Egyptians"],
+      ["Egyptian New Kingdom", -1550, -1077, "Egypt & Nile", 0xd4a017, "Egyptians"],
+      ["Kush / Nubia", -1070, 350, "Egypt & Nile", 0xa0673b, "Nubian_Kingdoms"],
+      ["Aksumite Empire", 100, 940, "Egypt & Nile", 0x7a4a28, "Aksum"],
+      ["Mali Empire", 1230, 1670, "Southern Africa", 0x3d7a45, "Mali"],
+      ["Songhai Empire", 1464, 1591, "Southern Africa", 0x1f5c38, "Songhai"],
+      ["Minoan Civilization", -2700, -1450, "Europe", 0x6ea0c4, "Minoans"],
+      ["Mycenaean Greece", -1600, -1100, "Europe", 0x3e6f99, "Mycenaeans"],
+      ["Classical Greece", -800, -323, "Europe", 0x2f5f98, "Greeks"],
+      ["Roman Republic", -509, -27, "Europe", 0x8c2f2a, "Romans"],
+      ["Roman Empire", -27, 476, "Europe", 0xb33a32, "RomanEmpire"],
+      ["Byzantine Empire", 330, 1453, "Europe", 0x6a3d7a, "Byzantines"],
+      ["Holy Roman Empire", 800, 1806, "Europe", 0xc4a35a, "HolyRomanEmpire"],
+      ["Viking Age", 793, 1066, "Europe", 0x3e4c55, "Vikings"],
+      ["Sumer", -2900, -2334, "Mesopotamia", 0xc4a35a, "Sumerians"],
+      ["Akkadian Empire", -2334, -2154, "Mesopotamia", 0x9a7424, "Akkadians"],
+      ["Babylonian Empire", -1894, -539, "Mesopotamia", 0xd4843a, "Babylonians"],
+      ["Assyrian Empire", -1365, -609, "Mesopotamia", 0x7a4a28, "Assyrians"],
+      ["Achaemenid Empire", -550, -330, "Mesopotamia", 0x2a8f86, "Persians"],
+      ["Parthian & Sasanian", -247, 651, "Mesopotamia", 0x1c6e78, "Persians"],
+      ["Islamic Caliphates", 632, 1258, "Mesopotamia", 0x1f6b45, "Islam"],
+      ["Ottoman Empire", 1299, 1922, "Mesopotamia", 0x8c2f2a, "Rulers"],
+      ["Indus Valley", -3300, -1300, "South Asia", 0xd4654a, "indus_valley"],
+      ["Vedic Period", -1500, -500, "South Asia", 0xe09a3e, "Vedic"],
+      ["Maurya Empire", -322, -185, "South Asia", 0xd45a1a, "Maurya"],
+      ["Gupta Empire", 320, 550, "South Asia", 0xe07a28, "Gupta"],
+      ["Mughal Empire", 1526, 1857, "South Asia", 0x1f6b45, "Mughals"],
+      ["Shang Dynasty", -1600, -1046, "East Asia", 0xc43b3b, "shang_zhou"],
+      ["Zhou Dynasty", -1046, -256, "East Asia", 0xa32d2d, "shang_zhou"],
+      ["Qin & Han", -221, 220, "East Asia", 0xd64545, "QinHan"],
+      ["Tang Dynasty", 618, 907, "East Asia", 0xe07a4a, "Tang"],
+      ["Song Dynasty", 960, 1279, "East Asia", 0xd45a1a, "Song"],
+      ["Yuan, Ming & Qing", 1271, 1912, "East Asia", 0x8c2f2a, "YuanMingQing"],
+      ["Olmec", -1200, -400, "Americas", 0x4caf6a, "Olmec"],
+      ["Maya", -2000, 1500, "Americas", 0x2f8a4a, "Maya"],
+      ["Teotihuacan", -100, 550, "Americas", 0x3cb371, "Teotihuacan"],
+      ["Aztec Empire", 1428, 1521, "Americas", 0x1f6b45, "Aztec"],
+      ["Inca Empire", 1438, 1533, "Americas", 0x2e8b57, "Inca"],
+      ["Aboriginal Australia", -50000, 1788, "Oceania", 0x3d6f8f, "AboriginalAustralia"],
+      ["Polynesian Expansion", -1500, 1000, "Oceania", 0x6ea8c9, "Polynesia"],
+    ].map(([name, start, end, region, color, id]) => ({
+      name, start, end, region, color, href: SITE + id,
+    }));
+
+    const SCALE = 0.04;
+    const DRAW_START = -3300;
+    const TIME_MIN = DRAW_START * SCALE;
+    const TIME_MAX = 2000 * SCALE;
+    const PITCH = 16;
+    const BAND = 12;
+
+    const canvas = document.getElementById("chart");
+    const layer = document.getElementById("layer");
+    const rangeEl = document.getElementById("range");
+    const tip = document.getElementById("tip");
+
+    function formatYear(year) {
+      const y = Math.round(year);
+      if (y < 0) return `${Math.abs(y).toLocaleString("en-US")} BCE`;
+      if (y === 0) return "1 CE";
+      return `${y.toLocaleString("en-US")} CE`;
+    }
+
+    function inkFor(color) {
+      const r = (color >> 16) & 255;
+      const g = (color >> 8) & 255;
+      const b = color & 255;
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b > 150 ? "#0e1420" : "#f4f1ea";
+    }
+
+    function placeEras() {
+      const out = [];
+      REGIONS.forEach((region, index) => {
+        const regionY = (index - (REGIONS.length - 1) / 2) * PITCH;
+        const list = ERAS.filter((era) => era.region === region.name)
+          .map((era) => ({ ...era, drawnStart: Math.max(era.start, DRAW_START) }))
+          .filter((era) => era.end > era.drawnStart)
+          .sort((a, b) => a.drawnStart - b.drawnStart || a.end - b.end);
+        const ends = [];
+        const lanes = list.map((era) => {
+          let lane = ends.findIndex((end) => end <= era.drawnStart);
+          if (lane < 0) {
+            lane = ends.length;
+            ends.push(era.end);
+          } else ends[lane] = era.end;
+          return lane;
+        });
+        const laneCount = Math.max(1, ends.length);
+        list.forEach((era, i) => {
+          const lane = lanes[i] ?? 0;
+          const inner = 0.4;
+          const h = (BAND - inner * (laneCount - 1)) / laneCount;
+          const y = regionY - BAND / 2 + h / 2 + lane * (h + inner);
+          out.push({ ...era, lane, lanes: laneCount, y, regionY });
+        });
+      });
+      return out;
+    }
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0e1420);
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 200);
+    camera.position.set(0, 0, 40);
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    const placed = placeEras();
+    const regionY = new Map(REGIONS.map((region, index) => [region.name, (index - (REGIONS.length - 1) / 2) * PITCH]));
+    const yMin = Math.min(...regionY.values()) - BAND;
+    const yMax = Math.max(...regionY.values()) + BAND;
+    const bars = [];
+    const regionLabels = [];
+    const yearLabels = [];
+    const barLabels = [];
+
+    function chip(text, className) {
+      const el = document.createElement("div");
+      el.textContent = text;
+      el.className = className;
+      layer.append(el);
+      return el;
+    }
+
+    REGIONS.forEach((region) => {
+      const y = regionY.get(region.name) ?? 0;
+      const track = new THREE.Mesh(
+        new THREE.PlaneGeometry(TIME_MAX - TIME_MIN + 30, BAND + 1.4),
+        new THREE.MeshBasicMaterial({ color: region.color, transparent: true, opacity: 0.22 }),
+      );
+      track.position.set((TIME_MIN + TIME_MAX) / 2, y, -0.8);
+      scene.add(track);
+      regionLabels.push({ el: chip(region.name, "region-chip"), y });
+    });
+
+    const minor = new THREE.Group();
+    const major = new THREE.Group();
+    scene.add(minor, major);
+    for (let year = -3000; year <= 2000; year += 100) {
+      const x = year * SCALE;
+      const millennium = year % 1000 === 0;
+      const isMajor = year % 500 === 0;
+      const line = new THREE.Mesh(
+        new THREE.PlaneGeometry(millennium ? 0.22 : isMajor ? 0.12 : 0.06, yMax - yMin),
+        new THREE.MeshBasicMaterial({ color: millennium ? 0xd4a64a : isMajor ? 0x2a3550 : 0x1a2233 }),
+      );
+      line.position.set(x, (yMin + yMax) / 2, -0.6);
+      (isMajor ? major : minor).add(line);
+      if (isMajor || year % 200 === 0) {
+        yearLabels.push({
+          el: chip(formatYear(year), "year-label" + (millennium ? " gold" : "")),
+          x,
+          major: isMajor,
+        });
+      }
+    }
+
+    for (const era of placed) {
+      const startX = era.drawnStart * SCALE;
+      const endX = era.end * SCALE;
+      const width = Math.max(endX - startX, 0.45);
+      const mid = (startX + endX) / 2;
+      const h = (BAND - 0.4 * (era.lanes - 1)) / era.lanes;
+      const plate = new THREE.Mesh(
+        new THREE.PlaneGeometry(width + 0.12, h + 0.12),
+        new THREE.MeshBasicMaterial({ color: 0xd4a64a, transparent: true, opacity: 0.55 }),
+      );
+      plate.position.set(mid, era.y, -0.05);
+      scene.add(plate);
+      const mesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(width, h * 0.86),
+        new THREE.MeshBasicMaterial({ color: era.color }),
+      );
+      mesh.position.set(mid, era.y, 0.05 + era.lane * 0.01);
+      mesh.userData = { era, baseZ: mesh.position.z };
+      scene.add(mesh);
+      bars.push(mesh);
+      const el = document.createElement("a");
+      el.textContent = era.name;
+      el.href = era.href;
+      el.target = "_blank";
+      el.rel = "noopener noreferrer";
+      el.title = `Open ${era.name} in the almanac`;
+      el.className = "bar-label";
+      el.style.color = inkFor(era.color);
+      layer.append(el);
+      barLabels.push({ el, x: mid, y: era.y, width });
+    }
+
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    let hovered = null;
+    let minZoom = 0.2;
+    let maxZoom = 36;
+    const pointers = new Map();
+    let drag = null;
+    let pinch = null;
+    let click = null;
+    let fitted = false;
+
+    function half() {
+      return {
+        hw: (camera.right - camera.left) / 2 / camera.zoom,
+        hh: (camera.top - camera.bottom) / 2 / camera.zoom,
+      };
+    }
+    function clientToWorld(clientX, clientY) {
+      const rect = canvas.getBoundingClientRect();
+      const ndcX = ((clientX - rect.left) / rect.width) * 2 - 1;
+      const ndcY = -(((clientY - rect.top) / rect.height) * 2 - 1);
+      const { hw, hh } = half();
+      return { x: camera.position.x + ndcX * hw, y: camera.position.y + ndcY * hh };
+    }
+    function clampCamera() {
+      camera.position.x = Math.min(TIME_MAX + 12, Math.max(TIME_MIN - 12, camera.position.x));
+      camera.position.y = Math.min(yMax + 6, Math.max(yMin - 6, camera.position.y));
+    }
+    function resize() {
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      if (w < 2 || h < 2) return false;
+      const viewH = 118;
+      const aspect = w / h;
+      camera.left = (-viewH * aspect) / 2;
+      camera.right = (viewH * aspect) / 2;
+      camera.top = viewH / 2;
+      camera.bottom = -viewH / 2;
+      camera.updateProjectionMatrix();
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setSize(w, h, false);
+      return true;
+    }
+    function zoomLimits(overview) {
+      minZoom = overview * 0.85;
+      maxZoom = 48;
+    }
+    function fit() {
+      if (!resize()) return;
+      const hw0 = (camera.right - camera.left) / 2;
+      const hh0 = (camera.top - camera.bottom) / 2;
+      const overview = Math.min((hw0 * 2) / ((TIME_MAX - TIME_MIN) * 1.08), (hh0 * 2) / ((yMax - yMin) * 1.12));
+      camera.zoom = overview;
+      camera.position.set((TIME_MIN + TIME_MAX) / 2, (yMin + yMax) / 2, 40);
+      camera.updateProjectionMatrix();
+      zoomLimits(overview);
+      fitted = true;
+    }
+    function startView() {
+      if (!resize()) return;
+      const hw0 = (camera.right - camera.left) / 2;
+      const hh0 = (camera.top - camera.bottom) / 2;
+      const overview = Math.min((hw0 * 2) / ((TIME_MAX - TIME_MIN) * 1.08), (hh0 * 2) / ((yMax - yMin) * 1.12));
+      camera.zoom = Math.max(overview, (hw0 * 2) / (1500 * SCALE));
+      camera.position.set(0, -16, 40);
+      camera.updateProjectionMatrix();
+      zoomLimits(overview);
+      fitted = true;
+    }
+    function zoomAt(factor, clientX, clientY) {
+      const before = clientToWorld(clientX, clientY);
+      camera.zoom = Math.min(maxZoom, Math.max(minZoom, camera.zoom * factor));
+      camera.updateProjectionMatrix();
+      const after = clientToWorld(clientX, clientY);
+      camera.position.x += before.x - after.x;
+      camera.position.y += before.y - after.y;
+      clampCamera();
+    }
+    function zoomCenter(factor) {
+      const rect = canvas.getBoundingClientRect();
+      zoomAt(factor, rect.left + rect.width / 2, rect.top + rect.height / 2);
+    }
+    function worldToScreen(x, y) {
+      const { hw, hh } = half();
+      const width = canvas.clientWidth || 1;
+      const height = canvas.clientHeight || 1;
+      return {
+        x: (((x - camera.position.x) / hw) * 0.5 + 0.5) * width,
+        y: ((-((y - camera.position.y) / hh)) * 0.5 + 0.5) * height,
+      };
+    }
+    function layoutLabels() {
+      const { hw } = half();
+      const width = canvas.clientWidth || 1;
+      for (const item of regionLabels) {
+        const point = worldToScreen(0, item.y);
+        item.el.style.top = `${point.y}px`;
+        item.el.style.visibility = point.y < 8 || point.y > canvas.clientHeight - 8 ? "hidden" : "visible";
+      }
+      const pxPerYear = (SCALE / (hw * 2)) * width;
+      minor.visible = pxPerYear * 100 > 28;
+      for (const item of yearLabels) {
+        const point = worldToScreen(item.x, 0);
+        const show = (item.major || minor.visible) && point.x > 8 && point.x < width - 8;
+        item.el.style.left = `${point.x}px`;
+        item.el.style.visibility = show ? "visible" : "hidden";
+      }
+      for (const item of barLabels) {
+        const point = worldToScreen(item.x, item.y);
+        const screenW = (item.width / (hw * 2)) * width;
+        item.el.style.left = `${point.x}px`;
+        item.el.style.top = `${point.y}px`;
+        item.el.style.visibility = screenW > item.el.offsetWidth + 12 ? "visible" : "hidden";
+      }
+    }
+    function writeRange() {
+      const { hw } = half();
+      rangeEl.textContent = `${formatYear((camera.position.x - hw) / SCALE)}  –  ${formatYear((camera.position.x + hw) / SCALE)}`;
+    }
+    function hideTip() {
+      tip.classList.remove("open");
+      tip.replaceChildren();
+    }
+    function showTip(era, clientX, clientY) {
+      tip.classList.add("open");
+      tip.replaceChildren();
+      const title = document.createElement("h2");
+      title.textContent = era.name;
+      const meta = document.createElement("p");
+      meta.textContent = `${formatYear(era.start)} – ${formatYear(era.end)}`;
+      const where = document.createElement("p");
+      where.className = "region";
+      where.textContent = era.region;
+      const link = document.createElement("a");
+      link.href = era.href;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "Open in the almanac";
+      tip.append(title, meta, where, link);
+      const parent = canvas.parentElement.getBoundingClientRect();
+      tip.style.left = `${Math.max(8, Math.min(clientX - parent.left + 14, parent.width - 240))}px`;
+      tip.style.top = `${Math.max(8, Math.min(clientY - parent.top + 16, parent.height - 120))}px`;
+    }
+    function pick(clientX, clientY) {
+      const rect = canvas.getBoundingClientRect();
+      pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -(((clientY - rect.top) / rect.height) * 2 - 1);
+      raycaster.setFromCamera(pointer, camera);
+      const next = raycaster.intersectObjects(bars, false)[0]?.object ?? null;
+      if (hovered && hovered !== next) hovered.position.z = hovered.userData.baseZ;
+      hovered = next;
+      if (hovered) hovered.position.z = hovered.userData.baseZ + 0.35;
+      canvas.style.cursor = hovered ? "pointer" : drag ? "grabbing" : "grab";
+      if (hovered) showTip(hovered.userData.era, clientX, clientY);
+      else hideTip();
+    }
+    function pinchMetrics() {
+      const pts = [...pointers.values()];
+      const a = pts[0] ?? { x: 0, y: 0 };
+      const b = pts[1] ?? a;
+      return { dist: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)), mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 };
+    }
+    function applyPinch() {
+      if (!pinch) return;
+      const metrics = pinchMetrics();
+      camera.zoom = Math.min(maxZoom, Math.max(minZoom, pinch.zoom * (metrics.dist / pinch.dist)));
+      camera.position.x = pinch.cx;
+      camera.position.y = pinch.cy;
+      camera.updateProjectionMatrix();
+      const now = clientToWorld(metrics.mx, metrics.my);
+      camera.position.x += pinch.worldX - now.x;
+      camera.position.y += pinch.worldY - now.y;
+      clampCamera();
+    }
+    function onPointerDown(event) {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      try { canvas.setPointerCapture(event.pointerId); } catch { /* synthetic */ }
+      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      hideTip();
+      if (pointers.size === 1) {
+        click = { id: event.pointerId, x: event.clientX, y: event.clientY, era: hovered?.userData.era ?? null };
+        drag = { x: event.clientX, y: event.clientY, cx: camera.position.x, cy: camera.position.y };
+        pinch = null;
+        canvas.style.cursor = "grabbing";
+      } else if (pointers.size >= 2) {
+        click = null;
+        drag = null;
+        const metrics = pinchMetrics();
+        const world = clientToWorld(metrics.mx, metrics.my);
+        pinch = { dist: metrics.dist, zoom: camera.zoom, cx: camera.position.x, cy: camera.position.y, worldX: world.x, worldY: world.y };
+      }
+    }
+    function onPointerMove(event) {
+      if (tip.classList.contains("open") && tip.contains(event.target)) return;
+      if (!pointers.has(event.pointerId)) {
+        if (pointers.size === 0) pick(event.clientX, event.clientY);
+        return;
+      }
+      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      if (pointers.size >= 2) { applyPinch(); return; }
+      if (!drag) return;
+      const rect = canvas.getBoundingClientRect();
+      const { hw, hh } = half();
+      camera.position.x = drag.cx - ((event.clientX - drag.x) / rect.width) * hw * 2;
+      camera.position.y = drag.cy + ((event.clientY - drag.y) / rect.height) * hh * 2;
+      clampCamera();
+    }
+    function onPointerUp(event) {
+      const start = click;
+      const alone = pointers.size <= 1;
+      if (start?.id === event.pointerId) click = null;
+      pointers.delete(event.pointerId);
+      if (pointers.size < 2) pinch = null;
+      if (pointers.size === 1) {
+        const remaining = [...pointers.entries()][0];
+        if (remaining) drag = { x: remaining[1].x, y: remaining[1].y, cx: camera.position.x, cy: camera.position.y };
+      } else {
+        drag = null;
+        canvas.style.cursor = "grab";
+      }
+      if (alone && start && start.id === event.pointerId && start.era) {
+        if (Math.hypot(event.clientX - start.x, event.clientY - start.y) < 6) {
+          window.open(start.era.href, "_blank", "noopener,noreferrer");
+        }
+      }
+    }
+    function onWheel(event) {
+      event.preventDefault();
+      zoomAt(Math.exp(-event.deltaY * 0.00115), event.clientX, event.clientY);
+    }
+    function onKey(event) {
+      const target = event.target;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) return;
+      const { hw, hh } = half();
+      if (event.key === "ArrowLeft") camera.position.x -= hw * 0.18;
+      else if (event.key === "ArrowRight") camera.position.x += hw * 0.18;
+      else if (event.key === "ArrowUp") camera.position.y += hh * 0.18;
+      else if (event.key === "ArrowDown") camera.position.y -= hh * 0.18;
+      else if (event.key === "+" || event.key === "=") zoomCenter(1.2);
+      else if (event.key === "-" || event.key === "_") zoomCenter(1 / 1.2);
+      else if (event.key === "Home" || event.key === "0") fit();
+      else return;
+      event.preventDefault();
+      clampCamera();
+    }
+
+    canvas.addEventListener("pointerdown", onPointerDown);
+    canvas.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointermove", onPointerMove);
+    canvas.addEventListener("pointerup", onPointerUp);
+    canvas.addEventListener("pointercancel", onPointerUp);
+    canvas.addEventListener("wheel", onWheel, { passive: false });
+    canvas.addEventListener("contextmenu", (event) => event.preventDefault());
+    window.addEventListener("keydown", onKey);
+    document.getElementById("zoomIn").addEventListener("click", () => zoomCenter(1.25));
+    document.getElementById("zoomOut").addEventListener("click", () => zoomCenter(1 / 1.25));
+    document.getElementById("fit").addEventListener("click", () => fit());
+    new ResizeObserver(() => { if (!fitted) startView(); else resize(); }).observe(canvas.parentElement);
+    canvas.style.cursor = "grab";
+    startView();
+    renderer.setAnimationLoop(() => {
+      layoutLabels();
+      writeRange();
+      renderer.render(scene, camera);
+    });
+  </script>
+</body>
+</html>
